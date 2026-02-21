@@ -12,13 +12,13 @@ The prologue serves as the tutorial and the opening of Meghan's story on Terridy
 
 Meghan arrives at Terridyn's surface port in the middle of the night. Her shuttle was delayed by a mechanical problem coming down from the anchor station; everyone else on the manifest took hotel rooms and rebooked for morning. The shuttle is empty. The port is quiet.
 
-At customs, she discovers that her Caliburn passport has been upgraded — without her knowledge or consent — to a diplomatic passport, listing her as a Cultural Ambassador. Caliburn has no diplomatic relations with Terridyn, but the passport carries weight regardless. The customs agent, unsure how to handle an unscheduled diplomatic arrival at 3am, steps away to wake his supervisor.
+At customs, she discovers that her Calibran passport has been upgraded — without her knowledge or consent — to a diplomatic passport, listing her as a Cultural Ambassador. Calibran has no diplomatic relations with Terridyn, but the passport carries weight regardless. The customs agent, unsure how to handle an unscheduled diplomatic arrival at 3am, steps away to wake his supervisor.
 
 Meghan is shown to the VIP lounge to wait.
 
 She doesn't wait.
 
-Leaving her luggage and passport behind, she slips out of the lounge and tries to reach the city before anyone can formalise whatever the Caliburn government has decided she is.
+Leaving her luggage and passport behind, she slips out of the lounge and tries to reach the city before anyone can formalise whatever the Calibran government has decided she is.
 
 ### Tutorial Zone — The Port
 
