@@ -38,6 +38,8 @@ All colour in the game is drawn from a single 64-entry palette. No material uses
 | General | 29 | Clothing, environment, props, secondary colours |
 | **Total** | **64** | |
 
+**Palette intent:** The palette is intentionally bright and cheerful. This is a deliberate choice on two levels. Technically, saturated and well-separated colours are easier to work with under cel shading — banding reads cleanly, zones are distinct, and the four lighting tones produce legible results without muddy mid-values. Thematically, the brightness creates an emotional counterbalance to the dystopian society operating on Terridyn. The world is corporate-controlled, half-empty, and quietly dangerous; the visual language refuses to reflect that darkness back at the player. The game looks like a place where good things can happen, because they can. This tonal balance is established from the first frame and holds consistently — so that when characters like Sir Gallopington arrive, they feel native to the world rather than tonally incongruous.
+
 **Palette discipline:** The restricted palette enforces visual consistency across the game. Characters, environments, and UI all speak the same colour language. New assets that require a new colour require a palette discussion — the palette is not expanded casually.
 
 **Blush tones** are designed to blend with flesh tones through the material B channel (see below), creating the anime blush effect as a material parameter rather than a separate render pass.
