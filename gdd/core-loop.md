@@ -241,5 +241,4 @@ The pipeline failure system means most job failures are not game over — they a
 - Whether studying is a dedicated location (library, dorm room) or can be done anywhere
 - Exam event schedule — how many scheduled exam events exist and at what intervals?
 - Whether studying is a dedicated location (library, dorm room) or can be done anywhere
-- Skill terminology: **Engineering** (established in skill system) vs **Craftsmanship** (used in mechanic job article) — reconcile to Engineering
-- Skill terminology: **Parkour** (established, includes Swift Service capabilities) vs **Swift Service** (used in waitress article) — reconcile to Parkour
+- *(Skill naming reconciled: Engineering confirmed for mechanic job; Parkour confirmed for waitress/delivery crowd navigation; Swift Service folded into Parkour)*
