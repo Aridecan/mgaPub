@@ -82,10 +82,25 @@ UI audio is minimal and non-intrusive. Menus, notifications, and system feedback
 
 ---
 
+## Voice Acting
+
+### Development and Launch
+
+Voice overs will be AI-generated for development and initial release. This keeps the VO pipeline unblocked during writing and iteration — dialogue can be revised freely without incurring recording cost, and placeholder performances can be reviewed in-context throughout production.
+
+AI VO is the shipped product until a replacement is feasible. It is not a temporary stopgap to be apologised for; it is the practical approach for a solo developer with a story-heavy game and a large script.
+
+### Replacement Plan
+
+Once the game is feature-complete and story-complete — no more dialogue changes — human voice actors are the target if budget allows. At that point the script is locked and recording sessions can be scoped accurately. The replacement is a full swap, not a partial one: all characters or none.
+
+The AI-generated performances serve as reference for the human recording sessions: casting can be done against them, and directors have a clear read on the intended character register for each role.
+
+---
+
 ## Open Items
 
 - Reference tracks for each context — to be compiled and reviewed
-- Voice acting direction — language, accent range, casting approach
 - Specific character theme compositions — documented in private design notes
 - Whether the bar has licensed music, original compositions, or in-world diegetic performances
 - Hell environment audio — confirm choral vs. purely orchestral vs. combination
