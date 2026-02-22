@@ -210,6 +210,12 @@ The macro loop is story chapter progression:
 | Chapters 4–5 | Full team operational; CAMERA system active; institutional conflict |
 | Chapter 6 | Climax; civilian skills become primary tools; everything built pays off |
 
+**Chapter 3 — Machina Dynamics Internship:** At the end of Chapter 2, Meghan is required to apply for an internship at Machina Dynamics as the price of Tierney's assistance. The internship becomes available in Chapter 3 and provides stable, recurring income that shifts the economic pressure — survival becomes less urgent, freeing time budget for other priorities. The cost is operating inside a corporation that turns out to have its own agenda.
+
+**Content-gated jobs:** Additional job opportunities become available in Spicy and Super Spicy content tiers as Meghan's character develops and she becomes more open with herself. These unlock through relationship progression and character growth rather than skill thresholds. See private design documentation for full detail.
+
+---
+
 Chapters are **task-complete, not timer-complete** — they continue until story objectives are finished. Some quests within chapters are time-limited (Celeste's auction window in Chapter 1 is the first example). The chapter itself does not expire, but specific opportunities within it do.
 
 Skill progression across the macro loop shapes what Meghan is capable of by the end. A player who spent Chapters 1 and 2 focused on social jobs arrives at Chapter 6's guerrilla arc with strong Negotiation and Situational Awareness. A combat-focused player arrives with a different toolkit. The unified system means no choice is wasted — everything built as Meghan transfers directly to Ava.
@@ -233,6 +239,7 @@ The pipeline failure system means most job failures are not game over — they a
 - Meditation partial CP recovery — confirm: does Meditation provide a meaningful top-up during the day, or is its CP restoration limited to post-encounter recovery only?
 - Exam event schedule — how many scheduled exam events exist and at what intervals?
 - Whether studying is a dedicated location (library, dorm room) or can be done anywhere
-- Chapter 3 stable job — what is it, and how does it change the economy pressure?
+- Exam event schedule — how many scheduled exam events exist and at what intervals?
+- Whether studying is a dedicated location (library, dorm room) or can be done anywhere
 - Skill terminology: **Engineering** (established in skill system) vs **Craftsmanship** (used in mechanic job article) — reconcile to Engineering
 - Skill terminology: **Parkour** (established, includes Swift Service capabilities) vs **Swift Service** (used in waitress article) — reconcile to Parkour
