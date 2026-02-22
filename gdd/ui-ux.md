@@ -135,7 +135,7 @@ Outside of widget configuration, the smartphone is the primary interface for all
 | **Widgets** | Configure active eye implant and drone widget sets |
 | **Map** | City map, fast travel (if unlocked), points of interest |
 | **Skills** | Full skill and attribute view; progression tracking |
-| **Inventory** | Equipment, items, and consumables *(detail forthcoming)* |
+| **Inventory** | Equipment, items, and consumables — see [Inventory](inventory.md) |
 | **Missions** | Active and completed mission list; quest tracking |
 | **Contacts** | NPCs Meghan has relationships with; communication log |
 | **Delivery app** | Courier job dispatch (unlocked in Chapter 1) |
