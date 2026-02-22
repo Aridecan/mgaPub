@@ -171,7 +171,7 @@ These are the only elements that break diegesis. They are intentionally minimal.
 - Inventory system design — not yet documented
 - Drone widget adaptation process — is it a crafting step, a skill check, a time cost, or some combination?
 - Whether lost phone scenarios are scripted (specific mission events) or can occur organically through pipeline capture
-- Whether environmental conditions other than blindfolding can degrade the laser channel (smoke, magical interference, certain materials)
-- Whether the drone itself can be damaged, destroyed, or captured — and what the fallback is if it is
+- Environmental laser degradation confirmed — smoke, magical interference, and certain materials can degrade the laser channel; technical implementation TBD
+- Drone damage and destruction: the drone is a stealth unit and does not have a damage model. It exists primarily to provide the third-person camera perspective and will not be targeted or destroyed by enemies. This may be revisited in a later design pass.
 - Contact/relationship tracker design — what information is shown and how
 - Whether the delivery app and other job interfaces live in the phone or are accessed via separate in-world terminals
