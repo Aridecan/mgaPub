@@ -84,17 +84,29 @@ UI audio is minimal and non-intrusive. Menus, notifications, and system feedback
 
 ## Voice Acting
 
+### The Dialogue Document
+
+All dialogue is written with accompanying emotional context: the line, the character's internal state, the intent of the delivery, and any relevant scene context. This is not supplementary annotation — it is part of writing the line. A line without its emotional context is incomplete.
+
+This document is the single source of truth for all VO work, regardless of who or what performs it. It serves three purposes simultaneously:
+
+| Use | How the document is used |
+|-----|--------------------------|
+| **AI VO generation** | Dialogue and emotional context fed directly into the AI pipeline to automate performance generation |
+| **Fan localisation** | Handed to localizers alongside the script — they have the character register, the emotional beat, and the intent, not just the words to translate |
+| **Human VA direction** | If human actors replace the AI VO, the document is the director's brief — casting reference, session breakdown, and performance notes in one |
+
+Writing the emotional context is writing the performance. The document format makes that work reusable across every downstream use without additional effort.
+
 ### Development and Launch
 
-Voice overs will be AI-generated for development and initial release. This keeps the VO pipeline unblocked during writing and iteration — dialogue can be revised freely without incurring recording cost, and placeholder performances can be reviewed in-context throughout production.
+Voice overs are AI-generated using tools that accept dialogue and emotional context as input, automating the generation pipeline directly from the dialogue document. This keeps VO unblocked during writing and iteration — dialogue can be revised freely without recording cost, and performances can be reviewed in-context throughout production.
 
-AI VO is the shipped product until a replacement is feasible. It is not a temporary stopgap to be apologised for; it is the practical approach for a solo developer with a story-heavy game and a large script.
+AI VO is the shipped product until replacement is feasible. It is not a temporary stopgap; it is the practical approach for a solo developer with a story-heavy game and a large script.
 
 ### Replacement Plan
 
-Once the game is feature-complete and story-complete — no more dialogue changes — human voice actors are the target if budget allows. At that point the script is locked and recording sessions can be scoped accurately. The replacement is a full swap, not a partial one: all characters or none.
-
-The AI-generated performances serve as reference for the human recording sessions: casting can be done against them, and directors have a clear read on the intended character register for each role.
+Once the game is feature-complete and story-complete — script locked, no more dialogue changes — human voice actors are the target if budget allows. The replacement is a full cast swap. The AI performances serve as casting reference; the dialogue document serves as the director's brief. No additional preparation is needed at that point beyond scheduling.
 
 ---
 
