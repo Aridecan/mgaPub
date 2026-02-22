@@ -143,7 +143,7 @@ The clothing destruction system (Spicy DLC) ties wardrobe management directly to
 
 ### CAMERA System
 
-Available from Chapter 4, the CAMERA system enables team management gameplay. Developed by Meghan and Imara Kesari from combined CryTek and Calibran drone technology, it allows the magical girl team to be deployed and coordinated across missions. Each team member's distinct capabilities can be assigned independently or in combination. The system reflects the team having matured from improvised crisis response to structured operations.
+Available from Chapter 4, the CAMERA system enables team management gameplay. Developed by Meghan and Imara Kesari from combined Xtalics and Calibran drone technology, it allows the magical girl team to be deployed and coordinated across missions. Each team member's distinct capabilities can be assigned independently or in combination. The system reflects the team having matured from improvised crisis response to structured operations.
 
 *Detail: forthcoming.*
 

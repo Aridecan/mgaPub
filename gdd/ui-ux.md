@@ -82,10 +82,10 @@ The drone's widget capacity is limited in the early game. This is a technology c
 | Game stage | Drone widget capacity | Reason |
 |------------|----------------------|--------|
 | Chapters 1–2 | Limited | Drone systems not yet understood; basic functionality only |
-| Chapter 3+ | Expanding | Meghan joins MD and begins working with CryTek technology; she understands the drone's architecture and can extend it |
+| Chapter 3+ | Expanding | Meghan joins MD and begins working with Xtalics technology; she understands the drone's architecture and can extend it |
 | Late game | Full | Full widget set available as Meghan and Imara Kesari develop the CAMERA system |
 
-The Chapter 3 internship at Machina Dynamics is the gate — not just narratively but mechanically. Access to CryTek and to Imara's expertise is what allows the drone HUD to become the tactical tool it eventually is.
+The Chapter 3 internship at Machina Dynamics is the gate — not just narratively but mechanically. Access to Xtalics and to Imara's expertise is what allows the drone HUD to become the tactical tool it eventually is.
 
 ### Drone Widget Configuration
 
