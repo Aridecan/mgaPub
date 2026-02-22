@@ -20,6 +20,8 @@ PC is the only target platform. Console is not planned for the initial release. 
 
 Engine features are selected to match the art direction: the visual style uses a custom 4-tone cel shader with an inverse hull outline solution and no reliance on post-processing. Unreal features that conflict with or are superseded by the custom rendering pipeline (path-traced Lumen, screen-space effects) are not used or are disabled. Features that complement it — geometry processing, animation, physics — are used where appropriate.
 
+**Nanite** is enabled. Nanite handles both high- and low-poly geometry efficiently, and all assets are imported as Nanite-compatible meshes. In practice, the anime-style assets are lower polygon than Nanite was designed for, but enabling it on import costs nothing and keeps the option available. The pipeline treats Nanite compatibility as a standard import step rather than a deliberate per-asset decision.
+
 *See [Art Direction](art-direction.md) for full rendering detail.*
 
 ---
@@ -73,6 +75,6 @@ The build pipeline handles:
 - DirectX version target
 - Linux distribution — specific distros and kernel versions to be confirmed
 - Mac target hardware (Apple Silicon — M-series; Intel Mac support not planned)
-- Controller support — keyboard/mouse confirmed; controller layout TBD
-- Whether Nanite is used for geometry, or whether the cel-shader pipeline supersedes it
+- Controller support — keyboard/mouse primary; Steam Controller confirmed as secondary input option; full controller layout and binding document TBD
+- Recommended specifications (above minimum; to be determined during development)
 - Steam Deck compatibility target (optional but worth evaluating given Linux build)

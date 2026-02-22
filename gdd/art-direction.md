@@ -118,6 +118,32 @@ Interior lines — anatomy, clothing folds, seam detail — are handled by the d
 
 ---
 
+## Asset Sourcing and Workflow
+
+MGA does not model every asset from scratch. The practical workflow uses existing 3D assets as a starting point, replacing their materials and textures to bring them into the visual system.
+
+### Asset Sources
+
+- **Humble Bundle purchases** — commercial 3D assets acquired through bundle deals
+- **Epic Games Store free assets** — assets distributed free through the Unreal Engine marketplace
+
+These assets arrive with their own materials and textures, which are discarded. Only the geometry is retained.
+
+### Conversion Process
+
+1. **Import** — Asset imported into Unreal Engine with Nanite compatibility enabled as a standard step
+2. **Material replacement** — Original materials stripped; custom double-index palette material applied
+3. **Texture authoring** — Primary RGBA texture, secondary surface properties texture, and definition texture (where needed) authored for the mesh using the beta UV layout
+4. **Palette assignment** — Material instance parameters set to assign the appropriate Color 1 and Color 2 palette slots for the asset's role and context
+
+The result is an asset that looks native to MGA's visual language despite not being modelled for it. The palette discipline enforces visual consistency: an asset is only finished when it speaks the same colour vocabulary as the rest of the game.
+
+### Why This Works
+
+The anime/manga aesthetic is achieved at the material and shader layer, not the modelling layer. A mesh with correct topology reads correctly under the cel shader and inverse hull outline regardless of where it originated. The primary constraint is that the geometry is clean enough to outline well — heavily triangulated or noisy meshes may require cleanup before the inverse hull solution reads cleanly.
+
+---
+
 ## Open Items
 
 - Inverse hull weight / scaling values — to be calibrated during shader development
