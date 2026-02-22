@@ -93,6 +93,39 @@ Configured separately from the eye implant layout. Same drag-and-position interf
 
 ---
 
+## CAMERA Drone — Physical Operation
+
+### Control
+
+Meghan controls the drone through a cybernetics-linked transmitter — effectively at a thought. She can adjust two parameters in real time:
+
+- **Position around her body** — the drone orbits her at any angle, functioning like a standard third-person camera the player rotates
+- **Height off the ground** — how high the drone hovers, affecting the camera's vertical position and field of view
+
+This makes the drone behave like a conventional third-person follow camera from the player's perspective, while remaining a physical object in the game world.
+
+### Video Return — Laser Channel
+
+The drone transmits its camera feed back to Meghan via laser, received by the optical sensors in her eye cybernetics. The laser requires line of sight — specifically, it needs to reach a surface within Meghan's field of vision to reflect into her eye receiver.
+
+Under normal conditions this is always satisfied: the drone is positioned nearby, the laser bounces off the ground, a wall, or any surface Meghan can see, and the full video feed reaches her eye implants. The result is a complete third-person view with full widget overlay capability.
+
+### Degraded Mode — Blindfolded
+
+If Meghan is blindfolded, the laser channel fails: there is nothing in her line of sight for the laser to reflect from, so the video feed cannot reach the eye receiver.
+
+In this state the drone falls back to its **command radio channel**, which carries significantly less data. The radio fallback provides:
+
+- A narrow view covering a small cylinder around Meghan's body
+- Enough for the player to see Meghan's profile and her outfit
+- No tactical view of the surrounding area; no widget data beyond her immediate position
+
+The player's information state mirrors Meghan's. When she cannot see, the camera cannot see. This is intentional — capture sequences and blindfolded states use the degraded drone view as a gameplay mechanic, not just a visual effect.
+
+The degraded view is still a third-person perspective on Meghan. The player is not completely blind; they can see what Meghan is wearing, her physical state, and her immediate body position. They cannot see what is around her.
+
+---
+
 ## The Smartphone as Menu Hub
 
 Outside of widget configuration, the smartphone is the primary interface for all in-world menus. If Meghan has her phone, she has full access to:
@@ -138,5 +171,7 @@ These are the only elements that break diegesis. They are intentionally minimal.
 - Inventory system design — not yet documented
 - Drone widget adaptation process — is it a crafting step, a skill check, a time cost, or some combination?
 - Whether lost phone scenarios are scripted (specific mission events) or can occur organically through pipeline capture
+- Whether environmental conditions other than blindfolding can degrade the laser channel (smoke, magical interference, certain materials)
+- Whether the drone itself can be damaged, destroyed, or captured — and what the fallback is if it is
 - Contact/relationship tracker design — what information is shown and how
 - Whether the delivery app and other job interfaces live in the phone or are accessed via separate in-world terminals
