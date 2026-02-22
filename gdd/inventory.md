@@ -55,7 +55,33 @@ Meghan has two hand slots — left and right. These are not storage; they are ac
 
 When Meghan picks up an item from the ground, it goes to a hand slot. From there the player moves it to a storage container as a separate action. This is intentional: picking something up and stowing it are two distinct physical acts.
 
-**Quick-store actions** can be mapped to the action bar to collapse this into a single input. An action might read: *"Store right hand item → jacket pocket"* or *"Store left hand item → backpack."* These are user-defined mappings and are a power-user feature. Most players will pick something up, open inventory, and drag it into place — the quick-store actions are for players who want to optimise the workflow.
+---
+
+## Quick Actions and Reservations
+
+### Quick-Store and Quick-Retrieve
+
+Quick actions are mappable to the action bar and collapse two-step inventory interactions into one input. Two types:
+
+- **Quick-store:** *"Store right hand item → jacket pocket"* — takes the item currently held in the specified hand and places it in the target container
+- **Quick-retrieve:** *"Retrieve phone"* — pulls a specified item from storage and places it in a hand slot
+
+These are power-user features. Most players will pick something up, open inventory, and drag it into place. Quick actions are for players who want to optimise common workflows — a courier who picks up the same tool repeatedly, or a player who always wants a specific item in hand at the start of a fight.
+
+### Reservations
+
+A reservation links a specific item to a specific container slot — encoding the equivalent of muscle memory. For example: *phone → Jeans A, right front pocket.*
+
+Once a reservation is set:
+
+- **Quick-store** for that item always targets the reserved container first. If the reserved container can accept the item (dimensions, volume, weight all pass), it goes there. If not — because the container is destroyed, full, or Meghan is not wearing that piece of clothing — the action falls back to auto-storage or requires manual placement.
+- **Quick-retrieve** for that item pulls from the reserved container first, then searches all other containers if not found there.
+
+Reservations are advisory, not enforced. The system uses them as a first preference, not a guarantee. If the reserved container no longer exists — the jeans were destroyed, the backpack was dropped — the reservation is orphaned and the fallback applies.
+
+**Setting a reservation:** In the per-storage view, the player assigns a reservation by right-clicking (or equivalent) an item and selecting a target container, or by dragging an item to a container slot and marking it as reserved. Reserved slots display a visual indicator (a pin or lock icon on the slot) so the player knows which locations are committed.
+
+**Clearing a reservation:** Any reservation can be cleared or reassigned at any time through the same interface.
 
 ---
 
@@ -124,6 +150,8 @@ The combined grid view merges all stored items into a single display regardless 
 Adding an item in this view triggers auto-storage — the system finds the first valid container and places the item there without player direction. The player sees the item appear in the grid; the container assignment is handled automatically.
 
 This view trades control for speed. Players who do not want to think about container assignment use this view. Players managing around destructible clothing — aware that certain items should be in certain containers — use the per-storage view.
+
+**Tooltip:** Hovering over any item in the combined view shows which container it is currently stored in. This is the minimum information needed for players who care about clothing destruction risk — if a jacket is taking heavy damage, they can check what is in it without switching to the per-storage view.
 
 ---
 
