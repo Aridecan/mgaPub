@@ -48,7 +48,7 @@ Terridyn is a sci-fi city three centuries from now, half-empty, corporate-run. I
 
 ### Burton's Bar
 
-The bar is a working-class space with warmth and regulars and occasional chaos. Its ambient music should fit: something with blues or jazz influence, live-band feeling (even if not literally live in-world). Low energy during quiet service hours; the room can push it louder during Friday and Saturday night rushes when the crowds come in. The music at Burton's should feel like it belongs to the place, not like a soundtrack.
+The bar is a working-class space with warmth and regulars and occasional chaos. Its ambient music is Irish/Celtic pub style — fiddles, bodhrán, tin whistle, the sound of a place that has been a bar for a long time and knows exactly what it is. Low energy during quiet service hours; the room pushes louder during Friday and Saturday night rushes when the crowds come in. The music at Burton's should feel like it belongs to the place, not like a soundtrack.
 
 ### Hell Environments
 
