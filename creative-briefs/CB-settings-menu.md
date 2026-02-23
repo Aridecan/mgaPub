@@ -58,6 +58,23 @@ The resolution dropdown is **populated from the display's supported modes** at r
 
 **Minimum supported resolution: 1920×1080.** Resolutions below 1080p are not offered. The game is not designed or tested below this threshold.
 
+**Every resolution entry includes its aspect ratio label.** Players should never have to calculate whether a resolution matches their streaming setup. Format:
+
+```
+1920×1080  (16:9)
+2560×1440  (16:9)
+3840×2160  (4K · 16:9)
+1920×1200  (16:10)
+2560×1600  (16:10)
+2560×1080  (21:9 Ultrawide)
+3440×1440  (21:9 Ultrawide)
+5120×2160  (21:9 Ultrawide)
+3840×1080  (32:9 Super Ultrawide)
+5120×1440  (32:9 Super Ultrawide)
+```
+
+The aspect ratio label appears in a muted secondary colour alongside the resolution — present and readable without competing with the numbers.
+
 Reference resolution list by aspect ratio (all subject to monitor support):
 
 | 16:9 | 16:10 | 21:9 | 32:9 |
@@ -68,13 +85,13 @@ Reference resolution list by aspect ratio (all subject to monitor support):
 
 #### Windowed Mode — Free Resize
 
-In **Windowed** mode the resolution dropdown is hidden. Instead, the player resizes the window freely by dragging the window border.
+> **Platform note:** Aspect-ratio-locked window resizing requires OS-level window message handling (e.g. WM_SIZING on Windows) that Unreal does not provide out of the box. Feasibility must be confirmed on Windows, Linux, and Mac before committing to this feature. **If cross-platform implementation is not straightforward, drop the free-resize behaviour entirely and use the standard resolution dropdown in Windowed mode instead.** Do not carry this as a partial implementation.
 
-The selected **Aspect Ratio** is enforced during resize — dragging any edge or corner snaps the window to maintain the chosen ratio. This prevents accidental stretching while still giving the player full control over the window's size on screen.
+If implemented on all three platforms:
 
-A **minimum window size of 1920×1080** is enforced; the window cannot be dragged below this threshold regardless of aspect ratio.
+In **Windowed** mode the resolution dropdown is hidden. The player resizes the window freely by dragging the window border. The selected **Aspect Ratio** is enforced during resize — dragging any edge or corner snaps the window to maintain the chosen ratio. A **minimum window size of 1920×1080** is enforced. The game remembers window position and size between sessions.
 
-The window position on screen is free; the game remembers the last position and size between sessions.
+If not implemented: Windowed mode uses the same resolution dropdown as Fullscreen, with the same aspect ratio labels. Window is not user-resizable beyond the selected resolution.
 
 **Advanced settings** (collapsed by default; visible at all times but expanded only when needed — no requirement to set Custom preset first):
 
