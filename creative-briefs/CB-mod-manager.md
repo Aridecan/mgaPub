@@ -6,6 +6,12 @@ MGA provides in-game mod management tooling but does not host a mod server. The 
 
 Modelled on Factorio's in-game mod manager.
 
+### Design Philosophy — Mod Freedom
+
+The game provides tools to load and run mods correctly. What those mods contain is the player's business.
+
+MGA will not police mod content, enforce content tier compliance on mods, or add infrastructure to classify mods by content level. Any such system would only be as reliable as mod authors choosing to tag their work accurately — which cannot be enforced — making it a false assurance rather than a real one. Players installing mods take on responsibility for what those mods contain. The game's role ends at providing the tools to do it cleanly.
+
 ---
 
 ## Server URL Configuration
@@ -180,4 +186,4 @@ This allows a player to have the same mod installed but active only in one playt
 - Whether localization packages are tied to the mod's GUID or have their own GUIDs
 - Whether the Available tab paginates or loads all entries (depends on expected server index size)
 - Conflict resolution UI: if two installed mods are flagged as incompatible with each other, where and how is that surfaced?
-- Whether a mod can be marked as a **content mod** (adds adult content) and subject to the same content-tier gating as base game content
+- ~~Content mod gating~~ — explicitly out of scope; see Design Philosophy above
