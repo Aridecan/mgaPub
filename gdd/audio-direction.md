@@ -62,6 +62,21 @@ Thematic design for specific characters is documented in private design notes. T
 
 ---
 
+## Audio Output Architecture
+
+MGA routes audio through two separate output channels:
+
+| Channel | Contains |
+|---------|----------|
+| **Game Audio** | SFX, voice, ambient, UI sounds |
+| **Music** | All music only |
+
+Both channels default to the system's primary output device. Players can route the Music channel to a separate output device (e.g. a virtual audio cable) to capture game audio and music independently in streaming software. This allows streamers to drop the music channel in OBS without losing game audio — avoiding licensing issues without any post-processing.
+
+The split is reflected in the settings menu with separate output device selectors for each channel. See [CB-settings-menu](../creative-briefs/CB-settings-menu.md) for the full audio settings layout.
+
+---
+
 ## Sound Design
 
 ### Principle

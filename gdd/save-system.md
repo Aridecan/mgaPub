@@ -101,6 +101,34 @@ The player can dismiss the warning and continue, or switch playthroughs from the
 
 ---
 
+## Save File Versioning
+
+Save files include a schema version field from the first public release. This is a non-negotiable requirement given the weekly build release schedule via Bittorrent/SubscribeStar — players will carry saves between builds, and a save written by build N must be loadable by build N+1.
+
+When the game loads a save file:
+1. It reads the schema version
+2. If the version matches the current build, load normally
+3. If the version is older, run the appropriate migration chain and load
+4. If the version is newer than the current build (player loading a save from a newer build), display a warning and offer to proceed or cancel — do not silently corrupt
+
+Migration functions must be written alongside any change to the save schema, not after.
+
+Save files are stored in a location the player can easily back up: `Documents/MGA/Saves/` (Windows). This is documented in the game's FAQ.
+
+---
+
+## Save Slots
+
+Each playthrough folder contains:
+- **1 autosave slot** — overwritten on each autosave cycle; not user-managed
+- **Unlimited manual save slots** — player-named with auto-generated timestamp; no artificial cap
+
+Manual saves display: player-assigned name, timestamp, chapter label, and a screenshot thumbnail.
+
+An **export/export save** option is available in the load screen — exports the full playthrough folder as a zip for backup or sharing between machines. Import validates schema version before loading.
+
+---
+
 ## Open Items
 
 - Exact slider increments for autosave (confirm: off / 5 / 10 / 15 / 20 / 30, or different range)
