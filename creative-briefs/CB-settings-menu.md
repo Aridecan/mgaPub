@@ -29,6 +29,8 @@ The streamer/content-creator question from the save system first-boot flow is in
 
 ### 1. Display
 
+**Main settings** (always visible):
+
 | Setting | Type | Default | Notes |
 |---------|------|---------|-------|
 | Resolution | Dropdown | Native | Populated from supported resolutions |
@@ -36,15 +38,47 @@ The streamer/content-creator question from the save system first-boot flow is in
 | Refresh Rate | Dropdown | Max available | Only shown when Fullscreen selected |
 | VSync | Toggle | On | |
 | Quality Preset | Dropdown | High | Low / Medium / High / Ultra / Custom |
-| Shadows | Dropdown | High | Shown when Preset = Custom |
-| Anti-aliasing | Dropdown | TAA | Shown when Preset = Custom |
-| Textures | Dropdown | High | Shown when Preset = Custom |
-| Effects Quality | Dropdown | High | Shown when Preset = Custom |
-| View Distance | Slider | 75% | Shown when Preset = Custom |
-| Motion Blur | Toggle | Off | Also in Accessibility |
 | Field of View | Slider | 90° | Range: 70°–110° |
 | Brightness | Slider | 50% | |
 | HDR | Toggle | Auto | Greyed out if display does not support HDR |
+
+**Advanced settings** (collapsed by default; visible at all times but expanded only when needed — no requirement to set Custom preset first):
+
+*Upscaling* — mutually exclusive; only one can be active:
+
+| Setting | Type | Default | Notes |
+|---------|------|---------|-------|
+| Upscaling Mode | Dropdown | Off | Off / DLSS / FSR / XeSS |
+| Upscaling Quality | Dropdown | Quality | Performance / Balanced / Quality / Ultra Quality — only shown when Upscaling Mode ≠ Off |
+| DLSS Frame Generation | Toggle | Off | NVIDIA RTX 40-series only; only shown when DLSS selected |
+
+DLSS requires an NVIDIA RTX GPU. FSR (AMD FidelityFX Super Resolution) works on a wider range of hardware. XeSS is Intel's equivalent. All three are integrated via Unreal plugins; availability is detected at runtime and unavailable options are greyed out.
+
+*Rendering quality* — individual overrides; selecting any override sets Quality Preset to Custom:
+
+| Setting | Type | Default | Notes |
+|---------|------|---------|-------|
+| Anti-Aliasing | Dropdown | TAA | Off / FXAA / TAA / MSAA 2× / MSAA 4× / MSAA 8× — TAA required for DLSS |
+| Shadow Quality | Dropdown | High | Off / Low / Medium / High / Ultra |
+| Shadow Distance | Dropdown | High | Low / Medium / High / Ultra |
+| Ambient Occlusion | Toggle | On | Screen-space AO; performance cost on lower-end hardware |
+| Global Illumination | Dropdown | Lumen | Off / Baked / Lumen — Lumen is Unreal 5 dynamic GI; high hardware cost |
+| Reflections | Dropdown | Lumen | Off / Screen Space / Lumen |
+| Texture Quality | Dropdown | High | Low / Medium / High / Ultra |
+| Effects Quality | Dropdown | High | Particle and magical effect fidelity — Low / Medium / High / Ultra |
+| View Distance | Slider | 75% | |
+
+*Visual effects* — toggles for effects that are stylistic rather than technical; off by default for some:
+
+| Setting | Type | Default | Notes |
+|---------|------|---------|-------|
+| Motion Blur | Toggle | Off | Also synced with Accessibility setting |
+| Depth of Field | Toggle | On | Bokeh blur on out-of-focus elements; personal preference varies |
+| Bloom | Toggle | On | Light bleed on bright sources |
+| Lens Flare | Toggle | On | |
+| Film Grain | Toggle | Off | Subtle grain overlay; personal preference |
+| Chromatic Aberration | Toggle | Off | Colour fringing effect; many players dislike this |
+| Vignette | Toggle | Off | Screen-edge darkening |
 
 ---
 
