@@ -12,11 +12,23 @@ Listed top to bottom in display order:
 
 | Item | Behaviour | State |
 |------|-----------|-------|
+| **Continue** | Loads the most recent save from the most recent playthrough — no browser required | **Hidden** until at least one save exists; appears above New Game once a save is present |
 | **New Game** | Opens the new playthrough creation flow — name the playthrough, set content tier, enable mods | Always enabled |
 | **Load Game** | Opens the playthrough and save browser | **Greyed out** if no playthrough folders exist; enabled as soon as any save exists |
 | **Mods** | Opens global mod management — install, remove, browse installed mods | Always enabled |
 | **Settings** | Opens the settings menu (see [CB-settings-menu](CB-settings-menu.md)) | Always enabled |
 | **Exit to Desktop** | Closes the game | Always enabled |
+
+### Continue — Detail
+
+Continue loads without any additional confirmation — one click, straight into the game. Directly below the Continue button, in small muted text, the context of what it will load is shown:
+
+```
+Continue
+  Playthrough 1 · Chapter 2 · Saved 14 Feb 2331, 21:43
+```
+
+This tells the player exactly where they are returning to before they commit. Players managing multiple playthroughs can see at a glance whether Continue is pointing at the right one; if not, they use Load Game to select a different playthrough instead.
 
 ---
 
@@ -70,7 +82,7 @@ If this is the very first launch and the first-launch wizard has just completed,
 ## Open Items
 
 - Background art direction — static image, looping animation, or live scene from the game world
-- Whether a **Continue** shortcut appears at the top of the menu once saves exist (loads most recent save directly, without opening the browser) — common QoL feature worth considering
+- ~~Whether a **Continue** shortcut appears~~ — confirmed, added above New Game; loads most recent save with context subtitle
 - Credits — not in the current list; decide whether it lives in the main menu, the settings menu, or is omitted from early builds
 - Controller navigation order — confirm shoulder button shortcut for SubscribeStar icon or rely on sequential navigation
 - Whether the SubscribeStar icon animates or pulses on new supporter milestones (probably out of scope for early builds)
