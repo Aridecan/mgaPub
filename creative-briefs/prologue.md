@@ -10,9 +10,9 @@ The prologue serves as the tutorial and the opening of Meghan's story on Terridy
 
 ### Arrival
 
-Meghan arrives at Terridyn's surface port in the middle of the night. Her shuttle was delayed by a mechanical problem coming down from the anchor station; everyone else on the manifest took hotel rooms and rebooked for morning. The shuttle is empty. The port is quiet.
+Meghan arrives at Terridyn's surface port at **1:30 AM on a Sunday**. Her shuttle was delayed by a mechanical problem coming down from the anchor station; everyone else on the manifest took hotel rooms and rebooked for morning. The shuttle is empty. The port is quiet.
 
-At customs, she discovers that her Calibran passport has been upgraded — without her knowledge or consent — to a diplomatic passport, listing her as a Cultural Ambassador. Calibran has no diplomatic relations with Terridyn, but the passport carries weight regardless. The customs agent, unsure how to handle an unscheduled diplomatic arrival at 3am, steps away to wake his supervisor.
+At customs, she discovers that her Calibran passport has been upgraded — without her knowledge or consent — to a diplomatic passport, listing her as a Cultural Ambassador. Calibran has no diplomatic relations with Terridyn, but the passport carries weight regardless. The customs agent, unsure how to handle an unscheduled diplomatic arrival at this hour, steps away to wake his supervisor.
 
 Meghan is shown to the VIP lounge to wait.
 
@@ -42,7 +42,7 @@ The base route is the cleanest path. The Spicy route is harder and carries econo
 
 Meghan reaches the air tram and rides into downtown Terridyn City. Everything is closed. The city is half-empty on a good day; at this hour it is a ghost town.
 
-She hears something — a call for help — and finds Celeste Burton being assaulted by gang members outside Burton's Tavern, where she had been closing up for the night.
+She hears something — and finds Celeste Burton being assaulted by gang members in the **alley behind Burton's Tavern**, where she had been taking out the night's refuse. Burton's Tavern closes at 2 AM on Fridays and Saturdays; Celeste is doing end-of-night cleanup in the back alley when the gang arrives. Meghan is the only person around.
 
 **Combat tutorial:** The fight introduces the combat system, consciousness points, and the nanotech shield feedback mechanic.
 
