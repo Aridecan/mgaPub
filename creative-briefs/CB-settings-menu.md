@@ -33,14 +33,48 @@ The streamer/content-creator question from the save system first-boot flow is in
 
 | Setting | Type | Default | Notes |
 |---------|------|---------|-------|
-| Resolution | Dropdown | Native | Populated from supported resolutions |
 | Window Mode | Dropdown | Borderless Windowed | Fullscreen / Borderless Windowed / Windowed |
-| Refresh Rate | Dropdown | Max available | Only shown when Fullscreen selected |
+| Aspect Ratio | Dropdown | 16:9 | See aspect ratio table below |
+| Resolution | Dropdown | Native | See resolution table below; hidden in Windowed mode |
+| Refresh Rate | Dropdown | Max available | Fullscreen only |
 | VSync | Toggle | On | |
 | Quality Preset | Dropdown | High | Low / Medium / High / Ultra / Custom |
 | Field of View | Slider | 90° | Range: 70°–110° |
 | Brightness | Slider | 50% | |
 | HDR | Toggle | Auto | Greyed out if display does not support HDR |
+
+#### Aspect Ratios
+
+| Aspect Ratio | Common use | Example resolutions |
+|--------------|-----------|---------------------|
+| **16:9** | Standard widescreen — the most common monitor format | 1920×1080, 2560×1440, 3840×2160 |
+| **16:10** | Slightly taller; common on older monitors, some laptops | 1920×1200, 2560×1600, 3840×2400 |
+| **21:9** | Ultrawide | 2560×1080, 3440×1440, 5120×2160 |
+| **32:9** | Super ultrawide (Samsung Odyssey and similar) | 3840×1080, 5120×1440 |
+
+#### Resolutions — Fullscreen and Borderless Windowed
+
+The resolution dropdown is **populated from the display's supported modes** at runtime — only resolutions the connected monitor actually supports are shown. The list is filtered by the selected aspect ratio.
+
+**Minimum supported resolution: 1920×1080.** Resolutions below 1080p are not offered. The game is not designed or tested below this threshold.
+
+Reference resolution list by aspect ratio (all subject to monitor support):
+
+| 16:9 | 16:10 | 21:9 | 32:9 |
+|------|-------|------|------|
+| 1920×1080 | 1920×1200 | 2560×1080 | 3840×1080 |
+| 2560×1440 | 2560×1600 | 3440×1440 | 5120×1440 |
+| 3840×2160 | 3840×2400 | 5120×2160 | — |
+
+#### Windowed Mode — Free Resize
+
+In **Windowed** mode the resolution dropdown is hidden. Instead, the player resizes the window freely by dragging the window border.
+
+The selected **Aspect Ratio** is enforced during resize — dragging any edge or corner snaps the window to maintain the chosen ratio. This prevents accidental stretching while still giving the player full control over the window's size on screen.
+
+A **minimum window size of 1920×1080** is enforced; the window cannot be dragged below this threshold regardless of aspect ratio.
+
+The window position on screen is free; the game remembers the last position and size between sessions.
 
 **Advanced settings** (collapsed by default; visible at all times but expanded only when needed — no requirement to set Custom preset first):
 
