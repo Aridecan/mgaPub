@@ -26,6 +26,8 @@ This is a single player game. Players are free to mod it, hack their save files,
 
 I support the modding community. I will provide tools for loading mods and managing load order, and I will document the mod boot process. That is the extent of what I can offer. I am one person. I cannot provide full mod support, and I will not pretend otherwise. Mod-friendly is a commitment; full mod support is not.
 
+The game will not police or restrict mod content. What a mod contains is between the mod author and the player. Any system that attempted to enforce content compliance on mods would only be as reliable as mod authors choosing to comply — which cannot be guaranteed — making it a false assurance rather than a real protection. The tools are provided; the responsibility rests with the player.
+
 ---
 
 ## 5. Player Agency Is Never Removed
