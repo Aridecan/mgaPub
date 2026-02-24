@@ -67,7 +67,7 @@ The phone is accessed in-world — Meghan takes it out, and the world continues 
 
 By default, world time continues at full speed while the phone is open. The game's pacing is designed around this — players should not miss critical events while managing their menus under normal play conditions.
 
-Players who prefer a safety net can enable **Pause Time While Using Phone** in Gameplay Settings (see [CB-settings-menu](CB-settings-menu.md)). This is opt-in and off by default.
+Players who prefer a safety net can enable **Pause in In-Game Menu** in Gameplay Settings (see [CB-settings-menu](CB-settings-menu.md)). This covers both the phone menu and the out-of-character menu. Opt-in, off by default.
 
 ---
 
