@@ -59,6 +59,72 @@ World-anchored widgets are toggled on or off as a class — the player cannot in
 
 ---
 
+## Actions vs Widgets — How They Unlock
+
+These two things are gated differently and it is worth stating explicitly.
+
+**Actions** unlock automatically when a skill reaches the required rank. No purchase needed — the capability is there the moment the threshold is crossed. A player who hits the right rank in Melee Combat gains the new action immediately.
+
+**Widgets** do not unlock automatically. A skill rank may make a widget available for purchase, but the player must actively buy the licence before the widget can be loaded. Reaching the qualifying rank only opens the door; the purchase is a separate decision and a separate cost.
+
+This distinction matters for the configuration screen: a widget shown as "eligible" in the skills menu still does nothing until it has been purchased.
+
+---
+
+## Slot Counts and Capacity
+
+### Eye implant AR — First Person
+
+| Stage | Slots | How to increase |
+|-------|-------|----------------|
+| Game start | 3 custom widgets | — |
+| New phone tier | More slots | Purchasing a higher-tier phone adds capacity |
+
+Slot count scales with phone hardware. The basic phone (Terry-financed, Chapter 1) supports 3 concurrent custom widgets. Higher-tier phones add more. The action bar does not occupy a custom widget slot — it is fixed infrastructure.
+
+### CAMERA drone — Third Person
+
+| Stage | Slots | How to increase |
+|-------|-------|----------------|
+| Game start | 3 custom widgets | — |
+| Chapter 1–2 | 3 (no change) | Phone upgrades do not affect CAMERA capacity |
+| Chapter 3+ | Expanding | Meghan begins porting widgets via Xtalics research at Machina Dynamics |
+| Late game | Full | Capacity grows as Meghan and Imara Kesari develop the CAMERA system |
+
+Phone tier does not affect CAMERA capacity. The drone is independent hardware with its own architecture. Expanding it requires Meghan to understand and extend that architecture — which only becomes possible when she joins MD in Chapter 3 and begins working with Xtalics technology.
+
+---
+
+## Porting Widgets to CAMERA
+
+A widget does not automatically become available on the CAMERA drone when purchased. The drone runs different systems from the eye implants, and widgets must be adapted to run on it.
+
+The process:
+
+1. **Own the widget for eye AR first** — a widget cannot be ported to CAMERA unless Meghan already holds the licence and has it available for first-person use
+2. **Spend time porting it** — porting is a time investment; it represents Meghan doing the technical work to make the widget compatible with the drone's architecture
+3. **CAMERA slot must be available** — a ported widget still occupies a CAMERA slot; porting without capacity does nothing until a slot opens
+
+This means the CAMERA widget set is always a subset of or equal to the eye AR set, never larger. A player who wants a widget on the drone must first invest in it for first-person use.
+
+Porting becomes available in Chapter 3 when Meghan joins MD. Before that, the drone's widget set is fixed at its starting configuration.
+
+---
+
+## Widget Profiles
+
+The phone stores named widget profiles for each HUD. A profile is a complete snapshot of the current widget configuration — which widgets are active, where screen-anchored widgets are positioned, which world-anchored widgets are enabled.
+
+The player can:
+
+- Save the current configuration as a named profile
+- Switch between saved profiles from the phone interface
+- Maintain separate profiles for different situations (e.g., a combat loadout, a social loadout, a stealth loadout)
+
+Switching profiles is immediate. Profiles are stored per HUD — an eye AR profile does not affect the CAMERA configuration and vice versa.
+
+---
+
 ## Configuration Interface
 
 The configuration screen shows a canvas representing the full screen area. Screen-anchored widgets appear as draggable blocks on the canvas. World-anchored widgets are listed separately as toggles — they cannot be repositioned, only enabled or disabled.
@@ -104,9 +170,9 @@ Tagging marks a specific target with a world-anchored tag widget visible through
 | **Requirement** | Line of sight at time of tagging |
 | **Duration** | A few minutes — tag expires regardless of whether the target is in view |
 | **Widget** | World-anchored marker; visible through walls until expiry if the world-anchored tag widget is loaded |
-| **Retagging** | Requires re-acquiring line of sight |
+| **Retagging** | Requires line of sight; resets the timer to full duration |
 
-The tag duration creates a window — not a permanent tracker. If the player tags a target and then loses them, they have a few minutes to relocate before having to re-establish line of sight and tag again. This keeps bounty hunting active and requiring genuine tracking rather than set-and-forget.
+The tag duration creates a window — not a permanent tracker. If the player tags a target and then loses them, they have a few minutes to relocate. Retagging while still in line of sight resets the timer, so sustained tracking of a visible target is possible. Once line of sight is lost and the tag expires, it must be re-established from scratch.
 
 Tagging is available for any character, not just bounty targets. Tagged allies, tagged threats, tagged persons of interest — the tag widget does not distinguish. The player decides what is worth tagging.
 
@@ -132,8 +198,11 @@ The degraded view is still a third-person perspective on Meghan. The player is n
 - Whether screen-anchored widgets can be resized, or only repositioned
 - GPS widget — is it available from the basic phone, or gated behind a licence? Delivery is available from Chapter 1, so the GPS widget likely needs to be accessible early
 - Tag duration — exact value TBD; "a few minutes" is the design intent
-- Whether tags can be refreshed before expiry (extend duration by retagging while still in LOS) or must expire first
+- ~~Whether tags can be refreshed before expiry~~ — confirmed: retagging in LOS resets the timer to full duration
 - World-anchored widget range — configurable per widget, or a single global setting?
 - Alert monitor design — what triggers it, what information it surfaces
 - Whether the configuration canvas shows a mock game view as background or a neutral layout grid
-- Drone widget adaptation process — how widgets are made compatible with the drone (crafting, skill check, time cost, or automatic on licence purchase)
+- ~~Drone widget adaptation process~~ — confirmed: own the eye AR widget first, then spend time porting it; porting unlocks in Chapter 3 via Xtalics research at MD
+- Porting time cost — how long does porting a widget take? Is it a flat duration, does it vary by widget complexity, or is it a skill-gated process?
+- Number of profiles the phone can store — unlimited, or a cap?
+- Whether profiles can be shared between playthroughs or are per-save
