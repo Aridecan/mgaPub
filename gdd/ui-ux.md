@@ -52,16 +52,16 @@ Examples of the availability progression:
 
 ## Eye Implant Widgets — First Person HUD
 
-### Phone Tier and Slot Count
+### Phone Tier and Widget Budget
 
-The number of widgets Meghan can run simultaneously in first-person mode is determined by her smartphone tier. The basic phone — financed by Terry at the start of the game — supports a limited number of concurrent widgets. Higher-tier phones support more.
+The number of widgets Meghan can run simultaneously in first-person mode is determined by her smartphone tier. Each HUD has a **point budget** rather than a fixed slot count — widgets have individual point costs based on their licence tier, so the budget creates trade-off decisions rather than a simple "pick N widgets" cap.
 
-| Phone tier | Widget slots | Notes |
-|------------|-------------|-------|
+| Phone tier | Widget points | Notes |
+|------------|--------------|-------|
 | Basic (Terry-financed) | 3 | Available from Chapter 1 |
 | *(Higher tiers)* | More | Purchased through the economy; exact tiers TBD |
 
-Purchasing a better phone is an economic decision that directly expands HUD capability.
+Purchasing a better phone is an economic decision that directly expands HUD capability. Full widget point system: [CB-hud-modification](../creative-briefs/CB-hud-modification.md).
 
 ### Widget Configuration
 

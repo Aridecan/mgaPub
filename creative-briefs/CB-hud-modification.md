@@ -71,29 +71,33 @@ This distinction matters for the configuration screen: a widget shown as "eligib
 
 ---
 
-## Slot Counts and Capacity
+## Widget Points and Capacity
+
+Rather than a fixed slot count, each HUD has a **point budget**. Every widget has a point cost determined by how high up the skill tree the licence that unlocked it sits — a basic early-game widget costs 1 point; a high-tier late-game widget may cost 2 or 3. The player allocates their budget across whichever widgets they want active, creating meaningful trade-off decisions: three cheap widgets, one expensive and one cheap, or a single costly widget with points to spare.
+
+The action bar does not consume points — it is fixed infrastructure outside the budget.
 
 ### Eye implant AR — First Person
 
-| Stage | Slots | How to increase |
-|-------|-------|----------------|
-| Game start | 3 custom widgets | — |
-| New phone tier | More slots | Purchasing a higher-tier phone adds capacity |
+| Stage | Points | How to increase |
+|-------|--------|----------------|
+| Game start | 3 | — |
+| New phone tier | More | Purchasing a higher-tier phone adds to the point budget |
 
-Slot count scales with phone hardware. The basic phone (Terry-financed, Chapter 1) supports 3 concurrent custom widgets. Higher-tier phones add more. The action bar does not occupy a custom widget slot — it is fixed infrastructure.
+Point budget scales with phone hardware. The basic phone (Terry-financed, Chapter 1) provides 3 points. Higher-tier phones add more.
 
 ### CAMERA drone — Third Person
 
-| Stage | Slots | How to increase |
-|-------|-------|----------------|
-| Game start | 3 custom widgets | — |
-| Chapter 1–2 | 3 (no change) | Phone upgrades do not affect CAMERA capacity |
-| Chapter 3+ | Expanding | Slot cap increases via Xtalics research at Machina Dynamics |
-| Late game | Full | Capacity grows as Meghan and Imara Kesari develop the CAMERA system |
+| Stage | Points | How to increase |
+|-------|--------|----------------|
+| Game start | 3 | — |
+| Chapter 1–2 | 3 (no change) | Phone upgrades do not affect CAMERA budget |
+| Chapter 3+ | Expanding | Budget increases via Xtalics research at Machina Dynamics |
+| Late game | Full | Budget grows as Meghan and Imara Kesari develop the CAMERA system |
 
-Phone tier does not affect CAMERA capacity. The drone is independent hardware with its own architecture. Expanding beyond 3 slots requires Meghan to understand and extend that architecture — which only becomes possible when she joins MD in Chapter 3 and begins working with Xtalics technology.
+Phone tier does not affect CAMERA budget. The drone is independent hardware with its own architecture. Expanding beyond 3 points requires Meghan to understand and extend that architecture — which only becomes possible when she joins MD in Chapter 3 and begins working with Xtalics technology.
 
-Porting widgets to CAMERA is available from the start of the game. The Chapter 3 gate applies only to expanding slot capacity, not to porting itself.
+Porting widgets to CAMERA is available from the start of the game. The Chapter 3 gate applies only to expanding the point budget, not to porting itself.
 
 ---
 
@@ -105,9 +109,9 @@ The process:
 
 1. **Own the widget for eye AR first** — a widget cannot be ported to CAMERA unless Meghan already holds the licence and has it available for first-person use
 2. **Spend time porting it** — porting takes time proportional to how high up the skill tree the licence that unlocked the widget sits; a basic early-game widget ports quickly; a high-tier late-game widget takes significantly longer. Meghan's **Hacking** skill reduces porting time across the board.
-3. **CAMERA slot must be available** — a ported widget still occupies a CAMERA slot; porting without capacity does nothing until a slot opens
+3. **CAMERA budget must cover the point cost** — a ported widget costs the same number of points on CAMERA as it does on the eye AR system; a widget that costs 2 points requires 2 available points in the CAMERA budget to load
 
-This means the CAMERA widget set is always a subset of or equal to the eye AR set, never larger. A player who wants a widget on the drone must first invest in it for first-person use. If they can afford it, they can port it — but higher-tier widgets demand more of Meghan's time to adapt.
+This means the CAMERA widget set is always a subset of or equal to the eye AR set, never larger. A player who wants a widget on the drone must first invest in it for first-person use. If they can afford it, they can port it — but higher-tier widgets demand more of Meghan's time to adapt and more of the drone's point budget to run.
 
 ---
 
