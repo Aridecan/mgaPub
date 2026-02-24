@@ -143,7 +143,35 @@ The phone interface is navigated in-world — Meghan takes out her phone; time d
 
 If Meghan is separated from her phone — stolen, lost during a mission, or taken during a pipeline capture — the in-world menus become unavailable. She cannot access her skill view, her map, her inventory, or her mission list until she recovers it. The eye implant widgets continue to function (they are loaded into the implants, not streamed from the phone in real time) but cannot be reconfigured and widget profiles cannot be switched.
 
-The same applies during magical girl transformation. When Meghan transforms into Ava, everything she is wearing — including her phone — is stored in a pocket dimension for the duration. She has no phone access in transformed state. The widget profile loaded at the moment of transformation is fixed for the entire fight. This makes profile selection a deliberate pre-combat decision.
+The same applies during magical girl transformation. When Meghan transforms into Ava, everything she is wearing is stored in a pocket dimension for the duration. Her phone, if it is on her person, goes with it. The widget profile loaded at the moment of transformation is fixed for the entire fight. This makes profile selection a deliberate pre-combat decision.
+
+---
+
+## Phone and Transformation
+
+The default behaviour — phone into the pocket dimension, inaccessible during transformation — can be worked around. Players have several options, each with meaningful trade-offs.
+
+### The toss
+
+If Meghan is holding her phone when she transforms, she can toss it into the air just before the transformation completes, catch it on the way down as Ava, and keep it in hand. The phone remains in the physical world; it never enters the pocket dimension.
+
+Trade-off: the toss requires deliberate timing and leaves the phone airborne and uncontrolled for a moment. If she misses the catch — in a chaotic situation, under pressure, or simply mistimed — the phone lands on the ground. It is now somewhere in a combat zone.
+
+### The uniform pocket
+
+The magical girl uniform can be modified through the same clothing customisation system as Meghan's civilian wardrobe. Adding a pocket to the uniform is one option. A phone in the uniform's pocket goes into the pocket dimension with the uniform on transformation and comes back out with it on untransformation — remaining accessible in transformed state throughout.
+
+Trade-off: the uniform is not indestructible. If the magical girl uniform degrades in combat, the phone drops. A player relying on the pocket is betting on the uniform holding.
+
+### Pocket dimension storage as a mechanic
+
+If Meghan stores her phone in the magical girl uniform's pocket and then untransforms, she is back in her civilian clothes — and her phone is in the pocket dimension with the uniform. It stays there until she transforms again. She is effectively without a phone until her mana recovers enough to transform.
+
+This creates an emergent tactic: Meghan can deliberately exploit the pocket dimension as secure storage. She stores her real phone in the magical girl uniform, then allows herself to be captured carrying only a burner phone. Captors search and confiscate the burner. Once she is alone in a cell or left unguarded, she transforms to retrieve her real phone — with all menus, maps, and contacts intact — and proceeds from there.
+
+The burner phone is a purchasable item. It functions as a basic phone with no widgets, no skill profile, and no data — just enough to look like a phone worth taking.
+
+---
 
 ---
 
@@ -168,7 +196,7 @@ These are the only elements that break diegesis. They are intentionally minimal.
 - Phone tier progression — exact number of tiers and slot counts
 - ~~Whether time pauses when the phone is open~~ — resolved: world time continues normally by default; opt-in **Pause in In-Game Menu** toggle in Gameplay Settings covers both phone and out-of-character menus
 - Inventory system design — not yet documented
-- Drone widget adaptation process — is it a crafting step, a skill check, a time cost, or some combination?
+- ~~Drone widget adaptation process~~ — resolved: own eye AR widget first, then time investment to port; time proportional to licence tier, reduced by Hacking skill; see CB-hud-modification
 - Whether lost phone scenarios are scripted (specific mission events) or can occur organically through pipeline capture
 - Environmental laser degradation confirmed — smoke, magical interference, and certain materials can degrade the laser channel; technical implementation TBD
 - Drone damage and destruction: the drone is a stealth unit and does not have a damage model. It exists primarily to provide the third-person camera perspective and will not be targeted or destroyed by enemies. This may be revisited in a later design pass.

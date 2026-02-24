@@ -164,7 +164,9 @@ Profiles are part of gameplay, not just convenience. Two conditions prevent swit
 
 **Lost phone** — if Meghan's phone is taken or lost, widget profiles are inaccessible. The widgets currently loaded into her eye implants continue to function (they run from the implants, not streamed live from the phone), but she cannot reconfigure or switch profiles until she recovers it.
 
-**Magical girl transformation** — when Meghan transforms into Ava, everything she is wearing is stored in a pocket dimension for the duration. Her phone goes with it. She has no access to her phone in transformed state — no menus, no profile switching, no reconfiguration. Whatever profile was loaded before transformation is what she has for the fight. Choosing the right profile before transforming is a deliberate pre-combat decision.
+**Magical girl transformation** — when Meghan transforms into Ava, everything she is wearing is stored in a pocket dimension for the duration. Her phone goes with it by default. She has no access to her phone in transformed state — no menus, no profile switching, no reconfiguration. Whatever profile was loaded before transformation is what she has for the fight. Choosing the right profile before transforming is a deliberate pre-combat decision.
+
+Players who want phone access during transformation have options — the toss, or a uniform pocket modification — each with their own trade-offs. Full detail: [UI/UX — Phone and Transformation](../gdd/ui-ux.md#phone-and-transformation).
 
 ---
 
