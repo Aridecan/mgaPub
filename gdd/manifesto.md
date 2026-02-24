@@ -40,7 +40,7 @@ There is one planned exception: a single scene, approximately 30 to 45 seconds, 
 
 ## 6. Failure Has Consequences, Not Game Over Screens
 
-Failure leads to consequences and failure content. It does not lead to a dead end. Story progression will never be locked behind a successful outcome — there is always a path forward through success. Failure may open additional story paths, or it may not, but success will always be available.
+Failure leads to consequences and failure content. It does not lead to a dead end. Story progression will never be locked behind a failed outcome — there is always a path forward through success. Failure may open additional story paths, or it may not, but success will always be available.
 
 Game over screens may exist in specific circumstances if the design requires them, but they are not the default response to a player losing.
 
