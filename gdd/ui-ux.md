@@ -75,17 +75,14 @@ The arrangement is spatial — the player decides where on their screen each wid
 
 The CAMERA drone has its own widget system, independent of the eye implant set. Widgets must be specifically adapted to run on the drone before they can be loaded into it — a widget that works in Meghan's eye implants does not automatically work on the drone.
 
-### Drone Capacity — Pre and Post Chapter 3
+### Drone Capacity — Dual Cap
 
-The drone's widget capacity is limited in the early game. This is a technology constraint, not a phone constraint: the drone's systems are not yet fully understood or expanded.
+The CAMERA drone has two independent point caps. Both must be satisfied for a widget to run. The phone transmits widget data to the drone — so the phone's budget limits what it can push, and the drone's own hardware limits what it can receive and run. Upgrading one without the other hits the ceiling on the unupgraded side.
 
-| Game stage | Drone widget capacity | Reason |
-|------------|----------------------|--------|
-| Chapters 1–2 | Limited | Drone systems not yet understood; basic functionality only |
-| Chapter 3+ | Expanding | Meghan joins MD and begins working with Xtalics technology; she understands the drone's architecture and can extend it |
-| Late game | Full | Full widget set available as Meghan and Imara Kesari develop the CAMERA system |
+- **Phone cap** — increases with phone tier, same upgrades that expand eye AR budget
+- **CAMERA hardware cap** — starts at 3; expands via Xtalics research at Machina Dynamics from Chapter 3 onward
 
-The Chapter 3 internship at Machina Dynamics is the gate — not just narratively but mechanically. Access to Xtalics and to Imara's expertise is what allows the drone HUD to become the tactical tool it eventually is.
+Both caps start at 3. Full CAMERA capability requires upgrading both. Detail: [CB-hud-modification](../creative-briefs/CB-hud-modification.md).
 
 ### Drone Widget Configuration
 

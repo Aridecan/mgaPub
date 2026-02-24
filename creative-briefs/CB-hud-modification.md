@@ -88,16 +88,24 @@ Point budget scales with phone hardware. The basic phone (Terry-financed, Chapte
 
 ### CAMERA drone — Third Person
 
-| Stage | Points | How to increase |
-|-------|--------|----------------|
-| Game start | 3 | — |
-| Chapter 1–2 | 3 (no change) | Phone upgrades do not affect CAMERA budget |
-| Chapter 3+ | Expanding | Budget increases via Xtalics research at Machina Dynamics |
-| Late game | Full | Budget grows as Meghan and Imara Kesari develop the CAMERA system |
+The CAMERA system has two independent point caps. Both must be satisfied for a widget to run on the drone. The effective budget is whichever cap is lower.
 
-Phone tier does not affect CAMERA budget. The drone is independent hardware with its own architecture. Expanding beyond 3 points requires Meghan to understand and extend that architecture — which only becomes possible when she joins MD in Chapter 3 and begins working with Xtalics technology.
+| Cap | What it represents | How to increase |
+|-----|--------------------|----------------|
+| **Phone cap** | The phone's transmission budget for pushing widgets to the drone | Purchase a higher-tier phone |
+| **CAMERA cap** | The drone's own hardware budget for running widgets | Xtalics research at Machina Dynamics (Chapter 3+) |
 
-Porting widgets to CAMERA is available from the start of the game. The Chapter 3 gate applies only to expanding the point budget, not to porting itself.
+| Stage | Phone cap | CAMERA cap | Effective budget |
+|-------|-----------|------------|-----------------|
+| Game start | 3 | 3 | 3 |
+| New phone only | Higher | 3 | 3 (CAMERA is bottleneck) |
+| Chapter 3+ Xtalics only | 3 | Higher | 3 (phone is bottleneck) |
+| Both upgraded | Higher | Higher | Whichever is lower |
+| Late game | Full | Full | Full |
+
+To get more widgets on CAMERA, the player must upgrade both. Upgrading one without the other hits the ceiling on the unupgraded side. This means phone upgrades remain relevant even for players focused on third-person play, and Xtalics research is necessary but not sufficient on its own.
+
+Porting widgets to CAMERA is available from the start of the game. The Chapter 3 gate applies only to expanding the CAMERA hardware cap, not to porting itself.
 
 ---
 
