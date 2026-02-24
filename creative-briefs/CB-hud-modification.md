@@ -139,15 +139,22 @@ Switching profiles is immediate. Profiles are stored per HUD — an eye AR profi
 
 ## Configuration Interface
 
-The configuration screen shows a canvas representing the full screen area. Screen-anchored widgets appear as draggable blocks on the canvas. World-anchored widgets are listed separately as toggles — they cannot be repositioned, only enabled or disabled.
+The configuration screen displays a live preview of the current HUD — the actual screen as the player would see it during play — as the working canvas.
 
-| Element | Screen-anchored | World-anchored |
-|---------|----------------|----------------|
-| Enable / disable | Yes | Yes |
-| Reposition | Drag freely on canvas | No — follows target in world |
-| Resize | TBD | No |
+### Adding widgets
 
-The canvas shows a live preview of widget placement. Widgets outside the active slot count for the current phone tier are shown greyed out — they are configured but not loaded until slot capacity increases.
+A dropdown at the top of the screen lists all available widgets. The player selects one from the dropdown to add it to the current configuration.
+
+- **Static widgets** (screen-anchored) — appear on the canvas as draggable blocks. The player clicks and drags to position them anywhere on the screen. Position is stored as a percentage of screen dimensions (e.g., 25% from left, 80% from top), not raw pixel coordinates. This ensures placement is consistent across all supported resolutions and aspect ratios.
+- **Dynamic widgets** (world-anchored) — have no screen position to set. When selected from the dropdown they are added to a separate list alongside the canvas. The list shows which dynamic widgets are active; they can be enabled or disabled from there. No dragging, no placement.
+
+### Point budget display
+
+A persistent indicator on the configuration screen shows the current point usage against the available budget (e.g., **2 / 3 pts**). It updates in real time as widgets are added or removed. When a widget would exceed the available budget it cannot be added — the dropdown entry is shown as unavailable with the point cost displayed.
+
+### Widget profiles
+
+Saved profiles are accessible from the configuration screen. The player can save the current layout as a named profile or load a previously saved one. Switching profiles replaces the entire current configuration — static positions and dynamic widget toggles both — with the saved state.
 
 ---
 
