@@ -105,6 +105,36 @@ This gives the player a complete picture of what they have access to and what is
 
 ---
 
+## Viewing Ally Profiles
+
+STALKER will not share anyone's data. But a person can share their own.
+
+If Meghan is physically close to Nisa, Nagi, or Arri, any of them can hand her their phone — or initiate a direct phone-to-phone share. When this happens, Meghan sees their STALKER profile in the same read-only layout as her own skills screen. She is looking at their device; STALKER has shared nothing.
+
+### What she can see
+
+Everything visible on their own skills screen: attributes, skill ranks, progress bars, and licence status. The full picture of how STALKER currently assesses them.
+
+### What she cannot do
+
+The profile is read-only. Meghan cannot:
+
+- Purchase licences on their behalf
+- Trigger any transactions
+- Save a copy of their data
+
+When she closes the view or moves out of range, she sees nothing. There is no persistent record of what she looked at.
+
+### Presentation
+
+The ally profile view uses the same institutional layout as Meghan's own readout, with a clear header identifying whose profile is displayed. A visual indicator distinguishes it from Meghan's own profile — the view is borrowed, not owned.
+
+### The fiction
+
+All four of them have the same problem: STALKER profiles that don't match their civilian cover. A courier with maxed tactical skills. A student with combat certifications that shouldn't exist. Seeing each other's profiles is a moment of recognition — they can see exactly what STALKER sees, and it looks just as strange on Nagi and Nisa as it does on Meghan. Whether that's reassuring or alarming is up to the player to decide.
+
+---
+
 ## Presentation Notes
 
 - The display reads as a **corporate system readout**, not a game UI. Typography, spacing, and colour treatment should feel institutional.
