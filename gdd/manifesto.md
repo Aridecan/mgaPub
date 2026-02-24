@@ -70,6 +70,16 @@ The game has two boot phases. The first brings the player to the main menu; mods
 
 ---
 
+## 13. Realism Over Comfort
+
+This game models physical reality. Men are on average stronger than women. Heavy worlders are stronger than normal humans. Meghan begins the game at a genuine physical disadvantage against male opponents, and against a heavy worlder male in a straight fight she is severely outmatched.
+
+This is not a flaw to be patched. It is not an oversight. It is not something that will be quietly equalised to avoid discomfort. The physical asymmetry is intentional, grounded in real biology, and serves the design: the tension of Meghan overcoming disadvantage through skill, tactics, magic, and player ability is more interesting than a world where everyone is equally capable of everything.
+
+The game offers tools to compensate — skills, magic, environment, intelligence. What it does not offer is the pretence that the disadvantage does not exist.
+
+---
+
 ## 12. No Rails
 
 Features are designed to enable multiple approaches, not to funnel the player down a single path. When a system is built, the question is not "what is the intended use?" but "what are all the ways this could be used?" Players will find interactions and exploits the designer never anticipated — that is not a flaw to be patched, it is a sign that the systems have real depth.
