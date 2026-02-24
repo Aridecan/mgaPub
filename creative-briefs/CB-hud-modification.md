@@ -88,26 +88,26 @@ Slot count scales with phone hardware. The basic phone (Terry-financed, Chapter 
 |-------|-------|----------------|
 | Game start | 3 custom widgets | — |
 | Chapter 1–2 | 3 (no change) | Phone upgrades do not affect CAMERA capacity |
-| Chapter 3+ | Expanding | Meghan begins porting widgets via Xtalics research at Machina Dynamics |
+| Chapter 3+ | Expanding | Slot cap increases via Xtalics research at Machina Dynamics |
 | Late game | Full | Capacity grows as Meghan and Imara Kesari develop the CAMERA system |
 
-Phone tier does not affect CAMERA capacity. The drone is independent hardware with its own architecture. Expanding it requires Meghan to understand and extend that architecture — which only becomes possible when she joins MD in Chapter 3 and begins working with Xtalics technology.
+Phone tier does not affect CAMERA capacity. The drone is independent hardware with its own architecture. Expanding beyond 3 slots requires Meghan to understand and extend that architecture — which only becomes possible when she joins MD in Chapter 3 and begins working with Xtalics technology.
+
+Porting widgets to CAMERA is available from the start of the game. The Chapter 3 gate applies only to expanding slot capacity, not to porting itself.
 
 ---
 
 ## Porting Widgets to CAMERA
 
-A widget does not automatically become available on the CAMERA drone when purchased. The drone runs different systems from the eye implants, and widgets must be adapted to run on it.
+A widget does not automatically become available on the CAMERA drone when purchased. The drone runs different systems from the eye implants, and widgets must be adapted to run on it. Porting is available immediately — no chapter gate, no research prerequisite.
 
 The process:
 
 1. **Own the widget for eye AR first** — a widget cannot be ported to CAMERA unless Meghan already holds the licence and has it available for first-person use
-2. **Spend time porting it** — porting is a time investment; it represents Meghan doing the technical work to make the widget compatible with the drone's architecture
+2. **Spend time porting it** — porting takes time proportional to how high up the skill tree the licence that unlocked the widget sits; a basic early-game widget ports quickly; a high-tier late-game widget takes significantly longer. Meghan's **Hacking** skill reduces porting time across the board.
 3. **CAMERA slot must be available** — a ported widget still occupies a CAMERA slot; porting without capacity does nothing until a slot opens
 
-This means the CAMERA widget set is always a subset of or equal to the eye AR set, never larger. A player who wants a widget on the drone must first invest in it for first-person use.
-
-Porting becomes available in Chapter 3 when Meghan joins MD. Before that, the drone's widget set is fixed at its starting configuration.
+This means the CAMERA widget set is always a subset of or equal to the eye AR set, never larger. A player who wants a widget on the drone must first invest in it for first-person use. If they can afford it, they can port it — but higher-tier widgets demand more of Meghan's time to adapt.
 
 ---
 
@@ -202,7 +202,7 @@ The degraded view is still a third-person perspective on Meghan. The player is n
 - World-anchored widget range — configurable per widget, or a single global setting?
 - Alert monitor design — what triggers it, what information it surfaces
 - Whether the configuration canvas shows a mock game view as background or a neutral layout grid
-- ~~Drone widget adaptation process~~ — confirmed: own the eye AR widget first, then spend time porting it; porting unlocks in Chapter 3 via Xtalics research at MD
-- Porting time cost — how long does porting a widget take? Is it a flat duration, does it vary by widget complexity, or is it a skill-gated process?
+- ~~Drone widget adaptation process~~ — confirmed: own the eye AR widget first, then spend time porting it; porting is available immediately from game start; Chapter 3 Xtalics research only expands slot capacity
+- ~~Porting time cost~~ — confirmed: proportional to the licence tier that unlocked the widget; reduced by Hacking skill
 - Number of profiles the phone can store — unlimited, or a cap?
 - Whether profiles can be shared between playthroughs or are per-save
