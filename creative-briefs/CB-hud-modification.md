@@ -141,6 +141,10 @@ Switching profiles is immediate. Profiles are stored per HUD — an eye AR profi
 
 The configuration screen displays a live preview of the current HUD — the actual screen as the player would see it during play — as the working canvas.
 
+### Live preview
+
+The canvas shows a live view of what Meghan is currently seeing — the actual game world behind the configuration overlay. This gives real context for widget placement: the player can see exactly how a widget sits against the environment rather than positioning against a neutral background.
+
 ### Adding widgets
 
 A dropdown at the top of the screen lists all available widgets. The player selects one from the dropdown to add it to the current configuration.
@@ -154,7 +158,13 @@ A persistent indicator on the configuration screen shows the current point usage
 
 ### Widget profiles
 
-Saved profiles are accessible from the configuration screen. The player can save the current layout as a named profile or load a previously saved one. Switching profiles replaces the entire current configuration — static positions and dynamic widget toggles both — with the saved state.
+The phone stores named widget profiles. Common examples: a combat profile loaded with threat tracking and pool bars, a stealth profile with a mini-map and alert monitor, a social profile stripped down to just a name tag widget. The player can save the current layout as a named profile or switch to an existing one at any time — provided they have their phone.
+
+Profiles are part of gameplay, not just convenience. Two conditions prevent switching:
+
+**Lost phone** — if Meghan's phone is taken or lost, widget profiles are inaccessible. The widgets currently loaded into her eye implants continue to function (they run from the implants, not streamed live from the phone), but she cannot reconfigure or switch profiles until she recovers it.
+
+**Magical girl transformation** — when Meghan transforms into Ava, everything she is wearing is stored in a pocket dimension for the duration. Her phone goes with it. She has no access to her phone in transformed state — no menus, no profile switching, no reconfiguration. Whatever profile was loaded before transformation is what she has for the fight. Choosing the right profile before transforming is a deliberate pre-combat decision.
 
 ---
 

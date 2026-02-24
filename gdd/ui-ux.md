@@ -141,7 +141,9 @@ The phone interface is navigated in-world — Meghan takes out her phone; time d
 
 ### Losing the Phone
 
-If Meghan is separated from her phone — stolen, lost during a mission, or taken during a pipeline capture — the in-world menus become unavailable. She cannot access her skill view, her map, her inventory, or her mission list until she recovers it. The eye implant widgets continue to function (they are loaded into the implants, not streamed from the phone in real time) but cannot be reconfigured.
+If Meghan is separated from her phone — stolen, lost during a mission, or taken during a pipeline capture — the in-world menus become unavailable. She cannot access her skill view, her map, her inventory, or her mission list until she recovers it. The eye implant widgets continue to function (they are loaded into the implants, not streamed from the phone in real time) but cannot be reconfigured and widget profiles cannot be switched.
+
+The same applies during magical girl transformation. When Meghan transforms into Ava, everything she is wearing — including her phone — is stored in a pocket dimension for the duration. She has no phone access in transformed state. The widget profile loaded at the moment of transformation is fixed for the entire fight. This makes profile selection a deliberate pre-combat decision.
 
 ---
 
