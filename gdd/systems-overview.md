@@ -28,6 +28,19 @@ The other function levels commonly serve — increasing resource pool sizes (HP,
 
 The closest equivalent to a character level in the fiction is the **Overall Classification** field in the STALKER profile header — a derived label reflecting Meghan's current skill bracket. It is a label, not a tracked number, and it carries no mechanical weight beyond describing where she sits in STALKER's assessment.
 
+### No-Death Design Rule
+
+**Nobody dies on Terridyn.** This is a foundational design constraint, not a suggestion:
+
+1. **Content creation friendly:** No blood, no death animations. YouTube and Twitch influencers can cover MGA without colour filters or censorship workarounds
+2. **NPC progression tracking:** STALKER tracks skills and growth on enemy NPCs. If enemies die, that progression data is lost — the world loses texture every time a fight ends. Keeping everyone alive means the city's population is a persistent, evolving system
+3. **Defeat is content, not failure:** The game continues even when Meghan loses. Defeat routes into the failure pipeline, not a game-over screen. This keeps the player engaged and creates opportunities for recovery gameplay
+4. **Demographic protection:** Players cannot go on killing sprees and wreck the city's population balance, economy, or gender ratio — all of which are load-bearing narrative elements
+
+**In-fiction justification:** Personal shield nanites powered by Terridyn's energy crystals absorb damage as feedback that causes loss of consciousness rather than lethal injury. The Consciousness Pool (CP) replaces a traditional health bar for organic characters. At zero CP, the target is unconscious — not dead.
+
+**Planet-centric limitation:** The nanites only function on Terridyn because they are powered by the planet's energy crystals. Off-world, death is common — corporate wars, inter-state conflicts, and pirate actions all produce real casualties. This is one of the reasons the gender ratio is so heavily skewed female: males are disproportionately drafted and killed in off-world conflicts. The no-death rule is Terridyn-specific.
+
 ### Resource Pools
 
 Four active resource pools govern Meghan's capability moment to moment:
