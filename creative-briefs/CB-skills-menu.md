@@ -67,7 +67,9 @@ Skills are grouped into logical categories in the display (combat, technical, so
 
 All skills appear in the STALKER readout — civilian and magical girl alike. Every skill has a progress bar showing how close it is to the next rank. There is no separate magical girl section; the single view covers everything.
 
-The implication for the fiction: Meghan's STALKER profile carries a skill set that does not match her civilian employment history. A university student with maxed combat, magical, and tactical skills is an anomaly in the system. STALKER records this dispassionately. Whether anyone notices is a separate question.
+The implication for the fiction: Meghan's STALKER profile carries a skill set that does not match her civilian employment history. A university student with maxed combat, magical, and tactical skills is an anomaly in the system. STALKER records this dispassionately.
+
+Nobody can pull her profile directly — the corporate pact means STALKER shares no personal data. But eligibility queries are a different matter. If someone queries whether she qualifies for a security contractor licence, or a combat specialist contract, STALKER will answer yes — and that answer is visible. The anomaly is not readable as a file, but it can be inferred from what she is eligible for. Whether anyone is running those queries is a separate question.
 
 ---
 
