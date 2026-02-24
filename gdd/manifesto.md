@@ -70,6 +70,14 @@ The game has two boot phases. The first brings the player to the main menu; mods
 
 ---
 
+## 12. No Rails
+
+Features are designed to enable multiple approaches, not to funnel the player down a single path. When a system is built, the question is not "what is the intended use?" but "what are all the ways this could be used?" Players will find interactions and exploits the designer never anticipated — that is not a flaw to be patched, it is a sign that the systems have real depth.
+
+A game with genuine systemic freedom will always be played in ways its creator did not foresee. That is the goal.
+
+---
+
 ## 11. No In-Game Purchases
 
 This game is sold once. There are no in-game purchases, no battle passes, no loot boxes, no premium currencies, no temporary digital assets sold for real money. Ongoing support for development is available through SubscribeStar for those who choose it. That is the full extent of monetization.
