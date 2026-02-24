@@ -65,7 +65,9 @@ The Notes section is organised into the three categories above, searchable by ke
 
 The phone is accessed in-world — Meghan takes it out, and the world continues around her. Accessing the phone in an unsafe environment is a player choice with real consequences.
 
-**Open item:** whether world time continues at full speed, slows, or pauses when the phone is open — not yet decided. See [UI/UX open items](../gdd/ui-ux.md).
+By default, world time continues at full speed while the phone is open. The game's pacing is designed around this — players should not miss critical events while managing their menus under normal play conditions.
+
+Players who prefer a safety net can enable **Pause Time While Using Phone** in Gameplay Settings (see [CB-settings-menu](CB-settings-menu.md)). This is opt-in and off by default.
 
 ---
 

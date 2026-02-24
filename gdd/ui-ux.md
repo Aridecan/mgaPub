@@ -167,7 +167,7 @@ These are the only elements that break diegesis. They are intentionally minimal.
 
 - Full widget list and skill/license gate table — feature brief TBD
 - Phone tier progression — exact number of tiers and slot counts
-- Whether time pauses when the phone is open, or only slows, or continues normally
+- ~~Whether time pauses when the phone is open~~ — resolved: world time continues normally by default; opt-in **Pause Time While Using Phone** toggle available in Gameplay Settings
 - Inventory system design — not yet documented
 - Drone widget adaptation process — is it a crafting step, a skill check, a time cost, or some combination?
 - Whether lost phone scenarios are scripted (specific mission events) or can occur organically through pipeline capture
