@@ -55,6 +55,8 @@ Meghan has two hand slots — left and right. These are not storage; they are ac
 
 When Meghan picks up an item from the ground, it goes to a hand slot. From there the player moves it to a storage container as a separate action. This is intentional: picking something up and stowing it are two distinct physical acts.
 
+Items held in hand slots are visible on Meghan's model in third-person view wherever technically feasible. A phone in her right hand appears in her right hand. This is a best-effort commitment — highly irregular items may not have a modelled hold position, but standard items (phone, weapon, tool, consumable) should reflect their hand slot state visually.
+
 ---
 
 ## Quick Actions and Reservations
@@ -89,6 +91,8 @@ Reservations are advisory, not enforced. The system uses them as a first prefere
 
 Total carried weight is the sum of all items in all active storage containers. This is checked against a weight limit derived from Meghan's **Strength (STR)** attribute — higher STR allows a higher weight limit before penalty applies.
 
+**Baseline:** STR 4 represents the strength of a physically fit adult woman (not a powerlifter) and maps to a comfortable carry weight of **10 kg** — the amount she can carry while going about her day without meaningful fatigue. The weight limit scales linearly from this anchor point; exact scaling formula is TBD during calibration.
+
 Carrying weight above the limit does not hard-cap movement or action. Instead it causes **Stamina Pool (SP) drain** at a rate proportional to how far over the limit Meghan is. The further over, the faster SP depletes.
 
 | Weight state | Effect |
@@ -120,7 +124,7 @@ Auto-storage is only active in the combined inventory view. The algorithm is:
 3. Place the item in the first container that passes all three checks
 4. If no container can accept the item, the item remains in hand or on the ground
 
-The order is "first that fits" — not optimal packing, but fast and predictable. Players who want precise control use the per-storage view.
+**Iteration order — first worn, first checked.** Containers are iterated in the order the clothing piece was equipped. If Meghan put her pants on before her jacket, the pants pockets are checked before the jacket pockets. This is predictable and player-legible: the player controls the order by controlling how they dress. The order is "first that fits within the first-worn priority" — not optimal packing, but fast and consistent. Players who want precise control use the per-storage view.
 
 ---
 
@@ -163,14 +167,41 @@ This is relevant during pipeline capture sequences and other scenarios where the
 
 ---
 
+## Magical Girl Uniform and the Pocket Dimension
+
+The magical girl uniform participates in the inventory system as a wearable clothing item with its own containers, but its relationship to the pocket dimension creates interactions unique to it.
+
+### Uniform pieces
+
+The magical girl uniform is modular — assembled from individual pieces found around Terridyn rather than granted as a single complete outfit. Each piece has its own stats (protection, transformation MP cost, MP-per-second maintenance cost) documented in the magical girl systems. Pieces with pockets have higher MP costs than equivalent pieces without. The clothing customisation system applies to the uniform; modifications including adding pockets are possible.
+
+### Pocket dimension behaviour
+
+When Meghan transforms into Ava, the uniform and everything stored in its containers enter a pocket dimension for the duration. When she untransforms, the uniform and its contents return with her civilian clothes.
+
+**Items stored in the uniform's pockets follow the uniform.** If Meghan places her phone in a uniform pocket and then untransforms, the phone remains in the pocket dimension with the uniform — inaccessible until she transforms again. This is not a bug or an edge case; it is a deliberate consequence of the pocket dimension's scope. Players who store items in the uniform's pockets are accepting that those items are only accessible in transformed state.
+
+### Uniform damage and mana
+
+Uniform health reaching zero does not force untransformation. Only mana reaching zero causes untransformation. However, Meghan can deliberately sacrifice uniform health to recharge mana — trading structural integrity for continued transformation. This creates a last-resort option when mana is critically low: burn the uniform's remaining health to stay transformed long enough to complete the objective or reach a recovery point.
+
+Items in the uniform's pockets are not at risk from uniform damage short of the player deliberately reducing the uniform to zero health and choosing to untransform.
+
+### Notable items
+
+The **burner phone** is a purchasable item — a basic handset with no widget capability, no skill profile, and no data. It is intended as expendable: carried as a decoy during infiltration, confiscated by captors while the real phone remains secure elsewhere. Exact item properties (dimensions, volume, weight) TBD in the item database pass.
+
+---
+
 ## Open Items
 
 - Container list for all clothing items — dimensions, volume, and weight capacity per storage slot
-- Item database — dimensions, volume, and weight for all carriable items
-- STR-to-weight-limit formula — exact scaling
+- Item database — dimensions, volume, and weight for all carriable items; includes burner phone
+- ~~STR-to-weight-limit formula~~ — baseline confirmed: STR 4 = 10 kg; exact linear scaling formula TBD during calibration
 - SP drain rate per unit of overweight — exact values for calibration
-- Auto-storage iteration order — priority of containers when multiple could accept the same item
-- Whether the combined view shows which container an item is in (tooltip or label) or hides it entirely
+- ~~Auto-storage iteration order~~ — confirmed: first clothing worn = first checked
+- ~~Whether the combined view shows which container an item is in~~ — confirmed: tooltip on hover shows current container
 - Quick-store action bar binding UI — how the player defines and edits these mappings
-- Whether items in hand slots are visible on Meghan's model in third-person view
+- ~~Whether items in hand slots are visible on Meghan's model in third-person view~~ — confirmed: yes, best-effort for all standard items
 - Item damage from clothing damage — left open; revisit in a future design pass
+- Magical girl uniform piece locations around Terridyn — design and placement pass; narrative detail (Tierney/twins stashing them) is private repo
