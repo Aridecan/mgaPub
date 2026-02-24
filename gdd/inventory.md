@@ -91,7 +91,7 @@ Reservations are advisory, not enforced. The system uses them as a first prefere
 
 Total carried weight is the sum of all items in all active storage containers. This is checked against a weight limit derived from Meghan's **Strength (STR)** attribute — higher STR allows a higher weight limit before penalty applies.
 
-**Baseline:** STR 4 represents the strength of a physically fit adult woman (not a powerlifter) and maps to a comfortable carry weight of **10 kg** — the amount she can carry while going about her day without meaningful fatigue. The weight limit scales linearly from this anchor point; exact scaling formula is TBD during calibration.
+**Formula:** STR × 2.5 kg = comfortable carry weight threshold. STR 4 (fit woman) = 10 kg; STR 6 (fit man) = 15 kg; STR 10 (fit heavy worlder man) = 25 kg. The formula scales linearly with no further calibration needed.
 
 Carrying weight above the limit does not hard-cap movement or action. Instead it causes **Stamina Pool (SP) drain** at a rate proportional to how far over the limit Meghan is. The further over, the faster SP depletes.
 
@@ -197,7 +197,7 @@ The **burner phone** is a purchasable item — a basic handset with no widget ca
 
 - Container list for all clothing items — dimensions, volume, and weight capacity per storage slot
 - Item database — dimensions, volume, and weight for all carriable items; includes burner phone
-- ~~STR-to-weight-limit formula~~ — baseline confirmed: STR 4 = 10 kg; exact linear scaling formula TBD during calibration
+- ~~STR-to-weight-limit formula~~ — confirmed: STR × 2.5 kg; STR 4 (fit woman) = 10 kg, STR 6 (fit man) = 15 kg, STR 10 (fit HW man) = 25 kg
 - SP drain rate per unit of overweight — exact values for calibration
 - ~~Auto-storage iteration order~~ — confirmed: first clothing worn = first checked
 - ~~Whether the combined view shows which container an item is in~~ — confirmed: tooltip on hover shows current container
