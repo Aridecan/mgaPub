@@ -70,13 +70,11 @@ The game has two boot phases. The first brings the player to the main menu; mods
 
 ---
 
-## 13. Realism Over Comfort
+## 11. No In-Game Purchases
 
-This game models physical reality. Men are on average stronger than women. Heavy worlders are stronger than normal humans. Meghan begins the game at a genuine physical disadvantage against male opponents, and against a heavy worlder male in a straight fight she is severely outmatched.
+This game is sold once. There are no in-game purchases, no battle passes, no loot boxes, no premium currencies, no temporary digital assets sold for real money. Ongoing support for development is available through SubscribeStar for those who choose it. That is the full extent of monetization.
 
-This is not a flaw to be patched. It is not an oversight. It is not something that will be quietly equalised to avoid discomfort. The physical asymmetry is intentional, grounded in real biology, and serves the design: the tension of Meghan overcoming disadvantage through skill, tactics, magic, and player ability is more interesting than a world where everyone is equally capable of everything.
-
-The game offers tools to compensate — skills, magic, environment, intelligence. What it does not offer is the pretence that the disadvantage does not exist.
+I helped build some of the earliest implementations of in-game purchase systems on console. I watched what that became. It is not in this game.
 
 ---
 
@@ -88,8 +86,10 @@ A game with genuine systemic freedom will always be played in ways its creator d
 
 ---
 
-## 11. No In-Game Purchases
+## 13. Realism Over Comfort
 
-This game is sold once. There are no in-game purchases, no battle passes, no loot boxes, no premium currencies, no temporary digital assets sold for real money. Ongoing support for development is available through SubscribeStar for those who choose it. That is the full extent of monetization.
+This game models physical reality. Men are on average stronger than women. Heavy worlders are stronger than normal humans. Meghan begins the game at a genuine physical disadvantage against male opponents, and against a heavy worlder male in a straight fight she is severely outmatched.
 
-I helped build some of the earliest implementations of in-game purchase systems on console. I watched what that became. It is not in this game.
+This is not a flaw to be patched. It is not an oversight. It is not something that will be quietly equalised to avoid discomfort. The physical asymmetry is intentional, grounded in real biology, and serves the design: the tension of Meghan overcoming disadvantage through skill, tactics, magic, and player ability is more interesting than a world where everyone is equally capable of everything.
+
+The game offers tools to compensate — skills, magic, environment, intelligence. What it does not offer is the pretence that the disadvantage does not exist.
