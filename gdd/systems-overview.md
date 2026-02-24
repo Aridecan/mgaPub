@@ -18,6 +18,16 @@ Skills are learned capabilities that build on base attributes. Each skill has a 
 
 *Detail: forthcoming.*
 
+### Progression Philosophy — No Levels, No Feats
+
+MGA does not use a character level or a feat system. This is a design assumption, not a technical constraint — nothing prevents levels or feats from being added later, but the current design proceeds on the basis that they are not needed.
+
+The reasoning: skill rank progression, action unlocks at rank thresholds, and licence gates together provide all the mechanical function that a separate level/feat system would provide. Skill ranks give granular progression. New actions unlocking at rank thresholds give the milestone satisfaction that levelling up is supposed to deliver. Licence caps create deliberate ceilings that must be purchased through, functioning the same way feat gates do in other systems. The breadth of 50+ skills means build identity emerges from investment choices rather than from a separate layer of character options.
+
+Adding levels would introduce a redundant abstraction — a single derived number that summarises what skill ranks and attribute values already communicate, and one that would sit awkwardly on top of a STALKER profile designed around certified capabilities rather than character tiers.
+
+The closest equivalent to a character level in the fiction is the **Overall Classification** field in the STALKER profile header — a derived label reflecting Meghan's current skill bracket. It is a label, not a tracked number, and it carries no mechanical weight beyond describing where she sits in STALKER's assessment.
+
 ### Resource Pools
 
 Four active resource pools govern Meghan's capability moment to moment:
