@@ -63,11 +63,11 @@ Fifty-plus skills grouped by category. Each skill entry shows:
 
 Skills are grouped into logical categories in the display (combat, technical, social, physical, magical, etc.). Categories are collapsible. A filter or search field allows finding a specific skill without scrolling the full list.
 
-### STALKER's Incomplete View
+### All Skills — Including Magical Girl Skills
 
-STALKER infers capability from observable behaviour. It tracks what it can see. Skills Meghan exercises in visible, civilian contexts register and progress normally. Capabilities tied to her magical girl identity — transformation, mana use, magical combat — are either invisible to STALKER or surface as anomalous readings in adjacent skill categories.
+All skills appear in the STALKER readout — civilian and magical girl alike. Every skill has a progress bar showing how close it is to the next rank. There is no separate magical girl section; the single view covers everything.
 
-**This is an open design question:** whether magical girl skills appear in the STALKER view at all, or whether a separate non-STALKER section tracks Ava's magical capabilities. If separate, the skills menu has a second tab or section clearly distinguished from the STALKER readout. If integrated, STALKER attributes Meghan's magical abilities to exceptional human performance and tracks them under existing categories — which has interesting implications for her public profile. Decision deferred; the brief supports either approach.
+The implication for the fiction: Meghan's STALKER profile carries a skill set that does not match her civilian employment history. A university student with maxed combat, magical, and tactical skills is an anomaly in the system. STALKER records this dispassionately. Whether anyone notices is a separate question.
 
 ---
 
@@ -114,7 +114,7 @@ This gives the player a complete picture of what they have access to and what is
 
 ## Open Items
 
-- Whether magical girl / Ava skills appear in the STALKER view or in a separate non-STALKER section
+- ~~Whether magical girl skills appear in STALKER~~ — confirmed: all skills including magical girl appear in one unified view with progress bars
 - Full attribute list and groupings — in mechanics documentation
 - Skill category groupings for display purposes
 - Licence pricing — what currency, what scale
