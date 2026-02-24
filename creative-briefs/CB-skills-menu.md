@@ -109,7 +109,11 @@ This gives the player a complete picture of what they have access to and what is
 
 STALKER will not share anyone's data. But a person can share their own.
 
-If Meghan is physically close to Nisa, Nagi, or Arri, any of them can hand her their phone — or initiate a direct phone-to-phone share. When this happens, Meghan sees their STALKER profile in the same read-only layout as her own skills screen. She is looking at their device; STALKER has shared nothing.
+If Meghan is physically close to Nisa, Nagi, or Arri, she can view their STALKER profile via a phone-to-phone share. She is looking at their device; STALKER has shared nothing.
+
+**First use:** Meghan sends a share request from her phone. The ally accepts. This is the moment of established trust — a brief interaction that plays out once per ally.
+
+**Subsequent uses:** No prompt. The earlier acceptance implies standing permission. Meghan opens the ally's profile tab directly; the game treats it as understood that she asks and they hand it over. This avoids the request flow becoming a repetitive interruption during party management.
 
 ### What she can see
 
