@@ -34,6 +34,7 @@ Ordinary Girl Meghan / Magical Girl Ava is an adult action RPG set on a colony w
 | **[Scope](scope.md)** | What is in Game 1 and what is not |
 | **[Save System](save-system.md)** | Autosave, playthrough folders, per-save content tier, streamer mode |
 | **[UI/UX](ui-ux.md)** | HUD widgets, camera modes, smartphone menu hub, out-of-character menu |
+| **[Test Modes](test-modes.md)** | Standalone job test modes and quest-loop adventure sandbox |
 | **Accessibility** *(note)* | Art guideline: avoid red adjacent to green; full accessibility design is out of scope for the initial release |
 
 ---

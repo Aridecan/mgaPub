@@ -118,6 +118,12 @@ Steam achievements are not disabled when mods are active. Steam does not require
 
 ---
 
+## Test Game Modes
+
+Standalone test modes ship with the game as both development sandboxes and playable content. Four job-specific modes test the non-combat side jobs in isolation; a standalone adventure mode (gameplay in the style of *Naked Order* / *Naked Adventure*) tests clothing destruction, quest systems, enemy logic, and DLC content tier gating. Full design: [Test Modes](test-modes.md).
+
+---
+
 ## Tentative
 
 Items that are planned and may ship with Game 1, but are subject to cut if scope pressure requires it.
