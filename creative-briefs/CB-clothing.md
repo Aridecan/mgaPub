@@ -369,7 +369,7 @@ The uniform's 75% threshold means it must take 250% of its full durability in da
 **Actor:** The combat system
 **Goal:** Resolve damage from area attacks (explosions, gas fields, shockwaves) that strike multiple body zones simultaneously
 
-UC5 handles a targeted hit to a single zone. Area-of-effect (AoE) damage strikes the entire body — or a large portion of it — and must be distributed across all affected zones before entering each zone's cascade independently.
+UC5 handles a targeted hit to a single zone. Area-of-effect (AoE) damage strikes the entire body — or a large portion of it — and must be distributed, then resolved **per garment** from outermost layer down.
 
 **Zone surface area percentages:**
 
@@ -396,64 +396,94 @@ Every body zone has a declared **percentage of total body surface area**. These 
 
 *(Values are illustrative — exact calibration is a balance pass. The relative proportions should roughly reflect real human body surface area distribution.)*
 
-**AoE damage resolution — step by step:**
+**AoE damage resolution — per-garment model:**
+
+AoE damage does NOT resolve per-zone independently. Instead it resolves **per garment**, top layer down. Each garment collects all zone damage hitting its covered area, resolves once as a single combined hit, then redistributes its passthrough back out to its zones for the next layer to collect.
 
 ```
-Step 1 — Distribute damage by zone surface area
+Step 1 — Distribute to zones
   For each zone: zone_damage = total_aoe_damage × zone_surface%
 
-Step 2 — Enter each zone's cascade independently
-  Each zone_damage enters UC5 at the outermost layer for that zone
-  Every zone resolves its own cascade in parallel
+Step 2 — Collect into outermost garment
+  Sum the zone_damage for all zones this garment covers
+  Resolve the garment ONCE (absorption, clothing modifier, hardness, durability)
+  The garment's total passthrough is redistributed evenly across its covered zones
 
-Step 3 — Collect passthrough
-  Each zone produces its own passthrough value after all layers resolve
-  Total passthrough to shield/CP = sum of all zone passthroughs
+Step 3 — Collect into next garment down
+  Each garment at the next layer collects the redistributed zone damage
+  for the zones IT covers (which may be a subset of the previous garment's zones)
+  Resolve that garment ONCE, redistribute again
+
+Step 4 — Repeat until no more layers
+  Bare zones (no clothing at any layer) pass their original zone_damage
+  straight through
+
+Step 5 — Sum all zone passthroughs → total damage to shield/CP
 ```
 
-**Worked example — 200 blunt AoE damage (explosion):**
+**Why per-garment, not per-zone:** If each zone ran its own cascade independently, hardness would be applied once per zone — a coat covering 5 zones would get 5 hardness subtractions from a single explosion. That over-rewards coverage breadth. Resolving per garment means the coat gets one hardness subtraction against the combined damage, which is correct — it's one garment taking one hit.
+
+**Worked example — 1000 AoE damage, 20 zones at 5% each:**
 
 ```
-Clothing worn:
-  Coat (outer):     covers spine_01–05, clavicle L/R, upper_arm L/R
-  T-shirt (base):   covers spine_01–05, upper_arm L/R
-  Jeans (mid):      covers pelvis, spine_01, upper_leg L/R, lower_leg L/R
-  Panties (under):  covers pelvis
-  Nothing on:       head, neck, hands, lower_arms, feet
+Clothing:
+  Coat (outer):    covers zones 1–5 (5 zones)
+  T-shirt (base):  covers zones 2–4 (3 zones)
 
-Zone distribution (selected zones):
+Coat: absorption 15%, hardness 10 (blunt, 0% bypass)
+T-shirt: absorption 10%, hardness 5 (blunt, 0% bypass)
 
-spine_04 (chest, 6%): 200 × 0.06 = 12 damage
-  → Enters cascade: coat (outer) → T-shirt (base)
-  → After both layers: heavily mitigated, small passthrough
+Step 1 — Distribute to zones
+  Each zone: 1000 × 0.05 = 50 damage
+  All 20 zones start at 50
 
-upper_leg_L (8%): 200 × 0.08 = 16 damage
-  → Enters cascade: jeans (mid) only
-  → After one layer: partially mitigated
+Step 2 — Coat (outermost, zones 1–5)
+  Coat collects: 50 × 5 = 250 total
+  Absorption: 250 × 0.15 = 37.5 intercepted
+  Passthrough: 250 - 37.5 = 212.5
+  (Coat durability: 37.5 × clothing_mod - hardness applied to coat HP)
+  Redistribute passthrough: 212.5 ÷ 5 = 42.5 per zone
 
-hand_L (2%): 200 × 0.02 = 4 damage
-  → No clothing on hands
-  → 4 damage passes straight through to shield/CP, completely unmitigated
+  Zone 1: 42.5   Zone 2: 42.5   Zone 3: 42.5
+  Zone 4: 42.5   Zone 5: 42.5
 
-head (4%): 200 × 0.04 = 8 damage
-  → No clothing on head (unless wearing a hat)
-  → 8 damage passes straight through, completely unmitigated
+Step 3 — T-shirt (next layer, zones 2–4)
+  T-shirt collects: 42.5 × 3 = 127.5 total
+  Absorption: 127.5 × 0.10 = 12.75 intercepted
+  Passthrough: 127.5 - 12.75 = 114.75
+  (T-shirt durability: 12.75 × clothing_mod - hardness applied to shirt HP)
+  Redistribute passthrough: 114.75 ÷ 3 = 38.25 per zone
 
-Total passthrough = sum of all 21 zone passthroughs
+  Zone 2: 38.25   Zone 3: 38.25   Zone 4: 38.25
+
+Step 4 — Final per-zone damage to shield/CP
+  Zone 1:    42.5    (coat only)
+  Zone 2:    38.25   (coat + shirt)
+  Zone 3:    38.25   (coat + shirt)
+  Zone 4:    38.25   (coat + shirt)
+  Zone 5:    42.5    (coat only)
+  Zones 6–20: 50 each (bare — 15 zones)
+
+  Total to shield/CP: 42.5 + 38.25 + 38.25 + 38.25 + 42.5 + (15 × 50)
+                     = 199.75 + 750
+                     = 949.75
 ```
 
-The result: an explosion hits everywhere, but zones with layered clothing take far less damage than exposed zones. The same 200-damage blast might deliver 3 points through the coat+shirt stack on the chest, 10 points through the jeans on the legs, and the full 8 points on the bare head. Clothing coverage matters — a character in a full coat and jeans fares much better against explosions than one in a halter top and shorts.
+The coat and shirt together absorbed about 50 points from a 1000-damage explosion — modest, but meaningful. The real takeaway: 75% of the body was bare, and those zones passed 750 damage straight through. Full-body coverage matters enormously against AoE.
 
 **Key design properties:**
 
-- **Exposed zones are punished.** Any zone with no clothing passes its full share straight to shield/CP. This makes coverage a genuine defensive consideration for AoE-heavy encounters
-- **Each garment takes damage independently per zone.** The coat takes durability damage from the spine_04 portion AND the upper_arm portion AND the spine_01 portion — all in the same tick. A single explosion can push a garment closer to destruction across multiple zones simultaneously
-- **Layer stacking is most valuable against AoE.** A targeted hit only enters one zone's cascade. An AoE enters all of them. Having more zones covered by more layers reduces total passthrough significantly
-- **Chemical AoE fields** follow the same distribution. Each tick of a gas field splits damage by zone surface area, then each zone cascades through its layers. Exposed skin zones take full chemical damage; clothed zones benefit from their cloth type's resistance
+- **Each garment resolves once per AoE event.** The coat does one absorption/hardness calculation against its combined collected damage, not one per zone. This is simpler and makes hardness scale correctly — one big hit minus one hardness value, not many small hits each minus hardness
+- **Redistribution is even.** After a garment resolves, its passthrough splits evenly across its covered zones. The coat does not know or care which zones underneath have another layer — it just passes damage back out and the next garment collects what it covers
+- **Exposed zones are punished.** Any zone with no clothing passes its full share straight to shield/CP. Full-body coverage is a genuine defensive investment for AoE encounters
+- **Layer stacking is most valuable against AoE.** A targeted hit enters one zone and one cascade. An AoE hits everything. Zones where two garments overlap get two rounds of mitigation; zones with one get one; bare zones get none
+- **Chemical AoE fields** follow the same per-garment model. Each tick of a gas field distributes by zone surface area, collects into garments, and resolves per garment. Cloth type resistance applies at the garment level
 
 **Partial AoE — directional blasts:**
 
-Not all AoE strikes the whole body equally. A directional explosion (blast from the front) may only affect front-facing zones. The front/back dot product (see Body Region Segmentation) determines which zones are struck. A front blast might apply full damage to front zones and zero to back zones, meaning the coat's back coverage provides no benefit — only front-zone layers matter. An open coat (front zones removed) provides no protection against a frontal blast.
+Not all AoE strikes the whole body equally. A directional explosion (blast from the front) only affects front-facing zones. The front/back dot product (see Body Region Segmentation) determines which zones are struck. A front blast applies damage to front zones only — the coat's back coverage provides no benefit. An open coat (front zones removed, see UC3) provides no protection against a frontal blast.
+
+For directional AoE, zone surface percentages are recalculated across only the affected zones to maintain correct proportional distribution. The affected zones' percentages are normalised to sum to 100% of the total AoE damage.
 
 ---
 
