@@ -68,6 +68,8 @@ Official builds are built by Jenkins, not by my local machine. Every part of the
 
 The game has two boot phases. The first brings the player to the main menu; mods are not loaded or active at this stage. The second begins when a new game is started or a save is loaded; mods are loaded at this point. The game must always be able to reach the main menu from a cold boot. The main menu is the guaranteed safe state.
 
+Both phases use the same phased lifecycle (Load → Init → Config → Ready). See [Boot Manager](boot-manager.md) for the full technical design.
+
 ---
 
 ## 11. No In-Game Purchases

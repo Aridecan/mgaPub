@@ -175,6 +175,21 @@ The burner phone is a purchasable item. It functions as a basic phone with no wi
 
 ---
 
+## Localization Settings
+
+The settings menu provides two independent dropdowns for language selection:
+
+| Setting | Controls | Populated from |
+|---------|----------|----------------|
+| **Text Language** | Subtitles, UI strings, in-game text | Installed `LocText-*` packages |
+| **Voice Language** | Spoken dialogue, voice-over | Installed `LocVoc-*` packages |
+
+The two selections are fully independent. A player can choose any combination of installed text and voice languages — for example, English text with Japanese vocals. The boot manager loads both selected packages without requiring them to match. See [Boot Manager — Localization Independence](boot-manager.md#localization-independence).
+
+Each dropdown only lists languages for which the corresponding package is installed. If no voice package is installed for a language, it does not appear in the voice dropdown even if the text package is present, and vice versa.
+
+---
+
 ## Out-of-Character Menu
 
 Four options are always available regardless of phone status, accessed via a hardware input that does not require the phone:

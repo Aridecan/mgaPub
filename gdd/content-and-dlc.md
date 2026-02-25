@@ -29,6 +29,8 @@ Localization is delivered as DLC in two separate packages per language:
 
 Separating text and audio allows fan translators to contribute at whatever level they are able — text only, audio only, or both. Official localizations will use the same structure.
 
+Text and voice packages are **fully independent** — they do not depend on each other and can be mixed across languages. A player can select English text with Japanese vocals, or any other installed combination. The two are selected via separate dropdowns in the settings menu. See [UI/UX — Localization Settings](ui-ux.md#localization-settings).
+
 **Planned launch languages:** English (primary), Japanese (secondary, machine-translated initially).
 
 ---
@@ -67,5 +69,6 @@ Official content packages (Base, Spicy, Super Spicy, localization, region overri
 ## Related
 
 - [Manifesto — Boot Lifecycle](manifesto.md#10-the-boot-lifecycle-is-supported)
+- [Boot Manager](boot-manager.md) — ABM/MBM phased lifecycle, pak registration names, dependency resolution, search order
 - Feature Brief: Clothing Destruction System *(forthcoming)*
 - Feature Brief: Localization Pipeline *(forthcoming)*
