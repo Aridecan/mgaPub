@@ -49,42 +49,66 @@ Damage is localised — a hit to the torso only cascades through layers covering
 - **Multi-region garments:** Coveralls cover torso + arms + legs. A short-sleeve shirt covers torso + upper arms. A coat covers torso + hips
 - **Front/back distinction:** An open coat removes itself from front hit zones while remaining in back hit zones (see UC3)
 
-**Proposed region model:**
+**Planned approach — skeleton-based regions:**
 
-| Region | Covers | Left/Right split |
-|--------|--------|------------------|
-| **Head** | Skull, face, ears | No |
-| **Neck** | Neck, collar area | No |
-| **Upper torso front** | Chest, upper abdomen (front) | No |
-| **Upper torso back** | Upper back, shoulder blades | No |
-| **Lower torso front** | Belly, lower abdomen (front) | No |
-| **Lower torso back** | Lower back | No |
-| **Upper arm** | Shoulder to elbow | Yes (L/R) |
-| **Lower arm** | Elbow to wrist | Yes (L/R) |
-| **Hand** | Hand, fingers | Yes (L/R) |
-| **Hips** | Waist, pelvis, buttocks | No |
-| **Upper leg** | Thigh to knee | Yes (L/R) |
-| **Lower leg** | Knee to ankle | Yes (L/R) |
-| **Foot** | Foot, ankle | Yes (L/R) |
+Regions are derived from the UE5 Manny/Quinn skeleton (89 bones). When a collision occurs on a skeletal mesh, the engine reports the hit bone. A **bone-to-region lookup table** maps that bone to a clothing region. This is data-driven — regions can be split or merged by editing the table, no code changes required.
 
-This gives ~20 hit zones (13 base regions, 5 with L/R splits = 13 + 5 = 18 zones). Each garment declares which zones it covers. Each zone maintains its own independent layer stack.
+The spine is kept at full 5-bone granularity because the torso is where the most granular clothing coverage differences occur (panties vs. shorts, belly shirt vs. full shirt, halter top vs. T-shirt).
 
-**Examples:**
+**Front/back detection** is handled separately from the bone lookup. A dot product of the hit direction against the character's forward vector determines front vs. back:
 
-| Garment | Zones covered |
-|---------|---------------|
-| Halter top | Upper torso front, upper torso back |
-| Belly shirt | Upper torso front, upper torso back (NOT lower torso) |
-| Full T-shirt | Upper torso front/back, lower torso front/back, upper arm L/R |
-| Long-sleeve shirt | All torso zones, upper arm L/R, lower arm L/R |
-| Coveralls | All torso zones, upper arm L/R, lower arm L/R, hips, upper leg L/R, lower leg L/R |
-| Skirt | Hips, upper leg L/R (length-dependent) |
-| Left thigh-high stocking | Upper leg L, lower leg L |
-| Right ankle sock | Foot R |
-| Coat (closed) | Upper torso front/back, lower torso front/back, hips, upper arm L/R |
-| Coat (open) | Upper torso back, lower torso back, upper arm L/R (front zones removed — see UC3) |
+```
+region = bone_to_region_lookup[hit_bone]
+side = dot(hit_direction, character_forward) > 0 ? front : back
+```
 
-**Status:** The specific zone list above is a working proposal. The exact segmentation — particularly whether front/back splits are needed on hips and limbs, and whether the torso needs finer subdivision — is an open design question that will be refined during implementation.
+This gives every region a front/back distinction without doubling the region count.
+
+**Bone-to-region grouping:**
+
+| Skeleton bone(s) | Clothing region | L/R split |
+|------------------|-----------------|-----------|
+| `head` | head | No |
+| `neck_01`, `neck_02` | neck | No |
+| `clavicle_l`, `clavicle_r` | clavicle | Yes (L/R) |
+| `spine_05` | spine_05 (upper chest / shoulders) | No |
+| `spine_04` | spine_04 (chest) | No |
+| `spine_03` | spine_03 (mid torso / ribcage) | No |
+| `spine_02` | spine_02 (upper abdomen) | No |
+| `spine_01` | spine_01 (lower abdomen) | No |
+| `pelvis` | pelvis | No |
+| `upperarm_l/r`, `upperarm_twist_*_l/r` | upper_arm | Yes (L/R) |
+| `lowerarm_l/r`, `lowerarm_twist_*_l/r` | lower_arm | Yes (L/R) |
+| `hand_l/r`, all finger bones `_l/r` | hand | Yes (L/R) |
+| `thigh_l/r`, `thigh_twist_*_l/r` | upper_leg | Yes (L/R) |
+| `calf_l/r`, `calf_twist_*_l/r` | lower_leg | Yes (L/R) |
+| `foot_l/r`, `ball_l/r` | foot | Yes (L/R) |
+| IK bones, virtual bones | Unmapped (inherit nearest parent region) |
+
+This produces **21 regions** (13 centre-line regions + 8 with L/R splits = 13 + 8 = 21). Every region also has a front/back side from hit direction, giving up to 42 addressable hit zones without increasing the region count.
+
+**Garment coverage examples:**
+
+| Garment | Regions covered |
+|---------|-----------------|
+| Panties | pelvis |
+| Shorts | pelvis, spine_01 |
+| Jeans | pelvis, spine_01, upper_leg L/R, lower_leg L/R |
+| Halter top | spine_04, spine_05 |
+| Belly shirt | spine_03, spine_04, spine_05 |
+| Full T-shirt | spine_01–05, upper_arm L/R |
+| Long-sleeve shirt | spine_01–05, upper_arm L/R, lower_arm L/R |
+| Coveralls | spine_01–05, upper_arm L/R, lower_arm L/R, pelvis, upper_leg L/R, lower_leg L/R |
+| Skirt (knee-length) | pelvis, upper_leg L/R |
+| Left thigh-high stocking | upper_leg L, lower_leg L |
+| Right ankle sock | foot R |
+| Bra | spine_04, spine_05 |
+| Coat (closed) | spine_01–05, clavicle L/R, upper_arm L/R (front + back) |
+| Coat (open) | spine_01–05, clavicle L/R, upper_arm L/R (back only — front zones removed; see UC3) |
+
+**Verification required:** The assumption that UE5 hit detection on a skeletal mesh returns the nearest bone needs to be confirmed in-engine. If hit results return vertex data instead, the vertex-to-bone mapping through skin weights provides the same lookup path.
+
+**Refinement:** The 21-region model is a starting point. If playtesting reveals that certain regions are never addressed independently (e.g. clavicle always groups with spine_05), regions can be merged by editing the lookup table. If finer granularity is needed somewhere, a region can be split by separating its bone entries.
 
 ---
 
@@ -100,7 +124,7 @@ This gives ~20 hit zones (13 base regions, 5 with L/R splits = 13 + 5 = 18 zones
 
 - Dressing requires the garment to be in hand first (follows UC1 of the Inventory Creative Brief — items always go to hands before anywhere else)
 - Each garment declares which **body zones** it covers and which **layer** it occupies (see Body Region Segmentation above)
-- Zones are granular: left and right limbs are independent, torso has front/back and upper/lower splits. A coat covers multiple torso zones + hips + upper arms. A left thigh-high stocking covers upper leg L + lower leg L only
+- Regions are derived from the UE5 skeleton bones (see Body Region Segmentation above). Left and right limbs are independent. The spine has 5 separate regions for fine-grained torso coverage. A coat covers spine_01–05 + clavicle + upper arms. A left thigh-high stocking covers upper_leg_L + lower_leg_L only
 - Layers per region are ordered: underwear → base → mid → outer. A garment declares its layer
 - Multiple garments can occupy the same region if they are on different layers. Panties (underwear, hips) + nylons (base, hips + legs) + skirt (mid, hips) + coat (outer, hips + torso) = four items on the hips region, no conflict
 - **Layer conflicts:** Two garments on the same region AND the same layer conflict. The player must remove one before equipping the other. You cannot wear two skirts on the mid layer of the hips region
@@ -616,5 +640,6 @@ The shirt is aging through both tracks. Eventually it will be replaced.
 - ~~Whether the open/closed state of a garment affects its absorption % or hardness~~ — **confirmed: opening removes the garment from front hit zones entirely; back zones remain protected**
 - ~~Wardrobe Warding interaction~~ — **confirmed: magical reinforcement increases both hardness and absorption % on the enchanted garment**
 - ~~Magical girl uniform interaction~~ — **confirmed: civilian clothes enter the pocket dimension on transformation and stop participating. The uniform is treated as a single opaque shield covering the entire body (even visually uncovered areas) with its own durability pool (~1000 vs. ~100 for a leather jacket) and its own absorption model (the 75% threshold system). The two systems are completely separate**
-- Body region segmentation — exact zone list needs refinement. Are front/back splits needed on hips and limbs? Does the torso need finer subdivision? The proposed 18-zone model is a working draft
-- How the combat system determines which body zone a hit strikes — targeting model, random distribution, or directional (attacker facing determines front/back)
+- **Skeleton hit detection verification** — confirm that UE5 skeletal mesh collision returns the nearest bone (or vertex with bone mapping via skin weights). This is the foundation of the bone-to-region lookup
+- Body region grouping refinement — the 21-region model may need merging (if some regions are never independently relevant) or splitting (if finer granularity is needed). Playtest-driven
+- Whether the clavicle region is independently useful or should be merged with spine_05 or upper_arm
