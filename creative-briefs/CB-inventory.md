@@ -190,7 +190,7 @@ Items have an **activation** property orthogonal to their hand cost:
 ## Related Documents
 
 - [Inventory Feature Brief](FB-inventory.md) *(forthcoming)* — storage resolution, UI layouts, weight formulas, forced drop calibration
-- [Clothing Creative Brief](CB-clothing.md) *(forthcoming)* — wardrobe, dressing, clothing destruction, inhibition interaction
+- [Clothing Creative Brief](CB-clothing.md) — wardrobe, dressing/undressing, layering, clothing damage cascade, degradation, repair, pocket viability
 - [Throwing Feature Brief](FB-throwing.md) *(forthcoming)* — aimed throw range calculation, targeting UI
 - [Lockpicking Creative Brief](CB-lockpicking.md) *(forthcoming)* — lock minigame design
 - [Inventory System (GDD)](../gdd/inventory.md) — current feature-level documentation (predates this creative brief)
