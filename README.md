@@ -65,6 +65,7 @@ The GDD is the central design reference. Start with **[gdd.md](gdd/gdd.md)** for
 | Brief | Contents |
 |-------|----------|
 | [HUD Modification](creative-briefs/CB-hud-modification.md) | Widget point budget, phone tiers, CAMERA dual cap, widget porting |
+| [Inventory](creative-briefs/CB-inventory.md) | Picking up, stowing, retrieving, world containers, overload |
 | [In-Game Menus](creative-briefs/CB-ingame-menus.md) | Phone-based menu system |
 | [Main Menu](creative-briefs/CB-main-menu.md) | Main menu design |
 | [Mod Manager](creative-briefs/CB-mod-manager.md) | Mod loading and management UI |
