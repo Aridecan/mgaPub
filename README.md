@@ -78,6 +78,7 @@ The GDD is the central design reference. Start with **[gdd.md](gdd/gdd.md)** for
 |--------|----------|
 | [What Is a GDD](dev-videos/script-01-what-is-a-gdd.md) | Dev video explaining game design documents |
 | [MGA GDD Walkthrough](dev-videos/script-02-mga-gdd-walkthrough.md) | Dev video walking through the MGA GDD |
+| [Design Document Decomposition](dev-videos/script-03-design-document-decomposition.md) | Creative briefs, feature briefs, and technical briefs |
 
 ---
 
