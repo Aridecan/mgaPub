@@ -364,6 +364,99 @@ The uniform's 75% threshold means it must take 250% of its full durability in da
 
 ---
 
+### UC5b — Area-of-Effect Damage Distribution
+
+**Actor:** The combat system
+**Goal:** Resolve damage from area attacks (explosions, gas fields, shockwaves) that strike multiple body zones simultaneously
+
+UC5 handles a targeted hit to a single zone. Area-of-effect (AoE) damage strikes the entire body — or a large portion of it — and must be distributed across all affected zones before entering each zone's cascade independently.
+
+**Zone surface area percentages:**
+
+Every body zone has a declared **percentage of total body surface area**. These percentages must sum to 100% across all zones.
+
+| Region | Surface % | Notes |
+|--------|-----------|-------|
+| head | 4% | |
+| neck | 2% | |
+| spine_05 (upper chest/shoulders) | 6% | Largest spine segment — broad shoulder area |
+| spine_04 (chest) | 6% | |
+| spine_03 (mid torso/ribcage) | 5% | |
+| spine_02 (upper abdomen) | 5% | |
+| spine_01 (lower abdomen) | 4% | |
+| pelvis | 5% | |
+| clavicle L/R | 2% each (4%) | |
+| upper_arm L/R | 4% each (8%) | |
+| lower_arm L/R | 3% each (6%) | |
+| hand L/R | 2% each (4%) | |
+| upper_leg L/R | 8% each (16%) | Largest region — thighs are a big surface |
+| lower_leg L/R | 5% each (10%) | |
+| foot L/R | 2.5% each (5%) | |
+| **Total** | **100%** | |
+
+*(Values are illustrative — exact calibration is a balance pass. The relative proportions should roughly reflect real human body surface area distribution.)*
+
+**AoE damage resolution — step by step:**
+
+```
+Step 1 — Distribute damage by zone surface area
+  For each zone: zone_damage = total_aoe_damage × zone_surface%
+
+Step 2 — Enter each zone's cascade independently
+  Each zone_damage enters UC5 at the outermost layer for that zone
+  Every zone resolves its own cascade in parallel
+
+Step 3 — Collect passthrough
+  Each zone produces its own passthrough value after all layers resolve
+  Total passthrough to shield/CP = sum of all zone passthroughs
+```
+
+**Worked example — 200 blunt AoE damage (explosion):**
+
+```
+Clothing worn:
+  Coat (outer):     covers spine_01–05, clavicle L/R, upper_arm L/R
+  T-shirt (base):   covers spine_01–05, upper_arm L/R
+  Jeans (mid):      covers pelvis, spine_01, upper_leg L/R, lower_leg L/R
+  Panties (under):  covers pelvis
+  Nothing on:       head, neck, hands, lower_arms, feet
+
+Zone distribution (selected zones):
+
+spine_04 (chest, 6%): 200 × 0.06 = 12 damage
+  → Enters cascade: coat (outer) → T-shirt (base)
+  → After both layers: heavily mitigated, small passthrough
+
+upper_leg_L (8%): 200 × 0.08 = 16 damage
+  → Enters cascade: jeans (mid) only
+  → After one layer: partially mitigated
+
+hand_L (2%): 200 × 0.02 = 4 damage
+  → No clothing on hands
+  → 4 damage passes straight through to shield/CP, completely unmitigated
+
+head (4%): 200 × 0.04 = 8 damage
+  → No clothing on head (unless wearing a hat)
+  → 8 damage passes straight through, completely unmitigated
+
+Total passthrough = sum of all 21 zone passthroughs
+```
+
+The result: an explosion hits everywhere, but zones with layered clothing take far less damage than exposed zones. The same 200-damage blast might deliver 3 points through the coat+shirt stack on the chest, 10 points through the jeans on the legs, and the full 8 points on the bare head. Clothing coverage matters — a character in a full coat and jeans fares much better against explosions than one in a halter top and shorts.
+
+**Key design properties:**
+
+- **Exposed zones are punished.** Any zone with no clothing passes its full share straight to shield/CP. This makes coverage a genuine defensive consideration for AoE-heavy encounters
+- **Each garment takes damage independently per zone.** The coat takes durability damage from the spine_04 portion AND the upper_arm portion AND the spine_01 portion — all in the same tick. A single explosion can push a garment closer to destruction across multiple zones simultaneously
+- **Layer stacking is most valuable against AoE.** A targeted hit only enters one zone's cascade. An AoE enters all of them. Having more zones covered by more layers reduces total passthrough significantly
+- **Chemical AoE fields** follow the same distribution. Each tick of a gas field splits damage by zone surface area, then each zone cascades through its layers. Exposed skin zones take full chemical damage; clothed zones benefit from their cloth type's resistance
+
+**Partial AoE — directional blasts:**
+
+Not all AoE strikes the whole body equally. A directional explosion (blast from the front) may only affect front-facing zones. The front/back dot product (see Body Region Segmentation) determines which zones are struck. A front blast might apply full damage to front zones and zero to back zones, meaning the coat's back coverage provides no benefit — only front-zone layers matter. An open coat (front zones removed) provides no protection against a frontal blast.
+
+---
+
 ### UC6 — Degradation
 
 **Actor:** The game systems (passive)
@@ -643,3 +736,5 @@ The shirt is aging through both tracks. Eventually it will be replaced.
 - **Skeleton hit detection verification** — confirm that UE5 skeletal mesh collision returns the nearest bone (or vertex with bone mapping via skin weights). This is the foundation of the bone-to-region lookup
 - Body region grouping refinement — the 21-region model may need merging (if some regions are never independently relevant) or splitting (if finer granularity is needed). Playtest-driven
 - Whether the clavicle region is independently useful or should be merged with spine_05 or upper_arm
+- Zone surface area percentages — calibration pass to ensure they reflect reasonable body surface distribution and produce balanced AoE results
+- Whether partial AoE (directional blasts) uses a binary front/back split or a gradient (zones at oblique angles receive reduced damage)
