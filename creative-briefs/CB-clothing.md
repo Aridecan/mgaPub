@@ -407,12 +407,13 @@ Step 1 — Distribute to zones
 Step 2 — Collect into outermost garment
   Sum the zone_damage for all zones this garment covers
   Resolve the garment ONCE (absorption, clothing modifier, hardness, durability)
-  The garment's total passthrough is redistributed evenly across its covered zones
+  The garment's total passthrough is redistributed to its covered zones
+  proportional to each zone's surface area (not evenly)
 
 Step 3 — Collect into next garment down
   Each garment at the next layer collects the redistributed zone damage
   for the zones IT covers (which may be a subset of the previous garment's zones)
-  Resolve that garment ONCE, redistribute again
+  Resolve that garment ONCE, redistribute proportionally again
 
 Step 4 — Repeat until no more layers
   Bare zones (no clothing at any layer) pass their original zone_damage
@@ -423,58 +424,77 @@ Step 5 — Sum all zone passthroughs → total damage to shield/CP
 
 **Why per-garment, not per-zone:** If each zone ran its own cascade independently, hardness would be applied once per zone — a coat covering 5 zones would get 5 hardness subtractions from a single explosion. That over-rewards coverage breadth. Resolving per garment means the coat gets one hardness subtraction against the combined damage, which is correct — it's one garment taking one hit.
 
-**Worked example — 1000 AoE damage, 20 zones at 5% each:**
+**Proportional redistribution:** When a garment redistributes passthrough to its covered zones, it does so in proportion to each zone's surface area — NOT evenly. A garment covering zones of 5%, 4%, 6%, 3%, 7% (total coverage = 25%) redistributes as:
+
+```
+zone_share = zone_surface% / garment_total_coverage%
+zone_passthrough = garment_passthrough × zone_share
+```
+
+This means larger zones receive a larger share of the passthrough, which is physically correct — more surface area exposed means more damage received.
+
+**Worked example — 1000 AoE damage, zones with different sizes:**
 
 ```
 Clothing:
-  Coat (outer):    covers zones 1–5 (5 zones)
-  T-shirt (base):  covers zones 2–4 (3 zones)
+  Coat (outer):    covers zones 1–5
+  T-shirt (base):  covers zones 2–4
 
-Coat: absorption 15%, hardness 10 (blunt, 0% bypass)
-T-shirt: absorption 10%, hardness 5 (blunt, 0% bypass)
+Zone surface areas:
+  Zone 1: 5%   Zone 2: 4%   Zone 3: 6%   Zone 4: 3%   Zone 5: 7%
+  Coat total coverage: 5+4+6+3+7 = 25%
+  Zones 6–20: remaining 75% (bare)
+
+Coat: absorption 15%, hardness 10 (blunt, 0% bypass), clothing_mod 1.0
+T-shirt: absorption 10%, hardness 5 (blunt, 0% bypass), clothing_mod 1.0
 
 Step 1 — Distribute to zones
-  Each zone: 1000 × 0.05 = 50 damage
-  All 20 zones start at 50
+  Zone 1: 1000 × 0.05 = 50      Zone 2: 1000 × 0.04 = 40
+  Zone 3: 1000 × 0.06 = 60      Zone 4: 1000 × 0.03 = 30
+  Zone 5: 1000 × 0.07 = 70
 
 Step 2 — Coat (outermost, zones 1–5)
-  Coat collects: 50 × 5 = 250 total
-  Absorption: 250 × 0.15 = 37.5 intercepted
+  Coat collects: 50+40+60+30+70 = 250 total
+  Intercepted: 250 × 0.15 = 37.5
   Passthrough: 250 - 37.5 = 212.5
-  (Coat durability: 37.5 × clothing_mod - hardness applied to coat HP)
-  Redistribute passthrough: 212.5 ÷ 5 = 42.5 per zone
+  Coat durability: (37.5 × 1.0) - 10 hardness = 27.5 durability damage
 
-  Zone 1: 42.5   Zone 2: 42.5   Zone 3: 42.5
-  Zone 4: 42.5   Zone 5: 42.5
+  Redistribute 212.5 proportionally:
+    Zone 1: 212.5 × (5/25) = 42.5
+    Zone 2: 212.5 × (4/25) = 34.0
+    Zone 3: 212.5 × (6/25) = 51.0
+    Zone 4: 212.5 × (3/25) = 25.5
+    Zone 5: 212.5 × (7/25) = 59.5
 
 Step 3 — T-shirt (next layer, zones 2–4)
-  T-shirt collects: 42.5 × 3 = 127.5 total
-  Absorption: 127.5 × 0.10 = 12.75 intercepted
-  Passthrough: 127.5 - 12.75 = 114.75
-  (T-shirt durability: 12.75 × clothing_mod - hardness applied to shirt HP)
-  Redistribute passthrough: 114.75 ÷ 3 = 38.25 per zone
+  T-shirt total coverage: 4+6+3 = 13%
+  T-shirt collects: 34.0+51.0+25.5 = 110.5 total
+  Intercepted: 110.5 × 0.10 = 11.05
+  Passthrough: 110.5 - 11.05 = 99.45
+  T-shirt durability: (11.05 × 1.0) - 5 hardness = 6.05 durability damage
 
-  Zone 2: 38.25   Zone 3: 38.25   Zone 4: 38.25
+  Redistribute 99.45 proportionally:
+    Zone 2: 99.45 × (4/13) = 30.6
+    Zone 3: 99.45 × (6/13) = 45.9
+    Zone 4: 99.45 × (3/13) = 22.95
 
 Step 4 — Final per-zone damage to shield/CP
-  Zone 1:    42.5    (coat only)
-  Zone 2:    38.25   (coat + shirt)
-  Zone 3:    38.25   (coat + shirt)
-  Zone 4:    38.25   (coat + shirt)
-  Zone 5:    42.5    (coat only)
-  Zones 6–20: 50 each (bare — 15 zones)
+  Zone 1:    42.5    (coat only — no shirt)
+  Zone 2:    30.6    (coat + shirt)
+  Zone 3:    45.9    (coat + shirt)
+  Zone 4:    22.95   (coat + shirt)
+  Zone 5:    59.5    (coat only — no shirt)
+  Zones 6–20: full zone_damage each (bare — 750 total)
 
-  Total to shield/CP: 42.5 + 38.25 + 38.25 + 38.25 + 42.5 + (15 × 50)
-                     = 199.75 + 750
-                     = 949.75
+  Total: 42.5 + 30.6 + 45.9 + 22.95 + 59.5 + 750 = 951.45
 ```
 
-The coat and shirt together absorbed about 50 points from a 1000-damage explosion — modest, but meaningful. The real takeaway: 75% of the body was bare, and those zones passed 750 damage straight through. Full-body coverage matters enormously against AoE.
+Note that zone 3 (6% surface) receives more passthrough than zone 4 (3% surface) after both the coat and the shirt — proportional redistribution at every layer preserves the physical relationship between zone size and damage exposure.
 
 **Key design properties:**
 
 - **Each garment resolves once per AoE event.** The coat does one absorption/hardness calculation against its combined collected damage, not one per zone. This is simpler and makes hardness scale correctly — one big hit minus one hardness value, not many small hits each minus hardness
-- **Redistribution is even.** After a garment resolves, its passthrough splits evenly across its covered zones. The coat does not know or care which zones underneath have another layer — it just passes damage back out and the next garment collects what it covers
+- **Redistribution is proportional.** After a garment resolves, its passthrough splits to its covered zones proportional to each zone's surface area. Larger zones receive more passthrough. The coat does not know or care which zones underneath have another layer — it just passes damage back out and the next garment collects what it covers
 - **Exposed zones are punished.** Any zone with no clothing passes its full share straight to shield/CP. Full-body coverage is a genuine defensive investment for AoE encounters
 - **Layer stacking is most valuable against AoE.** A targeted hit enters one zone and one cascade. An AoE hits everything. Zones where two garments overlap get two rounds of mitigation; zones with one get one; bare zones get none
 - **Chemical AoE fields** follow the same per-garment model. Each tick of a gas field distributes by zone surface area, collects into garments, and resolves per garment. Cloth type resistance applies at the garment level
