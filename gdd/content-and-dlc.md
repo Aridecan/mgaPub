@@ -60,7 +60,7 @@ Base Game
                                 └── Region Override
 ```
 
-This stack integrates with the mod boot lifecycle described in the manifesto — all packages (including DLC) are loaded at game start or save load, not at the main menu.
+Official content packages (Base, Spicy, Super Spicy, localization, region overrides) are loaded during the **boot lifecycle** — all must reach a stable initialized state before the main menu becomes available. Mods are loaded separately during the **session lifecycle** when a new game is started or a save is loaded. See [Manifesto — Boot Lifecycle](manifesto.md#10-the-boot-lifecycle-is-supported) for the two-phase model.
 
 ---
 

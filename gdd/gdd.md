@@ -25,7 +25,9 @@ Ordinary Girl Meghan / Magical Girl Ava is an adult action RPG set on a colony w
 | **[Core Loop](core-loop.md)** | Clock system, economy, school calendar, five jobs, failure pipeline |
 | **[Systems Overview](systems-overview.md)** | All major systems with brief descriptions and links |
 | **[Story Overview](story-overview.md)** | Spoiler-light premise, tone, and setting |
+| **[Title and Branding](title-and-branding.md)** | Title rationale, fraction logo, title screen art, evolving screens, chapter operator system |
 | **[Art Direction](art-direction.md)** | Visual style, cel shader, colour palette, material system, outlines |
+| **[Character Pipeline](character-pipeline.md)** | Body mesh architecture, hair system, clothing pipeline, Blender workflow |
 | **[Audio Direction](audio-direction.md)** | Music, sound design intent, and reference |
 | **[Platforms & Tech](platforms-and-tech.md)** | Engine, platform targets, build pipeline |
 | **[Scope](scope.md)** | What is in Game 1 and what is not |

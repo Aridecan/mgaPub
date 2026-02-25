@@ -190,6 +190,24 @@ These are the only elements that break diegesis. They are intentionally minimal.
 
 ---
 
+## Jumping Puzzle Timer
+
+Jumping puzzles include a visible in-game timer for players who want to compete on completion times.
+
+| Element | Detail |
+|---------|--------|
+| **Timer display** | On-screen with millisecond precision (e.g. `02:14.327`) |
+| **Start trigger** | Entering the start volume or interacting with a start prompt |
+| **End trigger** | Reaching the end volume |
+| **Modded indicator** | Small, neutral "MODDED" label displayed on the timer when mods are active |
+| **Local records** | Best-of-session and personal best times saved locally |
+
+The timer provides transparent run information. Enforcement and ranking standards are left to the community — competitive players and speedrunners set their own rules around what constitutes a valid run. The "MODDED" indicator is informational, not punitive; mods are not treated as cheating.
+
+No online leaderboard, anti-cheat, or run upload is provided. Most competitive jumping puzzle communities rely on video verification, and the game's role is to provide a consistent clock and unambiguous start/end points.
+
+---
+
 ## Open Items
 
 - Full widget list and skill/license gate table — feature brief TBD

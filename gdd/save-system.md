@@ -129,6 +129,36 @@ An **export/export save** option is available in the load screen — exports the
 
 ---
 
+## Extension-Safe Persistence
+
+The save system is designed for extension. Feature tiers (Spicy / Super Spicy) and optional modules (including mods) can register additional persistent state through a controlled serialization interface, preserving backward compatibility and minimizing integration risk.
+
+### How It Works
+
+Each extension owns a unique identifier (GUID). On session load:
+
+1. Extension code loads and registers its persistence handler with the save system, keyed by its GUID
+2. The save file is loaded; chunks are routed by GUID to each registered handler
+3. Each extension receives only its own namespaced data — never the core save or other extensions' data
+4. The core save format remains authoritative and loadable without any extensions present
+
+### Constraints
+
+- Extensions may only **append** versioned data through the persistence interface; they must not modify or reinterpret core save fields
+- Unknown extension chunks (from missing or disabled mods) are **ignored safely** with explicit warnings listing the missing extension IDs
+- Saves must load with missing extensions by safely ignoring unknown data — the game provides a warning but does not hard-fail
+- The same persistence interface is used by official DLC tiers and third-party mods — mods gain access to extension points that already exist for the DLC architecture, not a separate system
+
+### Recovery
+
+If a save contains data from mods that are not currently loaded:
+
+- The player is explicitly warned before loading
+- Options are provided to continue (unsafe) or cancel
+- Disabling mods may allow partial recovery but **does not guarantee** full compatibility — world state may reference mod content (locations, items, quest flags) that no longer exists
+
+---
+
 ## Open Items
 
 - Exact slider increments for autosave (confirm: off / 5 / 10 / 15 / 20 / 30, or different range)

@@ -89,6 +89,35 @@ The manifesto commits to mod-friendly infrastructure. The specific scope at laun
 
 ---
 
+## Demo Scope (Planned)
+
+The public demo will include:
+
+- Narrative progression through the end of Chapter 1
+- Three representative side jobs
+
+The demo is intended as a long-term systems validation environment — showcasing core combat, player agency tools, and the foundational gameplay loop without exposing late-game mechanics or narrative escalations. Demo scope is fixed at Chapter 1 and does not expand.
+
+The demo will be distributed on **itch.io** initially. Steam demo release is planned for later, once the visual style and systems are more mature. itch.io is chosen for its technical audience, devlog-heavy communication model, and controlled expectations.
+
+---
+
+## Early Access Scope (Planned)
+
+Early Access begins once all core systems (combat architecture, save infrastructure, feature tiering, input systems, UI frameworks) are considered structurally complete — currently projected around the start of Chapter 5 or Chapter 6 development.
+
+**EA content boundary:** Playable through Chapter 6, concluding just before the ascent to the anchor station via the space elevator. The final battles, the Tierney reveal, the ending tragedy, the epilogue, and New Game+ modes are reserved for full release.
+
+**EA philosophy:** During Early Access, development focus shifts from feature expansion to stabilization, balance refinement, performance optimization, and content iteration. No new foundational systems will be introduced during Early Access.
+
+---
+
+## Achievement Policy
+
+Steam achievements are not disabled when mods are active. Steam does not require it for single-player games, and MGA does not police how players engage with their own game. Achievements are controlled entirely by the game calling the Steamworks API — there is no platform-enforced "clean environment" check.
+
+---
+
 ## Tentative
 
 Items that are planned and may ship with Game 1, but are subject to cut if scope pressure requires it.

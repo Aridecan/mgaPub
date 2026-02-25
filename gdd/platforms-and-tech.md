@@ -56,11 +56,23 @@ The build pipeline handles:
 - Region override packaging
 - Mod tool builds where applicable
 
+### Build Version Tagging
+
+Every successful build tags all source repositories with the build version number. This guarantees that any released build can be recreated exactly from version control at a later date. The build number is visible in-game (main menu) so that bug reports and player feedback always reference a specific, traceable build state.
+
 *See [Content Architecture & DLC](content-and-dlc.md) for the full DLC stack.*
 
 ---
 
 ## Distribution
+
+### Demo Distribution
+
+The public demo will be distributed on **itch.io** initially — chosen for its technically literate audience, devlog-centric communication model, and lower expectation threshold for in-development builds. The demo serves as a long-term systems validation environment (see [Scope — Demo](scope.md#demo-scope-planned)).
+
+Steam demo release is planned for later, once the visual style, camera identity, and core systems are mature enough to meet the broader audience expectations of the Steam storefront.
+
+### Full Game Distribution
 
 **Primary:** Steam. The base game is designed to meet Steam's content policies. Spicy and Super Spicy DLC may require distribution through alternative channels depending on platform policy at time of release.
 

@@ -8,6 +8,8 @@ Music in MGA follows emotional truth, not scene-type labels. The question for ev
 
 Three musical pillars cover the majority of the game. They are distinct enough to be legible, flexible enough to blend at the moments that demand it.
 
+**Vocal rule:** The vast majority of in-game music is **instrumental**. Vocals are reserved for contexts where the game gives them space — no sung lyrics compete with dialogue or moment-to-moment gameplay. Vocals appear in: the main theme, closing credits, dedicated character theme performances, diegetic bar or stage performances, and corporate jingles. Everywhere else, the instruments carry the work alone.
+
 ---
 
 ## The Three Pillars

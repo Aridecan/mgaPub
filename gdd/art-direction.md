@@ -6,7 +6,11 @@
 
 MGA uses an anime/manga aesthetic throughout. Meshes are authored to anime conventions — clean topology, stylised proportions, and geometry that reads well under cel shading. The rendering pipeline is built to reinforce this style at every layer: palette-controlled colour, banded lighting, and drawn outlines, all without relying on post-processing.
 
+**Style reference:** Modern Anime Stylized — the visual sub-category occupied by Genshin Impact, Blue Protocol, and Honkai Star Rail. Smooth chunky hair clumps, rhythmic curves, clean silhouette shapes, soft but structured forms, medium detail, physics-friendly geometry.
+
 **Guiding principle:** The look is achieved in the render pass, not after it. Post-processing is avoided where a geometry or shader solution exists. This keeps overhead low and the frame budget predictable.
+
+*See [Character Pipeline](character-pipeline.md) for body mesh architecture, hair system, and clothing workflow.*
 
 ---
 
@@ -27,16 +31,18 @@ Bands are determined by the angle between the surface normal and the primary lig
 
 ## Colour Palette
 
-All colour in the game is drawn from a single 64-entry palette. No material uses colour values outside the palette.
+All colour in the game is drawn from a **98-entry palette** stored as a 16×7 grid (with unused slots in the final row). No material uses colour values outside the palette.
+
+![MGA Colour Palette](palette.png)
 
 | Category | Count | Purpose |
 |----------|-------|---------|
+| Base chromatic | 64 | Full hue spectrum — clothing, environment, props, effects, secondary colours (rows 1–4) |
+| Signature colours | 6 | Magical girl and faction identity colours — only used by the five magical girls and Tierney |
 | Flesh tones | 8 | Skin across the full character roster |
-| Greyscale | 9 | Shadows, metals, neutral elements, UI |
-| Signature colours | 6 | Character and faction identity colours |
-| Blush tones | 12 | Anime blush, flush, and emotional colour states |
-| General | 29 | Clothing, environment, props, secondary colours |
-| **Total** | **64** | |
+| Greyscale | 8 | Shadows, metals, neutral elements, UI |
+| Blush tones | 12 | Anime blush, flush, lips, mouth interior, and emotional colour states |
+| **Total** | **98** | |
 
 **Palette intent:** The palette is intentionally bright and cheerful. This is a deliberate choice on two levels. Technically, saturated and well-separated colours are easier to work with under cel shading — banding reads cleanly, zones are distinct, and the four lighting tones produce legible results without muddy mid-values. Thematically, the brightness creates an emotional counterbalance to the dystopian society operating on Terridyn. The world is corporate-controlled, half-empty, and quietly dangerous; the visual language refuses to reflect that darkness back at the player. The game looks like a place where good things can happen, because they can. This tonal balance is established from the first frame and holds consistently — so that when characters like Sir Gallopington arrive, they feel native to the world rather than tonally incongruous.
 
@@ -58,8 +64,8 @@ Each material instance exposes two arrays of palette index slots:
 
 | Parameter | Count | Maps to |
 |-----------|-------|---------|
-| Color 1 indexes | 30 | Palette entries (1–64) |
-| Color 2 indexes | 30 | Palette entries (1–64) |
+| Color 1 indexes | 30 | Palette entries (1–98) |
+| Color 2 indexes | 30 | Palette entries (1–98) |
 
 The 30 Color 1 slots and 30 Color 2 slots define the colour vocabulary available to that material instance. Which slot applies to any given pixel is determined by the primary texture.
 
@@ -151,5 +157,5 @@ The anime/manga aesthetic is achieved at the material and shader layer, not the 
 - Inverse hull weight / scaling values — to be calibrated during shader development
 - Whether the 4-tone band thresholds are globally uniform or exposed as per-material parameters
 - Signature colour assignments — partially established through character identity; to be formally locked into the palette
-- Environment palette usage — what subset of the 64 entries is available to environmental assets vs characters
+- Environment palette usage — what subset of the 98 entries is available to environmental assets vs characters
 - Whether the definition texture uses a fixed line colour or samples from the palette
