@@ -166,9 +166,9 @@ The clothing destruction system (Spicy DLC) ties wardrobe management directly to
 
 ### CAMERA System
 
-Available from Chapter 4, the CAMERA system enables team management gameplay. Developed by Meghan and Imara Kesari from combined Xtalics and Calibran drone technology, it allows the magical girl team to be deployed and coordinated across missions. Each team member's distinct capabilities can be assigned independently or in combination. The system reflects the team having matured from improvised crisis response to structured operations.
+CAMERA (Cognitive Augmented Monitoring, Engagement & Reconnaissance Assistant) provides the in-fiction justification for the third-person camera. Meghan's personal CAMERA drone is Calibran technology she brought with her — it provides the third-person view from the moment she steps off the ship in the prologue. In Chapter 3, Meghan and Imara Kesari upgrade the existing drone using Xtalics technology and build new drones for the other magical girls. Once allies have their own calibrated drones, full party switching and team management become available.
 
-*Detail: forthcoming.*
+*Detail: [CB-camera](../creative-briefs/CB-camera.md)*
 
 ### Content Tiers
 
