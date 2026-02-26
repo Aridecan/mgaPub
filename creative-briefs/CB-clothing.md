@@ -229,7 +229,7 @@ A hit to the front torso while the coat is open skips the coat entirely and casc
 ### UC5 — Damage Resolution
 
 **Actor:** The combat system
-**Goal:** Resolve incoming damage against clothing layers before it reaches the personal shield and CP
+**Goal:** Resolve incoming damage against clothing layers before it reaches CP
 
 **Attack properties (required on every damage source):**
 
@@ -332,7 +332,7 @@ Layer 1 (panties, underwear): cotton, 3% absorption, hardness 1
   Bypass:    blunt × cotton = 0%    Effective hardness: 1
   Durability damage: 2.725 - 1 = 1.725
 
-→ 70.495 reaches personal shield / CP
+→ 70.495 reaches CP
 ```
 
 **Same hit but slashing (cotton bypass 70%, wool 60%, latex 80%):**
@@ -351,11 +351,11 @@ Layer 1 (panties, cotton): effective hardness = 1 × 0.30 = 0.3
   Durability damage: 2.725 - 0.3 = 2.425
 ```
 
-Slashing shreds clothing far faster than blunt. The passthrough to shield/CP is the same, but the garments are chewed up.
+Slashing shreds clothing far faster than blunt. The passthrough to CP is the same, but the garments are chewed up.
 
 **Relationship to the magical girl uniform:** The uniform and civilian clothing are completely separate defensive systems. They do not stack or interact.
 
-- **Civilian form:** Damage cascades through clothing layers (this system) → personal shield → CP
+- **Civilian form:** Damage cascades through clothing layers (this system) → CP (the personal shield is the narrative wrapper for CP loss from physical damage — crystal nanites absorbing impact — not a separate pool)
 - **Transformed form:** Civilian clothes enter the pocket dimension. The magical girl is treated as effectively naked under an opaque magical shield. Damage passes through the uniform's own absorption model (the 75% threshold system in magical-girl-uniform.md) → CP. The uniform covers the entire body — including areas that appear visually uncovered — as a single defensive layer with a durability pool roughly 10× that of civilian clothing (~1000 vs. ~100 for a leather jacket)
 
 The uniform's 75% threshold means it must take 250% of its full durability in damage before any reaches CP — a level of protection civilian clothing cannot approach. This is the mechanical expression of the difference between mundane fabric and a magical construct.
@@ -419,7 +419,7 @@ Step 4 — Repeat until no more layers
   Bare zones (no clothing at any layer) pass their original zone_damage
   straight through
 
-Step 5 — Sum all zone passthroughs → total damage to shield/CP
+Step 5 — Sum all zone passthroughs → total damage to CP
 ```
 
 **Why per-garment, not per-zone:** If each zone ran its own cascade independently, hardness would be applied once per zone — a coat covering 5 zones would get 5 hardness subtractions from a single explosion. That over-rewards coverage breadth. Resolving per garment means the coat gets one hardness subtraction against the combined damage, which is correct — it's one garment taking one hit.
@@ -478,7 +478,7 @@ Step 3 — T-shirt (next layer, zones 2–4)
     Zone 3: 99.45 × (6/13) = 45.9
     Zone 4: 99.45 × (3/13) = 22.95
 
-Step 4 — Final per-zone damage to shield/CP
+Step 4 — Final per-zone damage to CP
   Zone 1:    42.5    (coat only — no shirt)
   Zone 2:    30.6    (coat + shirt)
   Zone 3:    45.9    (coat + shirt)
@@ -495,7 +495,7 @@ Note that zone 3 (6% surface) receives more passthrough than zone 4 (3% surface)
 
 - **Each garment resolves once per AoE event.** The coat does one absorption/hardness calculation against its combined collected damage, not one per zone. This is simpler and makes hardness scale correctly — one big hit minus one hardness value, not many small hits each minus hardness
 - **Redistribution is proportional.** After a garment resolves, its passthrough splits to its covered zones proportional to each zone's surface area. Larger zones receive more passthrough. The coat does not know or care which zones underneath have another layer — it just passes damage back out and the next garment collects what it covers
-- **Exposed zones are punished.** Any zone with no clothing passes its full share straight to shield/CP. Full-body coverage is a genuine defensive investment for AoE encounters
+- **Exposed zones are punished.** Any zone with no clothing passes its full share straight to CP. Full-body coverage is a genuine defensive investment for AoE encounters
 - **Layer stacking is most valuable against AoE.** A targeted hit enters one zone and one cascade. An AoE hits everything. Zones where two garments overlap get two rounds of mitigation; zones with one get one; bare zones get none
 - **Chemical AoE fields** follow the same per-garment model. Each tick of a gas field distributes by zone surface area, collects into garments, and resolves per garment. Cloth type resistance applies at the garment level
 
