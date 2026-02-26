@@ -106,7 +106,7 @@ This produces **21 regions** (13 centre-line regions + 8 with L/R splits = 13 + 
 | Coat (closed) | spine_01–05, clavicle L/R, upper_arm L/R (front + back) |
 | Coat (open) | spine_01–05, clavicle L/R, upper_arm L/R (back only — front zones removed; see UC3) |
 
-**Verification required:** The assumption that UE5 hit detection on a skeletal mesh returns the nearest bone needs to be confirmed in-engine. If hit results return vertex data instead, the vertex-to-bone mapping through skin weights provides the same lookup path.
+**Hit detection confirmed:** UE5's `FHitResult.BoneName` returns the nearest bone on a `SkeletalMeshComponent` collision. This gives the bone-to-region lookup its input directly from the engine. Fallback if `BoneName` is not populated for a specific collision type: iterate over all mapped bones and find the shortest distance from the hit point (`FHitResult.ImpactPoint`) to each bone's world-space location — computationally cheap given only ~20 mapped regions.
 
 **Refinement:** The 21-region model is a starting point. If playtesting reveals that certain regions are never addressed independently (e.g. clavicle always groups with spine_05), regions can be merged by editing the lookup table. If finer granularity is needed somewhere, a region can be split by separating its bone entries.
 
@@ -783,7 +783,7 @@ The shirt is aging through both tracks. Eventually it will be replaced.
 - ~~Whether the open/closed state of a garment affects its absorption % or hardness~~ — **confirmed: opening removes the garment from front hit zones entirely; back zones remain protected**
 - ~~Wardrobe Warding interaction~~ — **confirmed: magical reinforcement increases both hardness and absorption % on the enchanted garment**
 - ~~Magical girl uniform interaction~~ — **confirmed: civilian clothes enter the pocket dimension on transformation and stop participating. The uniform is treated as a single opaque shield covering the entire body (even visually uncovered areas) with its own durability pool (~1000 vs. ~100 for a leather jacket) and its own absorption model (the 75% threshold system). The two systems are completely separate**
-- **Skeleton hit detection verification** — confirm that UE5 skeletal mesh collision returns the nearest bone (or vertex with bone mapping via skin weights). This is the foundation of the bone-to-region lookup
+- ~~Skeleton hit detection verification~~ — **confirmed: `FHitResult.BoneName` returns the nearest bone on `SkeletalMeshComponent` collision. Distance-based fallback available if needed for specific collision types**
 - Body region grouping refinement — the 21-region model may need merging (if some regions are never independently relevant) or splitting (if finer granularity is needed). Playtest-driven
 - Whether the clavicle region is independently useful or should be merged with spine_05 or upper_arm
 - Zone surface area percentages — calibration pass to ensure they reflect reasonable body surface distribution and produce balanced AoE results
