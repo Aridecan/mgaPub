@@ -106,7 +106,7 @@ This produces **21 regions** (13 centre-line regions + 8 with L/R splits = 13 + 
 | Coat (closed) | spine_01–05, clavicle L/R, upper_arm L/R (front + back) |
 | Coat (open) | spine_01–05, clavicle L/R, upper_arm L/R (back only — front zones removed; see UC3) |
 
-**Hit detection confirmed:** UE5's `FHitResult.BoneName` returns the nearest bone on a `SkeletalMeshComponent` collision. This gives the bone-to-region lookup its input directly from the engine. Fallback if `BoneName` is not populated for a specific collision type: iterate over all mapped bones and find the shortest distance from the hit point (`FHitResult.ImpactPoint`) to each bone's world-space location — computationally cheap given only ~20 mapped regions.
+**Hit detection confirmed:** UE5's `FHitResult.BoneName` returns the nearest bone when the collision hits the `SkeletalMeshComponent` directly. If the hit lands on the character's capsule collider instead (no bone name available), the fallback is a simple for loop: iterate over the ~20 mapped bone world-space positions and find the shortest distance from `FHitResult.ImpactPoint`. Computationally trivial either path.
 
 **Refinement:** The 21-region model is a starting point. If playtesting reveals that certain regions are never addressed independently (e.g. clavicle always groups with spine_05), regions can be merged by editing the lookup table. If finer granularity is needed somewhere, a region can be split by separating its bone entries.
 
