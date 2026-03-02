@@ -19,9 +19,10 @@ Meghan does not have her phone. Only out-of-character options are available. The
 | **Save** | Manual save to current playthrough folder |
 | **Load** | Open the playthrough and save browser |
 | **Settings** | Open the settings menu |
+| **Tutorials** | Browse unlocked OOC tutorial entries — game mechanics reference |
 | **Exit to Desktop** | Close the game |
 
-This menu is always reachable regardless of phone status. It exists as a hardware-level input — Meghan's phone being absent does not prevent the player from saving or adjusting settings.
+This menu is always reachable regardless of phone status. It exists as a hardware-level input — Meghan's phone being absent does not prevent the player from saving, adjusting settings, or reviewing how a system works. The Tutorials entry provides access to the OOC mechanics encyclopedia — see [CB-tutorials](CB-tutorials.md).
 
 ---
 
@@ -30,7 +31,7 @@ This menu is always reachable regardless of phone status. It exists as a hardwar
 Meghan has her phone. The phone menu contains all out-of-character options plus the full in-fiction menu. Meghan takes out her phone in-world; time does not pause.
 
 #### Out-of-Character Section
-Same four options as the Lost Phone Menu — Save, Load, Settings, Exit to Desktop — accessible from within the phone menu so the player never needs to dismiss the phone to reach them.
+Same five options as the Lost Phone Menu — Save, Load, Settings, Tutorials, Exit to Desktop — accessible from within the phone menu so the player never needs to dismiss the phone to reach them.
 
 #### In-Fiction Sections
 
@@ -38,7 +39,7 @@ Same four options as the Lost Phone Menu — Save, Load, Settings, Exit to Deskt
 |---------|----------|-------|
 | **HUD Modification** | Configure active widget sets for eye implants and CAMERA drone | The most complex section — see [CB-hud-modification](CB-hud-modification.md) *(forthcoming)* |
 | **Map** | City map, points of interest, fast travel if unlocked | — |
-| **Notes** | Meghan's collected notes, lore entries, and observations | New; see detail below |
+| **Notes** | Meghan's collected notes, lore entries, observations, and app guides | See detail below |
 | **Missions** | Active and completed quest/job log; mission tracking | — |
 | **Skills** | Full skill and attribute view; progression tracking | — |
 | **Inventory** | Equipment, items, consumables | See [Inventory](../gdd/inventory.md) |
@@ -49,15 +50,16 @@ Same four options as the Lost Phone Menu — Save, Load, Settings, Exit to Deskt
 
 ## Notes Section
 
-Not previously documented. Meghan's Notes section contains:
+Meghan's Notes section contains four categories:
 
 - **Field notes** — observations Meghan has written or recorded during missions; personal commentary on events
 - **Lore entries** — world information collected through exploration, conversation, and items; encyclopaedia-style reference
 - **Quest notes** — contextual notes attached to missions (separate from the mission log itself — the mission log tracks objectives; notes track context, leads, and Meghan's read of a situation)
+- **App Guides** — built-in help files for each phone app; unlock progressively as Meghan gains access to apps and features; diegetic — Meghan reading her own phone's documentation. See [CB-tutorials](CB-tutorials.md) for the full entry list and unlock triggers
 
 Notes are read-only from the phone menu — Meghan adds them through play, not by the player typing. They serve as an in-world substitute for an external wiki: players who pay attention to what Meghan collects have the context they need without leaving the game.
 
-The Notes section is organised into the three categories above, searchable by keyword.
+The Notes section is organised into the four categories above, searchable by keyword.
 
 ---
 
@@ -77,7 +79,7 @@ If Meghan's phone is taken or lost:
 - All in-fiction sections become unavailable until the phone is recovered
 - Eye implant widgets continue to function (loaded into implants, not streamed from phone)
 - Widgets cannot be reconfigured without the phone
-- The out-of-character options (Save, Load, Settings, Exit) remain available via the Lost Phone Menu
+- The out-of-character options (Save, Load, Settings, Tutorials, Exit) remain available via the Lost Phone Menu
 
 Lost phone scenarios may be scripted mission events or may occur organically through the pipeline capture system. See [UI/UX open items](../gdd/ui-ux.md).
 

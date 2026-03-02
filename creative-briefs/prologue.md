@@ -207,6 +207,7 @@ This is the last guided tutorial moment. The prologue ends here. Chapter 1 opens
 - **One-time training wheels** — the paused combat mode exists only in Beat 8. The event-driven time model exists only in the prologue. Chapter 1 removes both and never brings them back
 - **Consequences from the start** — clothing destruction in the Spicy route creates a real economic cost. The game does not protect the player from the consequences of failure even in the tutorial
 - **Replay-friendly** — dialogue skipping is taught early (Beat 3); low-stakes content is skippable; the DLC branches offer different experiences on different playthroughs
+- **Encyclopedia unlock** — each beat that introduces a system also unlocks the corresponding entry in the offline encyclopedia (OOC Tutorials for mechanics, Phone App Guides for phone features). The prologue teaches; the encyclopedia lets the player revisit. See [CB-tutorials](CB-tutorials.md) for the full entry list and unlock triggers
 
 ---
 

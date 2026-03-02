@@ -169,15 +169,15 @@ This is relevant during pipeline capture sequences and other scenarios where the
 
 ## Magical Girl Uniform and the Pocket Dimension
 
-The magical girl uniform participates in the inventory system as a wearable clothing item with its own containers, but its relationship to the pocket dimension creates interactions unique to it.
+Uniform pieces are **spell constructs**, not physical garments. They exist in a dedicated magical inventory managed through a phone app, separate from the physical inventory system. Pieces have no weight, volume, or physical storage requirements — they manifest on the magical girl's body during transformation and return to spell-component state on untransformation.
 
-### Uniform pieces
+The physical inventory system interacts with the uniform only through the pocket dimension and through any physical items (e.g. a phone) stored in pockets on manifested uniform pieces.
 
-The magical girl uniform is modular — assembled from individual pieces found around Terridyn rather than granted as a single complete outfit. Each piece has its own stats (protection, transformation MP cost, MP-per-second maintenance cost) documented in the magical girl systems. Pieces with pockets have higher MP costs than equivalent pieces without. The clothing customisation system applies to the uniform; modifications including adding pockets are possible.
+Full uniform piece design — piece types, stats, customisation, acquisition, and the skill bonus system — is documented in the magical girl systems (private repo).
 
 ### Pocket dimension behaviour
 
-When Meghan transforms into Ava, the uniform and everything stored in its containers enter a pocket dimension for the duration. When she untransforms, the uniform and its contents return with her civilian clothes.
+When Meghan transforms into Ava, her civilian clothing and everything stored in its containers enter a pocket dimension for the duration. The uniform pieces manifest from the magical inventory simultaneously. When she untransforms, the uniform pieces return to the magical inventory and her civilian clothes return from the pocket dimension.
 
 **Items stored in the uniform's pockets follow the uniform.** If Meghan places her phone in a uniform pocket and then untransforms, the phone remains in the pocket dimension with the uniform — inaccessible until she transforms again. This is not a bug or an edge case; it is a deliberate consequence of the pocket dimension's scope. Players who store items in the uniform's pockets are accepting that those items are only accessible in transformed state.
 
@@ -204,4 +204,4 @@ The **burner phone** is a purchasable item — a basic handset with no widget ca
 - Quick-store action bar binding UI — how the player defines and edits these mappings
 - ~~Whether items in hand slots are visible on Meghan's model in third-person view~~ — confirmed: yes, best-effort for all standard items
 - Item damage from clothing damage — left open; revisit in a future design pass
-- Magical girl uniform piece locations around Terridyn — design and placement pass; narrative detail (Tierney/twins stashing them) is private repo
+- ~~Magical girl uniform piece locations around Terridyn~~ — resolved: uniform piece system documented in private repo (magical-girl-uniform-pieces.md); pieces are spell constructs in a dedicated magical inventory, not physical items in the physical inventory. Stash locations and acquisition detail are private repo

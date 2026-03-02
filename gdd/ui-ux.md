@@ -6,7 +6,7 @@
 
 MGA's UI is diegetic. Everything the player sees during gameplay is something Meghan actually sees — her cybernetic eye implants displaying AR overlays driven by her smartphone. The information available to the player is the information available to Meghan, which means UI capability is a function of her hardware and her skills. A better phone and higher skill ranks produce a more capable HUD. A player who has invested in Perception and bought the right licenses sees more than one who hasn't.
 
-The only elements that break diegesis are the out-of-character menu options — save, load, settings, exit — which exist because Meghan's phone cannot be the interface for operations outside the game world.
+The only elements that break diegesis are the out-of-character menu options — save, load, settings, tutorials, exit — which exist because Meghan's phone cannot be the interface for operations outside the game world.
 
 ---
 
@@ -133,6 +133,7 @@ Outside of widget configuration, the smartphone is the primary interface for all
 | **Map** | City map, fast travel (if unlocked), points of interest |
 | **Skills** | Full skill and attribute view; progression tracking |
 | **Inventory** | Equipment, items, and consumables — see [Inventory](inventory.md) |
+| **Notes** | Field notes, lore entries, quest notes, and app guides — see [CB-ingame-menus](../creative-briefs/CB-ingame-menus.md) |
 | **Missions** | Active and completed mission list; quest tracking |
 | **Contacts** | NPCs Meghan has relationships with; communication log |
 | **Delivery app** | Courier job dispatch (unlocked in Chapter 1) |
@@ -192,16 +193,17 @@ Each dropdown only lists languages for which the corresponding package is instal
 
 ## Out-of-Character Menu
 
-Four options are always available regardless of phone status, accessed via a hardware input that does not require the phone:
+Five options are always available regardless of phone status, accessed via a hardware input that does not require the phone:
 
 | Option | Function |
 |--------|----------|
 | **Save** | Manual save to current playthrough folder |
 | **Load** | Load a save from any playthrough folder |
 | **Game Settings** | Graphics, audio, controls, autosave slider, streamer settings |
+| **Tutorials** | Offline encyclopedia of game mechanics — entries unlock progressively as systems are introduced |
 | **Exit Game** | Return to desktop |
 
-These are the only elements that break diegesis. They are intentionally minimal.
+These are the only elements that break diegesis. They are intentionally minimal. The Tutorials entry provides a persistent reference for every system taught during the prologue and Chapter 1, available even when Meghan's phone is lost. See [CB-tutorials](../creative-briefs/CB-tutorials.md) for the full design.
 
 ---
 
