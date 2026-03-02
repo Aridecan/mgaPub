@@ -193,7 +193,7 @@ Each dropdown only lists languages for which the corresponding package is instal
 
 ## Out-of-Character Menu
 
-Five options are always available regardless of phone status, accessed via a hardware input that does not require the phone:
+Six options are always available regardless of phone status, accessed via a hardware input that does not require the phone:
 
 | Option | Function |
 |--------|----------|
@@ -201,6 +201,7 @@ Five options are always available regardless of phone status, accessed via a har
 | **Load** | Load a save from any playthrough folder |
 | **Game Settings** | Graphics, audio, controls, autosave slider, streamer settings |
 | **Tutorials** | Offline encyclopedia of game mechanics — entries unlock progressively as systems are introduced |
+| **Memories** | Rewatch previously-seen cutscenes with recorded actor state — see [Cutscenes](cutscenes.md) |
 | **Exit Game** | Return to desktop |
 
 These are the only elements that break diegesis. They are intentionally minimal. The Tutorials entry provides a persistent reference for every system taught during the prologue and Chapter 1, available even when Meghan's phone is lost. See [CB-tutorials](../creative-briefs/CB-tutorials.md) for the full design.

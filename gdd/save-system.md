@@ -148,6 +148,7 @@ Each extension owns a unique identifier (GUID). On session load:
 - Unknown extension chunks (from missing or disabled mods) are **ignored safely** with explicit warnings listing the missing extension IDs
 - Saves must load with missing extensions by safely ignoring unknown data — the game provides a warning but does not hard-fail
 - The same persistence interface is used by official DLC tiers and third-party mods — mods gain access to extension points that already exist for the DLC architecture, not a separate system
+- Core features also consume this interface: the [Memories system](cutscenes.md) stores its cutscene replay catalogue (actor state snapshots, content tier at recording, timestamps) as a persistence consumer registered by GUID, demonstrating that the extension architecture is not mod-only infrastructure
 
 ### Recovery
 

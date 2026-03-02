@@ -20,6 +20,7 @@ Meghan does not have her phone. Only out-of-character options are available. The
 | **Load** | Open the playthrough and save browser |
 | **Settings** | Open the settings menu |
 | **Tutorials** | Browse unlocked OOC tutorial entries — game mechanics reference |
+| **Memories** | Rewatch previously-seen cutscenes — see [Memories](#memories) below |
 | **Exit to Desktop** | Close the game |
 
 This menu is always reachable regardless of phone status. It exists as a hardware-level input — Meghan's phone being absent does not prevent the player from saving, adjusting settings, or reviewing how a system works. The Tutorials entry provides access to the OOC mechanics encyclopedia — see [CB-tutorials](CB-tutorials.md).
@@ -31,7 +32,7 @@ This menu is always reachable regardless of phone status. It exists as a hardwar
 Meghan has her phone. The phone menu contains all out-of-character options plus the full in-fiction menu. Meghan takes out her phone in-world; time does not pause.
 
 #### Out-of-Character Section
-Same five options as the Lost Phone Menu — Save, Load, Settings, Tutorials, Exit to Desktop — accessible from within the phone menu so the player never needs to dismiss the phone to reach them.
+Same six options as the Lost Phone Menu — Save, Load, Settings, Tutorials, Memories, Exit to Desktop — accessible from within the phone menu so the player never needs to dismiss the phone to reach them.
 
 #### In-Fiction Sections
 
@@ -63,6 +64,30 @@ The Notes section is organised into the four categories above, searchable by key
 
 ---
 
+## Memories
+
+The Memories menu allows the player to rewatch cutscenes they have previously seen. It is an out-of-character feature, available regardless of phone status.
+
+Cutscenes are added to the Memories catalogue on **first completion** — whether the player watched in full or skipped. Skipping counts as completion; the player can return to it later.
+
+**Catalogue layout:**
+- Entries listed in **story progression order**, grouped by chapter
+- Each entry shows: cutscene name, chapter label, first-seen timestamp (in-game date/time)
+
+**Replay behaviour:**
+- Selecting an entry replays the cutscene using the **recorded actor state snapshot** — characters wear the clothing and equipment they had when the player first saw the scene
+- Content-tiered cutscenes replay at the tier that was active at the time of recording
+- Same skip controls as live cutscenes
+- No gameplay consequences fire during replay — items are not re-granted, flags are not re-set
+
+**Save data:**
+- The Memories catalogue is stored per-playthrough in the save file using the extension-safe persistence architecture
+- If a cutscene asset is missing (removed or replaced in a future build), the entry shows a "content unavailable" placeholder
+
+See [Cutscenes](../gdd/cutscenes.md) for the full cutscene system design including actor lifecycle, state snapshots, and skip behaviour.
+
+---
+
 ## Phone Access and Time
 
 The phone is accessed in-world — Meghan takes it out, and the world continues around her. Accessing the phone in an unsafe environment is a player choice with real consequences.
@@ -79,7 +104,7 @@ If Meghan's phone is taken or lost:
 - All in-fiction sections become unavailable until the phone is recovered
 - Eye implant widgets continue to function (loaded into implants, not streamed from phone)
 - Widgets cannot be reconfigured without the phone
-- The out-of-character options (Save, Load, Settings, Tutorials, Exit) remain available via the Lost Phone Menu
+- The out-of-character options (Save, Load, Settings, Tutorials, Memories, Exit) remain available via the Lost Phone Menu
 
 Lost phone scenarios may be scripted mission events or may occur organically through the pipeline capture system. See [UI/UX open items](../gdd/ui-ux.md).
 
