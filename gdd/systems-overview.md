@@ -74,9 +74,9 @@ Combat is skill-driven and action-oriented. The attributes and skills developed 
 
 ### Traversal
 
-Moving through Terridyn is active and skill-dependent. Parkour covers urban acrobatics — vaults, climbs, wall-runs, chases, and crowd navigation while carrying items. Driving covers vehicle operation from bicycle through hoverbike. Both skills transfer directly to job performance and combat mobility; a player who has couriered extensively knows the city's geography before they need it for anything more dangerous.
+Moving through Terridyn is active, skill-driven, and analog. Stick deflection maps directly to speed — there is no binary walk/run toggle. Locomotion modes include walking, running, sprinting, climbing, jumping, swinging, crawling, swimming, and vehicle operation, all governed by existing skills (Parkour, Running, Athletics, Driving, Stealth, Evasion). Motion Matching provides smooth animation transitions between gaits and traversal states; the General Movement Component plugin handles the runtime movement logic. Skill investment opens new routes through the environment: rooftop shortcuts via Parkour, vertical climbs via Athletics, vehicle tiers via Driving. Content tier variants add modesty-covering locomotion (Spicy) and restraint-limited movement (Super Spicy) without altering the base traversal model.
 
-*Detail: forthcoming.*
+*Detail: [Traversal System](traversal.md) | [Creative Brief — Traversal](../creative-briefs/CB-traversal.md)*
 
 ---
 
