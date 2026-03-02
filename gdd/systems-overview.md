@@ -114,7 +114,7 @@ Failing a bounty hunting or hacking subjob does not trigger a game over. Meghan 
 
 Meghan's relationships with NPCs develop through repeated interaction, shared experience, and player choices. Relationship state affects dialogue options, available content, NPC assistance in missions, and the conditions under which other systems activate. Relationships are not a simple approval meter — they have texture that is only visible with sustained investment.
 
-*Detail: forthcoming.*
+*Detail: [CB-social](../creative-briefs/CB-social.md)*
 
 ### Inhibition
 
