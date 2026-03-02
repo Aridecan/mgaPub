@@ -236,7 +236,7 @@ The pipeline failure system means most job failures are not game over — they a
 
 ## Open Items
 
-- Meditation partial CP recovery — confirm: does Meditation provide a meaningful top-up during the day, or is its CP restoration limited to post-encounter recovery only?
+- ~~Meditation partial CP recovery~~ *(resolved — scales with skill level: marginal at basic, useful top-up at intermediate, meaningful day-extension at advanced, genuine sleep alternative at mastery. See [CB-meditation](../creative-briefs/CB-meditation.md))*
 - Exam event schedule — how many scheduled exam events exist and at what intervals?
 - Whether studying is a dedicated location (library, dorm room) or can be done anywhere
 - Exam event schedule — how many scheduled exam events exist and at what intervals?
