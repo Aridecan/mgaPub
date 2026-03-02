@@ -50,6 +50,8 @@ Game over screens may exist in specific circumstances if the design requires the
 
 Some mechanics will be hard. Assists will be available for players who need them. These assists are opt-in, clearly communicated, and free of shame. They reduce friction without removing the underlying systems — the challenge remains intact and available. Access to the game's content should not be gated by reflex or precision if the player does not want it to be.
 
+See [Difficulty Framework](difficulty.md) for the combat difficulty system implementing this principle.
+
 ---
 
 ## 8. Community Autonomy Over Enforcement

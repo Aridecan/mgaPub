@@ -221,13 +221,35 @@ Separate values are stored for KB+M and controller input.
 
 | Setting | Type | Default | Notes |
 |---------|------|---------|-------|
-| Difficulty | Dropdown | Normal | Easy / Normal / Hard / Custom (TBD) |
+| Difficulty | Dropdown | Normal | Easy / Normal / Hard / Custom — see [Difficulty Framework](../gdd/difficulty.md) |
 | Autosave | Dropdown | 10 min | Off / 5 / 10 / 15 / 20 / 30 min |
 | Pause in In-Game Menu | Toggle | Off | When on, world time pauses while any in-game menu is open (both phone and out-of-character); default off — the world continues normally and the game's pacing is designed around this |
 | Tutorial Hints | Toggle | On | |
 | HUD Opacity | Slider | 100% | Scales all widget opacity |
 | Notifications | Toggle | On | Skill level-up log, mission updates, etc. |
 | Notification Duration | Slider | Medium | How long non-critical notifications stay on screen |
+
+#### Difficulty — Custom Panel
+
+Selecting **Custom** in the Difficulty dropdown expands an additional settings panel below, following the same expand/collapse pattern as Display → Advanced. The panel contains eleven combat-only parameters, each as a labelled slider or dropdown:
+
+| Parameter | Type | Default (Normal) |
+|-----------|------|-------------------|
+| Enemy Aggression | Dropdown | Medium |
+| Enemy Read Speed | Dropdown | Medium |
+| AI Adaptiveness | Dropdown | Mixed |
+| Resource Exploitation | Dropdown | Partial |
+| Pursuit Tenacity | Dropdown | Standard |
+| Reaction Windows | Dropdown | Standard |
+| Incoming Damage | Slider | 1.0× |
+| Outgoing Damage | Slider | 1.0× |
+| Group Coordination | Dropdown | Medium |
+| Recovery Rate | Dropdown | Standard |
+| Cancellation Cost | Dropdown | Standard |
+
+Changing any parameter from a preset's values automatically switches the Difficulty dropdown to Custom. Selecting Easy, Normal, or Hard resets all parameters to that bundle and collapses the panel.
+
+Difficulty affects combat systems only — it does not touch the life-sim (school, economy, jobs, CP drain, time pressure). See [Difficulty Framework](../gdd/difficulty.md) for the full design.
 
 ---
 
@@ -275,7 +297,7 @@ Content settings are **per-playthrough**, not global. Changing content settings 
 ## Open Items
 
 - Full default key and button binding tables
-- Difficulty system design (what does Custom difficulty expose?)
+- ~~Difficulty system design~~ — RESOLVED: see [Difficulty Framework](../gdd/difficulty.md); Custom exposes 8 combat-only parameters
 - Whether camera lag and auto-center settings should also be exposed per Meghan mode (civilian vs. Ava)
 - Whether any settings require a restart to apply (resolution changes, language changes)
 - Settings file location on disk — recommend alongside save data in Documents/MGA/
