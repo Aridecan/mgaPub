@@ -12,6 +12,7 @@ This brief covers the player experience of combat: how attacks are initiated, ho
 
 - [Combat Mechanics](../../mgaPriv/mechanics/combat.md) — two-phase resolution, crits, DoT timing, defensive tiers
 - [Combat Resources](../../mgaPriv/mechanics/combat-resources.md) — CP, SP, MP pools, cap degradation, revival
+- [Knockout & Recovery Creative Brief](CB-knockout-recovery.md) — brainwave sync minigame, negative CP, post-revival state
 - [Action Bar System](../../mgaPriv/mechanics/skill-bar.md) — 9–10 slot bar, folders, input scheme
 - [Clothing Creative Brief](CB-clothing.md) — clothing damage cascade (UC5, UC5b), body zone segmentation
 - [Ground Combat — Weapons](../../mgaPriv/world/ground-combat.md) — weapon technology, personal shields

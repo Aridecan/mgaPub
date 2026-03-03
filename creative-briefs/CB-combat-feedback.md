@@ -20,6 +20,7 @@ The no-death design rule shapes feedback fundamentally. There are no death anima
 - [Art Direction](../gdd/art-direction.md) — cel shader, outline rendering, material system
 - [Difficulty Framework](../gdd/difficulty.md) — reaction windows, AI parameters
 - [Magical Girl Weapons](../../mgaPriv/mechanics/magical-girl-weapons.md) — ability-specific knockback effects
+- [Knockout & Recovery Creative Brief](CB-knockout-recovery.md) — brainwave sync minigame, post-revival state (UC8 handoff)
 
 ---
 
