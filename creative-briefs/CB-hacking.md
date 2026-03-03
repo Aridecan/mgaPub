@@ -166,7 +166,7 @@ Eight skills feed into hacking performance: Hacking (core), Engineering (key ide
 - The player enters the hack with a significant information advantage — fewer probes needed, lower alert accumulation
 - This is the payoff for time invested in the research/planning phase of the mission
 
-**What the player understands:** Preparation matters. Hacking is not just the minigame — it starts with mission planning. A player who rushes in blind faces a harder, noisier hack than one who did their homework.
+**What the player understands:** Preparation matters. Hacking is not just the minigame — it starts with mission planning. A player who rushes in blind faces a harder, noisier hack than one who did their homework. At the deepest level of preparation, research flows into scripting — see UC11.
 
 ---
 
@@ -211,6 +211,41 @@ Eight skills feed into hacking performance: Hacking (core), Engineering (key ide
 | **Military** | Full complexity — all features, all difficulty |
 
 **What the player feels:** Each corporation has a personality in their security. The player develops opinions — dreading QNS systems, finding Mautorium trivial, respecting Straton's cleverness. The manufacturer label becomes meaningful information before the hack even begins.
+
+---
+
+## UC11 — Over-Preparation: The Script Kiddy
+
+**Context:** Meghan has done extensive pre-mission research — confirmed the exact manufacturer, version, and product ID. She has written hack scripts tailored to the known Cylinder layout.
+
+**Player experience:**
+
+- The mission required infiltrating a Machina Dynamics facility; the player spent time in Research identifying the exact security system: "MD CleanVault v2.4"
+- The player invested further in scripting — using Hacking + Research to write an auto-solve sequence for v2.4's known layout
+- At the target, Meghan connects to the system and activates the script
+- Sections solve themselves in rapid succession — keys are inserted automatically, signals route correctly, watchdogs are managed by the scripted sequence
+- What would have been a 2-minute puzzle completes in 10 seconds with near-zero alert accumulation
+- The player watches the Cylinder peel itself apart — the payoff for hours of preparation
+
+**What the player feels:** Preparation has tangible, dramatic payoff. The contrast between a blind hack (probing, mistakes, watchdog pressure) and a scripted hack (effortless, quiet, fast) makes the research investment feel worth every minute. This is the hacking fantasy — the job that goes perfectly because the hacker did their homework.
+
+---
+
+## UC12 — Firmware Surprise (Script Failure)
+
+**Context:** Meghan prepared scripts for "QNS IndustrialLock v2.3" but the target has been updated since her research.
+
+**Player experience:**
+
+- Meghan arrives and activates her script — the first few sections solve cleanly
+- Then a key is inserted and the wrong signals route — a police block gets hit, alert spikes
+- The player realises the firmware has been patched: the script was written for v2.3, but the system is running v2.3.5
+- **Decision point:** continue running the script (hope the remaining sections haven't changed) or abort and switch to manual hacking (starting from a worse position with elevated alert)
+- If the player researched deeper, they might have known about the patch — "QNS released v2.3.5 three weeks ago to fix the bypass in section C"
+- If the version jump was major (v2.3 → v3.0), the script is useless from the first section — the Cylinder layout is completely different
+- The player falls back to manual hacking, using their knowledge of QNS's signature style (dense, heavy watchdogs) to navigate the unfamiliar puzzle
+
+**What the player understands:** Scripts are powerful but brittle. Over-reliance on automation is a risk — firmware changes break scripts, and a failed script leaves the player in a worse position than starting manual. The smartest approach combines preparation with adaptability: research the version, write the script, but be ready to improvise. Research depth matters — the player who also checked for firmware updates knew the risk; the player who stopped at "it's a QNS v2.3" got surprised.
 
 ---
 
