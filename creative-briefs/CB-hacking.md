@@ -170,16 +170,62 @@ Eight skills feed into hacking performance: Hacking (core), Engineering (key ide
 
 ---
 
+## UC9 — Recognising a Familiar System (Fixed Puzzles)
+
+**Context:** Meghan encounters a system she has hacked before — same manufacturer, same version number.
+
+**Player experience:**
+
+- The system label is visible: "Straton SecureGate v3.2"
+- The player recognises it — they've solved this exact puzzle before
+- **Knowledge Recall** pre-reveals the circuit layout (the game confirming what the player already knows)
+- The player inserts the same keys in the same positions — the Cylinder solves quickly and quietly
+- Minimal probing needed, minimal alert accumulation
+- What took 2 minutes the first time takes 20 seconds the second time
+
+**What the player understands:** Knowledge accumulates. Learning a system's puzzle once pays off every subsequent encounter. Hacking skill isn't just a number — it's represented by the player's actual memory of solutions. This is the core of the fixed puzzle system.
+
+---
+
+## UC10 — Corporate Signature Recognition
+
+**Context:** Meghan encounters a new version from a manufacturer she's familiar with.
+
+**Player experience:**
+
+- The label reads "Straton SecureGate v4.0" — a version she hasn't seen, but a manufacturer she knows
+- The puzzle is new, but the **corporate signature style** is familiar — Straton systems always use heavy cross-communication, indirect solutions
+- The player knows not to try the obvious key placement — Straton's style means the real solution is in a different section
+- Even though the specific puzzle is new, the player's familiarity with Straton's design philosophy gives them an approach
+- The version is harder than v3.2 (more sections, tighter watchdogs) but the style is the same
+
+**Corporate puzzle signatures:**
+
+| Manufacturer | Style |
+|-------------|-------|
+| **Straton Technologies** | Cross-communication heavy — indirect solutions, keys unlock other sections |
+| **QNS** | Dense, militaristic — heavy watchdog coverage, police blocks everywhere |
+| **Machina Dynamics** | Elegant, layered — clean logic but many layers deep |
+| **Mautorium** | Linear, direct — sequential, minimal cross-talk; easiest to learn |
+| **HLM** | Decoy-heavy — fake release ports, police blocks disguised as targets |
+| **Military** | Full complexity — all features, all difficulty |
+
+**What the player feels:** Each corporation has a personality in their security. The player develops opinions — dreading QNS systems, finding Mautorium trivial, respecting Straton's cleverness. The manufacturer label becomes meaningful information before the hack even begins.
+
+---
+
 ## Open Items
 
 - Voxel grid dimensions for the cylinder ends — how many key positions are available?
 - Key inventory management — how many keys does Meghan carry? Consumable or reusable? Acquired through Engineering, purchase, or loot?
 - Whether inserted keys can be removed (at alert cost) or are permanent for the attempt
 - Visual design of logic gates — readable representation of AND/OR/NOT/XOR for quick comprehension
-- Whether circuit layouts are procedurally generated or hand-designed per system type
-- Manufacturer-specific visual themes — do Straton systems look different from QNS systems?
 - Audio design — signal routing, watchdog countdowns, alert level ambient changes
 - Whether partial hacking progress persists (hack some layers, withdraw, return later) or if disconnecting resets
 - Multi-user hacking — can an ally manage watchdogs or insert keys at the other end while Meghan works the circuits?
 - Whether the hacking minigame tutorial is a dedicated training scenario (hacking simulator mentioned in hacking.md) or learned through early easy encounters
 - Accessibility — what happens for players who struggle with the logic puzzle? Does high Hacking skill eventually trivialise simple systems (auto-solve)?
+- Full corporate signature catalogue — which of the Big 20 produce security systems beyond the six listed?
+- How many unique version/product ID puzzles are needed for the full game (content budget)
+- Whether firmware updates happen dynamically in response to player actions or at fixed story points
+- Whether Meghan can document solved puzzles in-game (notes/journal) to assist recall
