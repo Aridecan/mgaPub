@@ -120,7 +120,25 @@ There is no game over from knockout. There is no retry prompt. The fight continu
 
 ---
 
-## UC6 — Ally Knockout (Party Member Down)
+## UC6 — Skipping the Minigame (Natural Recovery)
+
+**Context:** The player doesn't want to engage with the brainwave minigame — either by preference, because the situation is low-stakes, or for accessibility reasons.
+
+**Player experience:**
+
+- At any point during the brainwave display — including immediately on entry — the player can press the skip input
+- The minigame exits; the screen stays in the unconscious perspective but the wave tracking interface is removed
+- Meghan recovers naturally: CP climbs from negative toward the post-revival cap at a rate based on her **Meditation skill level** and **base CP recovery rate**
+- **Game time continues advancing** — the fight plays out, allies act, the situation evolves
+- When CP reaches the post-revival cap, Meghan wakes up automatically and the screen transitions back to the game world
+
+**The tradeoff:** The minigame is always faster than natural recovery. Active wave tracking accelerates the process. Skipping accepts the full time cost — longer unconsciousness, more time allies fight alone, and potentially a lower post-revival cap from extended downtime. But the option is always there.
+
+**Meditation as the equaliser:** The same skill that makes the minigame easier (wider windows, look-ahead, auto-sync) also makes natural recovery faster. A player who invests in Meditation and skips the minigame still recovers reasonably quickly. A player with low Meditation who skips pays a steeper time penalty — but it's never a game over.
+
+---
+
+## UC7 — Ally Knockout (Party Member Down)
 
 **Context:** A party member other than Meghan is knocked out.
 
@@ -145,6 +163,6 @@ There is no game over from knockout. There is no retry prompt. The fight continu
 - Visual design of the unconscious perspective — how abstract, how much battle information bleeds through, whether it changes with story context
 - Audio design — muffled battle sounds, heartbeat, wave-tracking audio feedback (tones for sync quality?)
 - Whether the brainwave display should show any information about the ongoing fight (ally health? enemy count?) or be purely internal
-- Accessibility considerations — alternative input modes for players who cannot manage rapid multi-button input; Meditation skill as the primary accessibility lever (high Meditation = easier minigame) may be sufficient
+- Accessibility considerations — the skip option plus Meditation investment provides a non-minigame path; whether additional accessibility options are needed beyond this
 - MP knockout (magical girl at zero MP): does this use the same brainwave minigame, or a different visual metaphor representing mana depletion rather than consciousness loss?
 - Whether enemy organic knockouts use the same system (enemies attempting brainwave recovery while downed) or simply use a timer
