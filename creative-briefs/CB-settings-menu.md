@@ -168,18 +168,21 @@ Two sub-tabs: **Keyboard & Mouse** and **Controller**. Both are fully rebindable
 
 | Setting | Type | Default |
 |---------|------|---------|
-| Full key binding table | Keybind | [Defaults TBD] |
+| Key binding table | Rebind UI | See [CB-controls](CB-controls.md) for defaults |
 | Mouse Sensitivity (Horizontal) | Slider | 50% |
 | Mouse Sensitivity (Vertical) | Slider | 50% |
 | Invert Mouse X | Toggle | Off |
 | Invert Mouse Y | Toggle | Off |
 | Mouse Smoothing | Toggle | Off |
+| Reset to Defaults | Button | — |
+
+**Keyboard rebinding UI:** A standard rebind table — each action is listed with its current binding. The player clicks a binding, then presses the desired new key. **Conflict detection** warns if the new key is already assigned to another action, offering to swap or cancel. Modifier keys (Shift, Ctrl, Alt) can be used as part of a binding.
 
 #### Controller
 
 | Setting | Type | Default |
 |---------|------|---------|
-| Full button binding table | Keybind | [Defaults TBD] |
+| Button binding table | Rebind UI | See [CB-controls](CB-controls.md) for defaults |
 | Stick Sensitivity (Horizontal) | Slider | 50% |
 | Stick Sensitivity (Vertical) | Slider | 50% |
 | Invert Stick X | Toggle | Off |
@@ -189,6 +192,20 @@ Two sub-tabs: **Keyboard & Mouse** and **Controller**. Both are fully rebindable
 | Trigger Sensitivity | Slider | 50% |
 | Rumble / Vibration | Toggle | On |
 | Aim Assist | Toggle | On |
+| Reset to Defaults | Button | — |
+
+**Controller rebinding UI:** Same table format as keyboard, but with **checkbox toggles for LT and LB modifiers**. Instead of requiring the player to hold modifier buttons during rebinding, the UI presents a modifier layer selector:
+
+| Layer selector | Modifier state | Assignable inputs |
+|----------------|----------------|-------------------|
+| **None** | No modifier | Face buttons (X/Y/B), D-pad, A, RT, RB, sticks |
+| **LT** | LT held | Face buttons, D-pad |
+| **LB** | LB held | Face buttons, D-pad |
+| **LT+LB** | Both held | Face buttons |
+
+The player selects which modifier layer they are editing, then assigns face buttons and D-pad within that layer. This makes the full 10-slot action bar mapping visible and editable without having to physically hold triggers during the rebind process. Conflict detection applies across all layers — assigning a function to LT+X warns if LT+X is already mapped elsewhere.
+
+**Per-profile rebinds** — if widget profiles exist per HUD (see [CB-hud-modification](CB-hud-modification.md)), control profiles may follow the same pattern, allowing different binding layouts for different gameplay contexts. This is an open question.
 
 ---
 
@@ -296,7 +313,7 @@ Content settings are **per-playthrough**, not global. Changing content settings 
 
 ## Open Items
 
-- Full default key and button binding tables
+- ~~Full default key and button binding tables~~ — RESOLVED: see [CB-controls](CB-controls.md) for complete binding tables
 - ~~Difficulty system design~~ — RESOLVED: see [Difficulty Framework](../gdd/difficulty.md); Custom exposes 8 combat-only parameters
 - Whether camera lag and auto-center settings should also be exposed per Meghan mode (civilian vs. Ava)
 - Whether any settings require a restart to apply (resolution changes, language changes)
