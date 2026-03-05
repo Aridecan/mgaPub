@@ -50,6 +50,7 @@ All bindings are **fully rebindable** through the settings menu (see [Settings M
 | D-pad Left/Right + LB  | Cycle characters                                    |
 | Menu button            | OOC / Phone menu                                    |
 | L4/R4 (Steam grip)     | Supported; mappings open / player configurable      |
+| Trackpad click (DualSense / Steam) | Supported; mapping open / player configurable |
 
 
 ### Modifier Layer Summary
@@ -143,7 +144,7 @@ The contextual action input is context-sensitive based on what is near the playe
 | Near a movable object         | —                                             | Object carry (push/pull)       |
 
 
-Press/release fires on button up — a quick tap. Hold fires after the hold threshold (~0.3s). This prevents accidental grabs when the player intends to interact.
+Press/release fires on button up — a quick tap. Hold fires after the **hold threshold** (default 0.25s, tunable 0.15s–0.50s in [Settings Menu — Controls](CB-settings-menu.md)). This prevents accidental grabs when the player intends to interact.
 
 ---
 
@@ -402,33 +403,40 @@ The brainwave sync minigame has 5 wave bands. Each band has two controls (up/dow
 
 ---
 
-### UC10 — Steam Controller (Extended Input)
+### UC10 — Extended Controller Input (Grip Buttons, Trackpads)
 
-**Actor:** Player using a Steam Controller or Steam Deck with grip buttons
-**Goal:** Use L4/R4 grip buttons as additional configurable shortcuts
+**Actor:** Player using a controller with extra inputs (Steam Controller, Steam Deck, DualSense)
+**Goal:** Use grip buttons and trackpad click as additional configurable shortcuts
 **Context:** Any gameplay.
 
-**Default state:**
+**Supported extended inputs:**
 
-- L4 and R4 are **supported but unmapped by default**. The game recognises them as valid input but does not assign default actions
-- Players configure L4/R4 through the standard rebinding interface in the settings menu, or through Steam Input's own configuration layer
+| Input | Available on |
+|-------|-------------|
+| L4 / R4 (grip buttons) | Steam Controller, Steam Deck |
+| Trackpad click | DualSense (PS5), Steam Controller |
+
+All extended inputs are **supported but unmapped by default**. The game recognises them as valid inputs but does not assign default actions. Players configure them through the standard rebinding interface in the settings menu.
+
+**Trackpad implementation:** The trackpad is exposed as a single click input only — not as a 2D surface. The game does not use trackpad position or touch/swipe data. Players who want trackpad-as-mouse or trackpad-as-joystick behaviour can configure that through Steam Input or system-level remapping, which the game does not interfere with.
 
 **Suggested uses (not enforced):**
 
 - L4: Dodge (mirroring R3 for players who dislike stick clicks)
 - R4: Contextual action (mirroring RT for quicker access)
+- Trackpad click: Map, phone toggle, or any single-press action
 - L4: Quick posture toggle (standing ↔ crouching)
 - R4: Zoom (mirroring RB)
 
-**Why open:** Grip buttons are not available on standard Xbox/PlayStation controllers. Mapping critical functions to grip buttons would create a hardware advantage. Keeping them as player-configurable shortcuts provides value to Steam Controller users without penalising standard gamepad users.
+**Why open:** These inputs are not available on all controllers. Mapping critical functions to them would create a hardware advantage. Keeping them as player-configurable shortcuts provides value without penalising standard gamepad users.
 
-**Steam Input compatibility:** The game's binding system should not conflict with Steam Input's remapping layer. If a player has configured L4/R4 through Steam Input, the game should respect those bindings without double-mapping.
+**Steam Input compatibility:** The game's binding system should not conflict with Steam Input's remapping layer. If a player has configured extended inputs through Steam Input, the game should respect those bindings without double-mapping.
 
 ---
 
 ## Open Items
 
-- Exact hold threshold for RT contextual action (grab vs interact) — currently ~0.3s; needs playtesting
+- ~~Exact hold threshold for RT contextual action~~ — RESOLVED: default 0.25s, tunable 0.15s–0.50s in settings menu
 - Whether folder tap behaviour (slot 1 / last used) interacts with modifier layers on controller
 - L4/R4 default mapping — currently open; may assign defaults after playtesting identifies common player preferences
 - LB+LT + B reserved slot — potential future assignment (party commands, emote wheel, map)

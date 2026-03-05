@@ -174,6 +174,7 @@ Two sub-tabs: **Keyboard & Mouse** and **Controller**. Both are fully rebindable
 | Invert Mouse X | Toggle | Off |
 | Invert Mouse Y | Toggle | Off |
 | Mouse Smoothing | Toggle | Off |
+| Hold Threshold | Slider | 0.25s | Range: 0.15s–0.50s; time before a key press becomes a hold (e.g. interact vs grab on E) |
 | Reset to Defaults | Button | — |
 
 **Keyboard rebinding UI:** A standard rebind table — each action is listed with its current binding. The player clicks a binding, then presses the desired new key. **Conflict detection** warns if the new key is already assigned to another action, offering to swap or cancel. Modifier keys (Shift, Ctrl, Alt) can be used as part of a binding.
@@ -192,6 +193,7 @@ Two sub-tabs: **Keyboard & Mouse** and **Controller**. Both are fully rebindable
 | Trigger Sensitivity | Slider | 50% |
 | Rumble / Vibration | Toggle | On |
 | Aim Assist | Toggle | On |
+| Hold Threshold | Slider | 0.25s | Range: 0.15s–0.50s; time before a button press becomes a hold (e.g. interact vs grab on RT) |
 | Reset to Defaults | Button | — |
 
 **Controller rebinding UI:** Same table format as keyboard, but with **checkbox toggles for LT and LB modifiers**. Instead of requiring the player to hold modifier buttons during rebinding, the UI presents a modifier layer selector:
