@@ -97,3 +97,17 @@ This game models physical reality. Men are on average stronger than women. Heavy
 This is not a flaw to be patched. It is not an oversight. It is not something that will be quietly equalised to avoid discomfort. The physical asymmetry is intentional, grounded in real biology, and serves the design: the tension of Meghan overcoming disadvantage through skill, tactics, magic, and player ability is more interesting than a world where everyone is equally capable of everything.
 
 The game offers tools to compensate — skills, magic, environment, intelligence. What it does not offer is the pretence that the disadvantage does not exist.
+
+---
+
+## 14. Dignity Is Not Optional
+
+D/s dynamics exist in this world. They range from playful power exchange to intense structures with real consequences. Terridyn's cyberpunk culture, the gender ratio, Tierney's nature — the setting creates space for BDSM at multiple levels, and the game does not shy from it.
+
+What the game does not contain is the erasure of personhood.
+
+No protagonist, no ally, no healthy relationship in this game uses the word "worthless" to describe a person — not as a title, not as a mode of address, not as self-reference. A submissive in MGA's world may kneel, may serve, may surrender control. They do so as a person of value choosing to give something. The power exchange has meaning *because* what is given has worth. Surrendering something worthless is not submission — it is nothing.
+
+The word "worthless" — and the psychology behind it — is reserved for antagonists. Characters who call others worthless, or who demand that others refer to themselves as worthless, are signalling something the world recognises: genuine cruelty, not kink. It is a villain marker. The audience and the characters both understand this. When a player hears "worthless" in this game, they are hearing a person who has crossed a line the setting does not forgive.
+
+The Gorean novels that popularised submissive self-deprecation speech ("this worthless one," "this girl") were written by a philosophy professor examining oppressive cultures — a study of how power structures dehumanise. Parts of the BDSM community took the examination as a manual. MGA does not repeat that mistake. The game depicts power dynamics; it does not endorse the destruction of self-worth as a feature of those dynamics.
