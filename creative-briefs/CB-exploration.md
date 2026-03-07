@@ -139,7 +139,7 @@ Two skills directly support exploration. **Exploration** (INT/AGI) governs pathf
 - **Locations visited** are remembered. The player's map reflects where Meghan has been, not where the game has revealed. Areas she has not visited are blank — not fogged, simply absent
 - **Routes discovered** are marked. Shortcuts, alternate paths, and traversal options that Meghan has found appear on her mental map. Routes she has seen but cannot access (skill too low) are marked differently — she knows they exist but cannot use them yet
 - **Points of interest** are logged. Shops, training areas, shrines, NPC locations, job sites, and significant landmarks are recorded as Meghan encounters them
-- **Investigation notes** persist. Information gathered during bounty investigations, hacking jobs, or conversations is stored. The player can review what they know about a location, faction, or NPC
+- **Investigation notes** persist. Information gathered during bounty investigations, hacking jobs, or conversations is stored as Notes on Meghan's phone. The player can review what they know about a location, faction, or NPC. See [CB-notes-and-discovery](CB-notes-and-discovery.md) for the full note system, including map pin creation from location-referenced notes
 
 **Map as earned knowledge:** The map is not a game UI imposed on the world — it is Meghan's understanding of the city, filtered through her phone's AR overlay. A player who has explored extensively has a rich, detailed map. A player who has stuck to the same route between the apartment and Burton's has a sparse one. The difference is visible and meaningful.
 
@@ -155,7 +155,7 @@ Two skills directly support exploration. **Exploration** (INT/AGI) governs pathf
 - Concealment rating distribution — what percentage of hidden items are findable at each Search tier?
 - Whether the map reveals NPC schedules (shows where an NPC typically is at different times) or if the player must learn schedules through observation
 - Fast travel — does Meghan gain fast travel to known locations (via monorail, taxi, or phone app) or must she always traverse manually?
-- Whether exploration has a completionist layer (total discoveries per district, percentage explored) or if that contradicts the organic discovery philosophy
+- ~~Whether exploration has a completionist layer (total discoveries per district, percentage explored) or if that contradicts the organic discovery philosophy~~ → **Resolved:** No completionist layer. Discovery is organic; no percentage counters, no "X/Y discovered" tracking. Notes accumulate but are never counted against a total. This is consistent with the Elden Ring discovery philosophy — see [CB-notes-and-discovery](CB-notes-and-discovery.md)
 - District-specific exploration content — does each district have unique discovery types, or is the system uniform across the city?
 - Underground exploration — how extensive is the subway/sewer network as an explorable space? Is it a full secondary traversal layer or limited to specific locations?
 - Whether the CAMERA drone provides aerial reconnaissance that supplements ground-level exploration

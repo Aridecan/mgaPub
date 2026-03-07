@@ -41,7 +41,7 @@ Same six options as the Lost Phone Menu — Save, Load, Settings, Tutorials, Mem
 | **HUD Modification** | Configure active widget sets for eye implants and CAMERA drone | The most complex section — see [CB-hud-modification](CB-hud-modification.md) *(forthcoming)* |
 | **Map** | City map, points of interest, fast travel if unlocked | — |
 | **Notes** | Meghan's collected notes, lore entries, observations, and app guides | See detail below |
-| **Missions** | Active and completed quest/job log; mission tracking | — |
+| **Missions** | Active and completed job contracts; tracks bounties, deliveries, repairs, hacking jobs, and waitressing shifts only — story progression is not tracked here | See [CB-notes-and-discovery](CB-notes-and-discovery.md) for the Notes/Missions separation |
 | **Skills** | Full skill and attribute view; progression tracking | — |
 | **Inventory** | Equipment, items, consumables | See [Inventory](../gdd/inventory.md) |
 | **Contacts** | NPCs Meghan has relationships with; communication log | — |
@@ -51,16 +51,19 @@ Same six options as the Lost Phone Menu — Save, Load, Settings, Tutorials, Mem
 
 ## Notes Section
 
-Meghan's Notes section contains four categories:
+Meghan's Notes section is the primary story-discovery mechanism. There is no quest log for the main story — the story reveals itself through notes that Meghan writes automatically based on what she experiences, observes, or is told. The player reads notes, connects the dots, and decides what to pursue. See [CB-notes-and-discovery](CB-notes-and-discovery.md) for the full design.
 
-- **Field notes** — observations Meghan has written or recorded during missions; personal commentary on events
-- **Lore entries** — world information collected through exploration, conversation, and items; encyclopaedia-style reference
-- **Quest notes** — contextual notes attached to missions (separate from the mission log itself — the mission log tracks objectives; notes track context, leads, and Meghan's read of a situation)
+The Notes section contains five categories:
+
+- **Leads** — actionable information: things Meghan could investigate or act on. Includes location references (which create map pins) and time windows where applicable. Sourced from conversations, observations, job side-effects, and NPC contact
+- **People** — what Meghan knows about specific NPCs: personality notes, reliability assessments, observed connections to other people, intel gathered through investigation
+- **World** — background information: history, geography, factions, technology, corporate structure. Encyclopaedia-style reference material sourced from lore objects, terminals, documents, and conversations
+- **Field Notes** — Meghan's personal observations and reflections. Diary-style entries: her read on a situation, emotional reactions, gut feelings, pattern recognition
 - **App Guides** — built-in help files for each phone app; unlock progressively as Meghan gains access to apps and features; diegetic — Meghan reading her own phone's documentation. See [CB-tutorials](CB-tutorials.md) for the full entry list and unlock triggers
 
-Notes are read-only from the phone menu — Meghan adds them through play, not by the player typing. They serve as an in-world substitute for an external wiki: players who pay attention to what Meghan collects have the context they need without leaving the game.
+Notes are generated automatically on trigger — conversation, observation, discovery, world event, job side-effect, NPC contact, or time-based reflection. The player never manually creates notes. They are read-only from the phone menu and serve as an in-world substitute for an external wiki: players who pay attention to what Meghan collects have the context they need without leaving the game.
 
-The Notes section is organised into the four categories above, searchable by keyword.
+The Notes section is searchable by keyword across all categories.
 
 ---
 
@@ -115,5 +118,5 @@ Lost phone scenarios may be scripted mission events or may occur organically thr
 - Time behaviour when phone is open — full speed / slowed / paused
 - Phone menu navigation layout — tab-based, radial, or list; visual design TBD
 - Whether the out-of-character options in the phone menu appear as a dedicated section or are accessible via a separate hardware shortcut even while the phone is open
-- Notes section — how entries are triggered (automatic on discovery, manual flag, both?)
+- ~~Notes section — how entries are triggered~~ → **Resolved:** automatic on trigger (conversation, observation, discovery, event, job side-effect, NPC contact, time-based reflection). See [CB-notes-and-discovery](CB-notes-and-discovery.md) UC1
 - HUD Modification detail — covered in CB-hud-modification *(forthcoming)*

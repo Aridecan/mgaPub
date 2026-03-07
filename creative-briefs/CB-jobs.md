@@ -353,9 +353,11 @@ Each job has an independent reputation track. Reputation is not a single number 
 
 | Reputation tier | Effect |
 |----------------|--------|
-| **Low** | Basic contracts, standard pay, limited client pool |
-| **Medium** | Better-paying contracts, equipment access, NPC introductions, repeat client relationships |
-| **High** | Rare contracts, exclusive materials, story events, faction-level access, NPC connections that provide information and assistance outside the job context |
+| **Low** | Basic contracts, standard pay, limited client pool. Access to F and E rank missions |
+| **Medium** | Better-paying contracts, equipment access, NPC introductions, repeat client relationships. Access to D through B rank missions |
+| **High** | Rare contracts, exclusive materials, story events, faction-level access, NPC connections that provide information and assistance outside the job context. Access to A through SSS rank missions |
+
+All missions are ranked F through SSS by difficulty, and some form escalating chains where completing one mission unlocks the next at a higher rank. See [CB-notes-and-discovery](CB-notes-and-discovery.md) UC8 for the full ranking scale and chain mission design.
 
 **Faction tension — the reputation portfolio:**
 
