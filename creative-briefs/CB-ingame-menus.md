@@ -1,10 +1,14 @@
-# CB — In-Game Menus
+# Creative Brief — In-Game Menus
+
+---
 
 ## Overview
 
-There are two possible in-game menu states depending on whether Meghan has her phone. Both are accessed via the same hardware input. The game detects phone status and opens the appropriate state automatically.
+During an active game session, the menu button (Esc/Tab / Menu button) opens one of two menu states depending on whether Meghan has her phone. The game detects phone status and opens the appropriate state automatically.
 
-Full diegetic and design detail is in [UI/UX](../gdd/ui-ux.md). This brief defines the two menu states, their contents, and the structure of the phone menu sections.
+These are two of the three menu contexts in MGA — the third is the [Title Menu](CB-main-menu.md), which appears when no game session is active.
+
+Full diegetic and design detail is in [UI/UX](../gdd/ui-ux.md). This brief defines the two in-game menu states, their contents, and the structure of the phone menu sections.
 
 ---
 
@@ -29,10 +33,17 @@ This menu is always reachable regardless of phone status. It exists as a hardwar
 
 ### State 2 — Phone Menu
 
-Meghan has her phone. The phone menu contains all out-of-character options plus the full in-fiction menu. Meghan takes out her phone in-world; time does not pause.
+Meghan has her phone. The phone menu is fully **in-fiction** — Meghan takes out her phone in-world; time does not pause. The phone displays in-world apps and a **System** button.
 
-#### Out-of-Character Section
-Same six options as the Lost Phone Menu — Save, Load, Settings, Tutorials, Memories, Exit to Desktop — accessible from within the phone menu so the player never needs to dismiss the phone to reach them.
+#### System Button
+
+A dedicated button on the phone interface that opens the out-of-fiction options — the same six items available in the Lost Phone Menu:
+
+- Save, Load, Settings, Tutorials, Memories, Exit to Desktop
+
+The System button is always visible on the phone screen. The player never needs to dismiss the phone to reach out-of-fiction options — they tap System, handle their business, and return to the phone's in-fiction sections.
+
+This is the one deliberate break from full diegesis within the phone menu. The phone is Meghan's; the System button is the player's.
 
 #### In-Fiction Sections
 
@@ -117,6 +128,6 @@ Lost phone scenarios may be scripted mission events or may occur organically thr
 
 - Time behaviour when phone is open — full speed / slowed / paused
 - Phone menu navigation layout — tab-based, radial, or list; visual design TBD
-- Whether the out-of-character options in the phone menu appear as a dedicated section or are accessible via a separate hardware shortcut even while the phone is open
+- ~~Whether the out-of-character options in the phone menu appear as a dedicated section or are accessible via a separate hardware shortcut even while the phone is open~~ — RESOLVED: **System button** on the phone interface opens OOC options; always visible, no separate hardware shortcut needed
 - ~~Notes section — how entries are triggered~~ → **Resolved:** automatic on trigger (conversation, observation, discovery, event, job side-effect, NPC contact, time-based reflection). See [CB-notes-and-discovery](CB-notes-and-discovery.md) UC1
 - HUD Modification detail — covered in CB-hud-modification *(forthcoming)*

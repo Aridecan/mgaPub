@@ -1,12 +1,35 @@
-# CB — Main Menu
-
-## Overview
-
-The main menu is the first screen the player reaches after the first-launch wizard (or directly on subsequent launches). Visual language matches the rest of the game: **clean and minimal**. Menu items are a vertical list. Background is a static or gently animated scene — specific art TBD.
+# Creative Brief — Main Menu
 
 ---
 
-## Menu Items
+## Overview
+
+MGA has **three menu contexts** that the player encounters depending on game state. All share the same hardware input (Esc/Tab / Menu button) but present different options based on context.
+
+| Menu | When | Fiction | Contents |
+|------|------|---------|----------|
+| **Title Menu** | No active game session (pre-game, between sessions) | Out of fiction | Continue, New Game, Load, Mods, Settings, Exit |
+| **Phone Menu** | Active session, Meghan has her phone | In fiction | In-world apps + System button (leads to OOC options) |
+| **Lost Phone Menu** | Active session, Meghan's phone is missing | Out of fiction | Save, Load, Settings, Tutorials, Memories, Exit |
+
+The Phone Menu and Lost Phone Menu are documented in detail in [In-Game Menus](CB-ingame-menus.md). This brief covers the **Title Menu** — the first screen the player sees.
+
+**Related documents:**
+
+- [In-Game Menus](CB-ingame-menus.md) — Phone Menu and Lost Phone Menu (active session)
+- [Settings Menu](CB-settings-menu.md) — settings accessible from all three menus
+- [Mod Manager](CB-mod-manager.md) — mod acquisition, load order, per-playthrough activation
+- [Boot Manager](../gdd/boot-manager.md) — ABM/MBM lifecycle, first-launch sequence
+
+---
+
+## Title Menu
+
+The title menu is the first screen the player reaches after the first-launch wizard (or directly on subsequent launches). Visual language matches the rest of the game: **clean and minimal**. Menu items are a vertical list. Background is a static or gently animated scene — specific art TBD.
+
+---
+
+## Title Menu Items
 
 Listed top to bottom in display order:
 
