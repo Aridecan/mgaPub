@@ -43,6 +43,8 @@ All dialogue is voiced. The dialogue document — a single source of truth conta
 
 **Manifesto alignment:** Per Manifesto Principle 5, all tutorials and story content are skippable. The dialogue system respects the player's time without penalising engagement.
 
+**Distinction from Interactive cutscenes:** Story conversations described here are normal gameplay dialogue — the camera adjusts softly but the player retains control and the world continues. **Interactive cutscenes** ([CB-cutscenes](CB-cutscenes.md) UC2) use the same dialogue system (branching, choices, skill-gating) but with authored NPC staging and scripted movement between dialogue beats. The difference is production value and staging, not mechanics — the dialogue system is the same underneath.
+
 ---
 
 ### UC2 — Player Choice Presentation
@@ -121,6 +123,8 @@ Social skills open dialogue options that would otherwise be unavailable. The opt
 4. **Named NPC ambient lines.** Core cast members who are present but not in conversation produce ambient dialogue — Celeste humming while cooking, Terry making a comment about the weather as they walk across campus, a teammate calling out a tactical observation during combat. These lines are not interactive but they reinforce character presence
 
 **Ambient dialogue does not interrupt.** Barks and chatter play as audio in the environment. They do not pause gameplay, open dialogue boxes, or require player response. The player who is paying attention hears worldbuilding. The player who is focused on their objective passes through without engagement. Both experiences are valid.
+
+**Distinction from Ambient World Scenes:** Ambient dialogue described here covers one-liners — barks, chatter fragments, contextual reactions. **Ambient World Scenes** ([CB-cutscenes](CB-cutscenes.md) UC3) are multi-line scripted exchanges between NPCs with authored staging — two guards discussing a shipment, students arguing on campus. Ambient World Scenes use spatial audio, can be interrupted if the player is detected, and can trigger Notes and Memories recording when key narrative points are reached. Ambient dialogue (this UC) is simpler: single lines or brief fragments that flavour the world without scripted structure.
 
 **Combat callouts:** During combat, teammates and enemies produce contextual voice lines — warnings about incoming attacks, callouts on enemy positions, reactions to hits taken or dealt, taunts, encouragement. These use the same ambient dialogue system but with higher priority and distinct audio mixing (clearer, louder, directional). See [CB-combat-feedback](CB-combat-feedback.md) for vocal reactions to specific combat events.
 

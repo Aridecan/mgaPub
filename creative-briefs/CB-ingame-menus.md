@@ -71,7 +71,7 @@ The Notes section is searchable by keyword across all categories.
 
 The Memories menu allows the player to rewatch cutscenes they have previously seen. It is an out-of-character feature, available regardless of phone status.
 
-Cutscenes are added to the Memories catalogue on **first completion** — whether the player watched in full or skipped. Skipping counts as completion; the player can return to it later.
+Cutscenes are added to the Memories catalogue on **first completion** — whether the player watched in full or skipped. Skipping counts as completion; the player can return to it later. Exception: **Ambient World Scenes** (scripted NPC exchanges in the environment) record conditionally — only when the scene reaches a key narrative point before interruption. See [CB-cutscenes](CB-cutscenes.md) UC6 for recording rules per cutscene tier.
 
 **Catalogue layout:**
 - Entries listed in **story progression order**, grouped by chapter
@@ -87,7 +87,7 @@ Cutscenes are added to the Memories catalogue on **first completion** — whethe
 - The Memories catalogue is stored per-playthrough in the save file using the extension-safe persistence architecture
 - If a cutscene asset is missing (removed or replaced in a future build), the entry shows a "content unavailable" placeholder
 
-See [Cutscenes](../gdd/cutscenes.md) for the full cutscene system design including actor lifecycle, state snapshots, and skip behaviour.
+See [Cutscenes](../gdd/cutscenes.md) for the technical architecture and [CB-cutscenes](CB-cutscenes.md) for the player experience of the three cutscene tiers (Non-Interactive Full, Interactive, Ambient World).
 
 ---
 
