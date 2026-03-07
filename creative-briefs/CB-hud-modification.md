@@ -25,6 +25,8 @@ Both HUDs include a fixed action bar along the bottom of the screen. It is not c
 
 The action bar is the one deliberate break from full diegesis in the HUD. It exists as a player reference for available actions and their inputs. Meghan's eye implants technically display it, but it is not something she consciously reads — it is there for the player's benefit. This is a pragmatic concession: action availability changes frequently enough that requiring the player to memorise it from context would be friction without payoff.
 
+Full action bar design — slots, folders, modes, profiles, and grapple mode: [Action Bar Creative Brief](CB-action-bar.md).
+
 ---
 
 ## Widget Types

@@ -13,7 +13,8 @@ This brief covers the player experience of combat: how attacks are initiated, ho
 - [Combat Mechanics](../../mgaPriv/mechanics/combat.md) — two-phase resolution, crits, DoT timing, defensive tiers
 - [Combat Resources](../../mgaPriv/mechanics/combat-resources.md) — CP, SP, MP pools, cap degradation, revival
 - [Knockout & Recovery Creative Brief](CB-knockout-recovery.md) — brainwave sync minigame, negative CP, post-revival state
-- [Action Bar System](../../mgaPriv/mechanics/skill-bar.md) — 9–10 slot bar, folders, input scheme
+- [Action Bar System](../../mgaPriv/mechanics/skill-bar.md) — 10-slot bar, folders, input scheme
+- [Action Bar Creative Brief](CB-action-bar.md) — player-facing action bar experience, modes, profiles
 - [Clothing Creative Brief](CB-clothing.md) — clothing damage cascade (UC5, UC5b), body zone segmentation
 - [Ground Combat — Weapons](../../mgaPriv/world/ground-combat.md) — weapon technology, personal shields
 - [Magical Girl Weapons](../../mgaPriv/mechanics/magical-girl-weapons.md) — soul extension weapons, elemental abilities
@@ -301,6 +302,8 @@ Grab → Grappled → Pinned → Binding
 
 Each stage escalates control and restricts the target's options. The chain can be broken at any stage if the target escapes.
 
+**Action bar mode swap:** When a Grab initiates (RT hold / E hold connects), the action bar automatically swaps to **grapple mode** — a state-specific layout showing only grapple-relevant actions (advance, maintain, escape, bind, release, etc.). The grapple contest is played through action bar choices, not a separate minigame. When the grapple ends (escape, release, or binding completion), the bar restores to the regular layout. See [Action Bar System — Action Bar Modes](../../mgaPriv/mechanics/skill-bar.md) for the full mode system and available actions per grapple state.
+
 **Initiating a grab (player as attacker):**
 
 1. Player activates a grab action from the action bar (requires melee range)
@@ -503,3 +506,6 @@ For AoE, Phase 1 is bypassed. Evasion provides a mitigation modifier before Phas
 - Dual-channel defence — can a target defend against Intimate Techniques and Mana Drain simultaneously, or must they prioritise one?
 - Whether intimate combat can be initiated from standard melee range (without grapple) if both parties are willing or one is caught off-guard
 - Visual/audio feedback design for intimate combat — what does the player see and hear during the exchange?
+- Grapple mode action bar — visual transition when the bar swaps modes (instant swap, slide animation, colour shift?)
+- Grapple mode action bar — whether third-party intervention actions appear when observing an ally being grappled
+- Grapple mode action bar — whether opponent state (SP, escape progress) is shown as a bar element or HUD information
