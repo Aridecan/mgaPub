@@ -102,7 +102,14 @@ The game offers tools to compensate — skills, magic, environment, intelligence
 
 ## 14. Dignity Is Not Optional
 
-D/s dynamics exist in this world. They range from playful power exchange to intense structures with real consequences. Terridyn's cyberpunk culture, the gender ratio, Tierney's nature — the setting creates space for BDSM at multiple levels, and the game does not shy from it.
+D/s dynamics exist in this world. They range from playful power exchange to intense structures with real consequences. Terridyn's cyberpunk culture, the gender ratio, and the nature of certain characters — the setting creates space for BDSM at multiple levels, and the game does not shy from it.
+
+<details>
+<summary>⚠️ Story Spoiler — Character reference</summary>
+
+The character referenced is Tierney — her nature as a succubus creates specific D/s dynamics in the setting.
+
+</details>
 
 What the game does not contain is the erasure of personhood.
 

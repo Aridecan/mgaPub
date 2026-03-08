@@ -106,7 +106,14 @@ The demo will be distributed on **itch.io** initially. Steam demo release is pla
 
 Early Access begins once all core systems (combat architecture, save infrastructure, feature tiering, input systems, UI frameworks) are considered structurally complete — currently projected around the start of Chapter 5 or Chapter 6 development.
 
-**EA content boundary:** Playable through Chapter 6, concluding just before the ascent to the anchor station via the space elevator. The final battles, the Tierney reveal, the ending tragedy, the epilogue, and New Game+ modes are reserved for full release.
+**EA content boundary:** Playable through Chapter 6, concluding just before the ascent to the anchor station via the space elevator. The final battles, the ending tragedy, the epilogue, and New Game+ modes are reserved for full release.
+
+<details>
+<summary>⚠️ Story Spoiler — Additional reserved content</summary>
+
+The Tierney reveal is also reserved for full release.
+
+</details>
 
 **EA philosophy:** During Early Access, development focus shifts from feature expansion to stabilization, balance refinement, performance optimization, and content iteration. No new foundational systems will be introduced during Early Access.
 

@@ -210,7 +210,14 @@ The macro loop is story chapter progression:
 | Chapters 4–5 | Full team operational; CAMERA system active; institutional conflict |
 | Chapter 6 | Climax; civilian skills become primary tools; everything built pays off |
 
-**Chapter 3 — Machina Dynamics Internship:** At the end of Chapter 2, Meghan is required to apply for an internship at Machina Dynamics as the price of Tierney's assistance. The internship becomes available in Chapter 3 and provides stable, recurring income that shifts the economic pressure — survival becomes less urgent, freeing time budget for other priorities. The cost is operating inside a corporation that turns out to have its own agenda.
+**Chapter 3 — Machina Dynamics Internship:** At the end of Chapter 2, Meghan is required to apply for an internship at Machina Dynamics as a condition of receiving help. The internship becomes available in Chapter 3 and provides stable, recurring income that shifts the economic pressure — survival becomes less urgent, freeing time budget for other priorities. The cost is operating inside a corporation that turns out to have its own agenda.
+
+<details>
+<summary>⚠️ Story Spoiler — Internship context</summary>
+
+The help is specifically from Tierney — the internship is the price of Tierney's assistance.
+
+</details>
 
 **Content-gated jobs:** Additional job opportunities become available in Spicy and Super Spicy content tiers as Meghan's character develops and she becomes more open with herself. These unlock through relationship progression and character growth rather than skill thresholds. See private design documentation for full detail.
 

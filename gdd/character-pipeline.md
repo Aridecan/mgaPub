@@ -74,8 +74,15 @@ Chaos Cloth pins at the socket root; simulation begins 1–2 loops away from the
 | Category | Count | Notes |
 |----------|-------|-------|
 | **NPC front styles** | 10 | General-purpose bangs and framing variations |
-| **Signature front styles** | 6 | One each for the 5 magical girls + Tierney; only these characters use these styles |
+| **Signature front styles** | 6 | One each for the 5 magical girls + one additional key character; only these characters use these styles |
 | **NPC back styles** | 10 | Short bobs, medium layered, long straight/wavy, ponytails (high/mid/low), 2 braid types |
+<details>
+<summary>⚠️ Story Spoiler — Signature hair assignment</summary>
+
+The additional key character with a signature front hairstyle is Tierney.
+
+</details>
+
 | **Launch NPC combinations** | 100 | 10 fronts × 10 backs; mixed with palette colour variation for sufficient crowd diversity |
 | **Aspirational target** | 2,500 | 50 fronts × 50 backs (long-term expansion goal) |
 

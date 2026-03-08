@@ -48,7 +48,14 @@ Each creative brief breaks down a player-facing system into concrete use cases:
 This is the spoiler-heavy repository. **175 markdown files** covering:
 
 - **7 Chapter Files** — Prologue through Chapter 6. Full narrative documentation from Meghan's arrival on Terridyn through the climax.
-- **13 Character Files** — Deep profiles for Meghan/Ava, Tierney, Tabithia Brown, Teressa Straton, Terry Straton, Celeste, Daisy, Jennifer, Milo, Elisa and Elena Kael, Alexander, Trevor, and Imara. Birthdays, blood types, zodiac signs, and thematic symbolism documented.
+- **13 Character Files** — Deep profiles for Meghan/Ava, Celeste, Daisy, Jennifer, Milo, Elisa and Elena Kael, Alexander, Trevor, Imara, and additional key characters. Birthdays, blood types, zodiac signs, and thematic symbolism documented.
+
+<details>
+<summary>⚠️ Story Spoiler — Full character file list</summary>
+
+The additional characters are Tierney, Tabithia Brown, Teressa Straton, and Terry Straton.
+
+</details>
 - **21 Corporation Files** — All Big 20 megacorps plus TMC. Each with leadership, industry, Terridyn operations, and strategic role.
 - **20 World/Setting Files** — Terridyn planet and colony history, city layout (2 km x 2 km downtown core, 4 km derelict outer belt, river division, two malls), the three human subspecies (Normal Humans, Resource-Optimized Humans, Heavy Worlders) and their origins, Hell structure, mana aspects, Calibran homeworld, the Alliance and political systems, the Exodus and how it depopulated the colony, weapons technology, holidays, the 400-day T3PC calendar, and cultural details like the Gospel of Prosperity.
 - **5 Hell Faction Files** — Demon species (8 types by sin alignment), canine demons, lust demons, wrath demons, Hell Council.

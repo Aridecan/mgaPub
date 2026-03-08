@@ -120,6 +120,9 @@ The progression from ÷ to ∞ traces Meghan's full psychological journey from f
 
 ---
 
+<details>
+<summary>⚠️ Story Spoiler — NG+ Title Screen</summary>
+
 ## NG+ Title Screen — Tierney Embracing Ava
 
 The NG+ title screen replaces the Shadow of Ava composition with an image of **Tierney hugging Ava from behind** — both arms and wings wrapped protectively around her, chin resting against Ava's back or shoulder.
@@ -153,6 +156,8 @@ In this context, the embrace becomes **a memory that never happened** — an ide
 | **Logo** | Final-form operator — "Meghan = Ava" or "Meghan∞Ava" |
 
 The tonal shift from cold/dark/lonely (main game) to warm/soft/connected (NG+) tells the player visually: *you are not the same player anymore, and this is not the same story.*
+
+</details>
 
 ---
 

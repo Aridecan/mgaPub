@@ -174,7 +174,7 @@ The main story has no Missions entry. It exists entirely in Notes:
 
 1. **Story beats generate notes.** Each story event — a conversation, an observation, a discovery — creates one or more notes. The note captures what happened, not what to do about it
 2. **Cross-references build threads.** When a new note relates to an existing one, Meghan adds a cross-reference ("This connects to what Celeste told me about the port — see [earlier note title]"). The player follows these connections to build the picture
-3. **No thread labelling.** The game does not group notes into "Chapter 1 thread" or "Tierney investigation." The player identifies patterns through reading and attention
+3. **No thread labelling.** The game does not group notes into named story threads (e.g. "Chapter 1 thread"). The player identifies patterns through reading and attention
 4. **Multiple entry points.** Critical story discoveries can be reached through multiple paths — different NPCs, different locations, different jobs. If the player misses one path, another exists. This mirrors the existing pipeline design philosophy: important content has redundant access paths
 5. **No progress tracking.** The game never says "3/7 clues found." The player reads what they have and decides if they know enough to act
 6. **Acting on notes.** The player goes to a location, talks to a person, or waits for a time based on what they have read. The game recognises their presence or action and advances the story. There is no "accept quest" step

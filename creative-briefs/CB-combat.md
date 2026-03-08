@@ -392,7 +392,12 @@ A practitioner with both Intimate Techniques and [Mana Drain](../../mgaPriv/mech
 - Mana Drain drains CP *and* MP (POW-driven, requires maintained physical contact)
 - The target must defend against both channels — CHA + Intimate Techniques against the intimate drain, DEF + Mana Stability against the mana drain
 - A dual-channel attacker strips CP from two sources and depletes the target's mana pool, removing their ability to cast or maintain magical defences
+<details>
+<summary>⚠️ Story Spoiler — Specific opponent type</summary>
+
 - Against Tierney or succubus-class opponents: Mana Drain becomes a contested exchange on *both* channels — both parties drain simultaneously on both axes. Skill and attributes on both CHA and POW determine who comes out ahead
+
+</details>
 
 **Restraint interaction — the asymmetric exchange:**
 

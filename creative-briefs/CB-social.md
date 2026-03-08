@@ -14,7 +14,7 @@ Social skills (Small Talk, Negotiation, Conflict Resolution, Seduction/Charm, So
 
 - [Core Loop](../gdd/core-loop.md) — social as core loop activity
 - [Systems Overview](../gdd/systems-overview.md) — relationship system overview, inhibition
-- [Relationship Dynamics](../../mgaPriv/plot/relationship-dynamics.md) — core cast relationships, Terry/Tierney mechanics
+- [Relationship Dynamics](../../mgaPriv/plot/relationship-dynamics.md) — core cast relationships, key character dynamics
 - [Inhibition](../../mgaPriv/mechanics/inhibition.md) — hidden openness stat, content gating
 - [Small Talk](../../mgaPriv/mechanics/skills/small-talk.md) — social skill progression
 - [Negotiation](../../mgaPriv/mechanics/skills/negotiation.md) — deal-making, bargaining
@@ -143,7 +143,14 @@ The five jobs (waitress, courier, mechanic, hacker, bounty hunter) each have cli
 
 Inhibition is a hidden stat that represents Meghan's internal resistance to vulnerability, intimacy, and self-expression. It starts high — Meghan is guarded, self-contained, and uncomfortable with closeness. Over the course of the game, inhibition lowers through genuine experiences:
 
-- **Terry's consistent warmth.** Terry's personality (and Tierney's ambient succubus influence) gradually reduces Meghan's defensiveness. This is not manipulation in the player's experience — it reads as a person learning to trust someone who is persistently kind
+- **Terry's consistent warmth.** Terry's personality gradually reduces Meghan's defensiveness. This is not manipulation in the player's experience — it reads as a person learning to trust someone who is persistently kind
+
+<details>
+<summary>⚠️ Story Spoiler — Underlying mechanic</summary>
+
+Tierney's ambient succubus influence also contributes to the inhibition reduction — the player does not see this layer during first playthrough.
+
+</details>
 - **Ava's return.** Reclaiming her magical girl identity in Chapter 2 forces Meghan to confront a part of herself she suppressed. This is a major inhibition reduction event
 - **Team formation.** Building a team of people who rely on her and whom she relies on reduces isolation-based defensiveness
 - **Story milestones.** Key emotional beats — reconciliation with Milo, honest conversations with Celeste, moments of vulnerability with Terry — each reduce inhibition by specific amounts
@@ -159,6 +166,9 @@ Inhibition is a hidden stat that represents Meghan's internal resistance to vuln
 **Design intent:** Inhibition reduction represents genuine character growth, not corruption. Meghan becoming more open is a positive arc. The gating exists to ensure that intimate content arrives at narratively appropriate moments — not because the player found the right dialogue combination, but because Meghan has genuinely changed through sustained experience.
 
 ---
+
+<details>
+<summary>⚠️ Story Spoiler — UC7: The Tierney Reveal and Relationship Recontextualisation</summary>
 
 ### UC7 — The Tierney Reveal and Relationship Recontextualisation
 
@@ -176,6 +186,8 @@ This is not a mechanical change. No stats are altered. No dialogue is unlocked t
 
 **NG+ perspective.** On a second playthrough, every interaction with Terry/Tabithia/Teressa carries additional weight. The player sees the manipulation happening in real time. Dialogue that seemed warm now reads as calculated — or perhaps the player sees genuine feeling underneath the calculation. The social system supports both readings.
 
+</details>
+
 ---
 
 ## Open Items
@@ -184,7 +196,12 @@ This is not a mechanical change. No stats are altered. No dialogue is unlocked t
 - Exact dialogue system architecture — branching trees, hub-and-spoke, or a hybrid?
 - How NPC schedules are implemented — fixed timetables, dynamic based on story state, or a combination?
 - Whether the player can actively damage a relationship (insult, betray, neglect) to the point of permanent closure
+<details>
+<summary>⚠️ Story Spoiler — Open item</summary>
+
 - How relationship state transfers between Terry/Tabithia/Teressa pre-reveal and Tierney post-reveal — are they averaged, does the strongest survive, or does each persona retain its own track?
+
+</details>
 - Date activities — what specific activities qualify as dates? Are they mechanically distinct from shared activities?
 - Whether NPCs can initiate social encounters (seeking Meghan out) or if all interaction is player-initiated
 - Phone communication — can relationships be maintained through phone calls/texts during periods when in-person contact is impractical?

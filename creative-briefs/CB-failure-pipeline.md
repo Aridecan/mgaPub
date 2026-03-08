@@ -85,6 +85,9 @@ The pipeline serves three design purposes. First, it keeps the player engaged af
 
 ---
 
+<details>
+<summary>⚠️ Story Spoiler — UC4: Terry's Intervention (Late Game)</summary>
+
 ### UC4 — Terry's Intervention (Late Game)
 
 **Actor:** Terry / Tierney (NPC)
@@ -101,6 +104,8 @@ The pipeline serves three design purposes. First, it keeps the player engaged af
 **What the player feels:** Relief at escape, but unease at the mechanism. Terry did not storm in with a rescue team. She *bought* Meghan. The debt is a reminder that Meghan's safety has a price, and Terry is willing to pay it — but expects repayment. Whether this is protective or controlling depends on where the player is in understanding Tierney's nature.
 
 **Meghan's awareness:** Meghan may not know Terry arranged the purchase. She may wake up and not understand how she got out. Depending on story state and relationship level, Terry may be transparent about it, evasive, or completely silent. The information surfaces through dialogue and investigation over time.
+
+</details>
 
 ---
 

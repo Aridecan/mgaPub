@@ -54,7 +54,14 @@ The exit state serves two purposes: it is the natural end-of-scene state, and it
 
 Gameplay consequences — items granted, flags set, relationship changes — are applied at scene **start**, not gated by watching duration. Skipping at two seconds gives the same gameplay result as watching the full five-minute scene. This is a locked design decision from [Cutscenes GDD](../gdd/cutscenes.md).
 
-**Examples:** Chapter-ending reveals, major confrontations, transformation sequences, first meetings with key characters, the Tierney identity reveal, combat set-pieces that require choreography beyond the normal combat system.
+**Examples:** Chapter-ending reveals, major confrontations, transformation sequences, first meetings with key characters, major identity reveals, combat set-pieces that require choreography beyond the normal combat system.
+
+<details>
+<summary>⚠️ Story Spoiler — Identity reveal example</summary>
+
+The identity reveal referenced is the Tierney identity reveal.
+
+</details>
 
 ---
 

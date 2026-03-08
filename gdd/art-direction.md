@@ -38,11 +38,18 @@ All colour in the game is drawn from a **98-entry palette** stored as a 16×7 gr
 | Category | Count | Purpose |
 |----------|-------|---------|
 | Base chromatic | 64 | Full hue spectrum — clothing, environment, props, effects, secondary colours (rows 1–4) |
-| Signature colours | 6 | Magical girl and faction identity colours — only used by the five magical girls and Tierney |
+| Signature colours | 6 | Reserved identity colours for key characters (see story spoiler below) |
 | Flesh tones | 8 | Skin across the full character roster |
 | Greyscale | 8 | Shadows, metals, neutral elements, UI |
 | Blush tones | 12 | Anime blush, flush, lips, mouth interior, and emotional colour states |
 | **Total** | **98** | |
+
+<details>
+<summary>⚠️ Story Spoiler — Signature Colours</summary>
+
+The 6 signature colours are reserved for the five magical girls and Tierney. Only these characters use these colours.
+
+</details>
 
 **Palette intent:** The palette is intentionally bright and cheerful. This is a deliberate choice on two levels. Technically, saturated and well-separated colours are easier to work with under cel shading — banding reads cleanly, zones are distinct, and the four lighting tones produce legible results without muddy mid-values. Thematically, the brightness creates an emotional counterbalance to the dystopian society operating on Terridyn. The world is corporate-controlled, half-empty, and quietly dangerous; the visual language refuses to reflect that darkness back at the player. The game looks like a place where good things can happen, because they can. This tonal balance is established from the first frame and holds consistently — so that when characters like Sir Gallopington arrive, they feel native to the world rather than tonally incongruous.
 
