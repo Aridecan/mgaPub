@@ -22,31 +22,71 @@ Training areas serve a dual purpose: they are both a **skill progression mechani
 
 ---
 
-## Training Area Structure
+## Use Cases
 
-Every training area follows the same pattern:
+### UC1 — First Visit to a Training Area (Lesson)
 
-### First Visit — Lesson
+**Actor:** The player
+**Goal:** Learn a skill's mechanics through guided instruction in a low-stakes environment
+**Trigger:** Player visits a training area for the first time
 
-1. **Instructor introduces the skill.** Brief dialogue explaining what the skill does, why it matters, and where it's useful. This is the in-game tutorial for that skill
-2. **Instructor demonstrates.** The NPC shows the player what the skill looks like in practice — a punch combo, a climbing technique, a hacking sequence. The player watches
-3. **Guided exercise.** The instructor talks the player through performing the skill themselves. Prompts on screen, instructor voice-over, forgiving failure conditions. The player learns the inputs and mechanics in a low-stakes environment
-4. **Lesson complete.** The skill is formally introduced. The player has a baseline understanding. Repeatable drills unlock
+**Step by step:**
 
-The lesson is **skippable** per Manifesto Principle 5. A player who already understands the skill (from a previous playthrough, from reading the encyclopedia, or from natural gameplay) can skip the lesson and go straight to drills. The lesson remains available to replay from the training area menu.
+1. **Instructor introduces the skill.** Brief dialogue explaining what the skill does, why it matters, and where it's useful. This is the in-game tutorial for that skill.
+2. **Instructor demonstrates.** The NPC shows the player what the skill looks like in practice — a punch combo, a climbing technique, a hacking sequence. The player watches.
+3. **Guided exercise.** The instructor talks the player through performing the skill themselves. Prompts on screen, instructor voice-over, forgiving failure conditions. The player learns the inputs and mechanics in a low-stakes environment.
+4. **Lesson complete.** The skill is formally introduced. The player has a baseline understanding. Repeatable drills unlock.
 
-### Return Visits — Repeatable Drills
+**The lesson is skippable** per Manifesto Principle 5. A player who already understands the skill (from a previous playthrough, from reading the encyclopedia, or from natural gameplay) can skip the lesson and go straight to drills. The lesson remains available to replay from the training area menu.
 
-After the lesson, the training area offers drills:
+---
 
-1. **Player selects a drill** from the training area menu. Each area offers 2–4 drills of varying intensity and focus
-2. **Drill runs.** The player performs the skill under controlled conditions — targets to hit, obstacles to navigate, puzzles to solve, timers to beat. The instructor provides coaching feedback during the drill ("Good — now try leading the target", "You're gripping too high on the wall")
-3. **Skill XP awarded** based on performance. Better execution = more XP. Drills are not as efficient as real-world application (UC6 in CB-studying establishes this pattern) but are reliable and repeatable
-4. **Drill complete.** Player can run another drill, switch to a different one, or leave
+### UC2 — Returning for Repeatable Drills
+
+**Actor:** The player
+**Goal:** Deliberately improve a specific skill through structured, repeatable exercises
+**Trigger:** Player returns to a training area after completing the initial lesson
+
+**Step by step:**
+
+1. **Player selects a drill** from the training area menu. Each area offers 2–4 drills of varying intensity and focus.
+2. **Drill runs.** The player performs the skill under controlled conditions — targets to hit, obstacles to navigate, puzzles to solve, timers to beat. The instructor provides coaching feedback during the drill ("Good — now try leading the target", "You're gripping too high on the wall").
+3. **Skill XP awarded** based on performance. Better execution = more XP. Drills are not as efficient as real-world application (UC6 in CB-studying establishes this pattern) but are reliable and repeatable.
+4. **Drill complete.** Player can run another drill, switch to a different one, or leave.
 
 **Drill difficulty scales with skill level.** A Parkour 10 player gets basic vault drills. A Parkour 50 player gets chained wall-run sequences. The training area grows with the player, remaining useful across the full skill range rather than becoming irrelevant after early levels.
 
 **Time cost.** Drills advance the clock. A quick drill might cost 15–30 minutes of game time. A full training session of multiple drills might cost 1–2 hours. The time cost creates the same trade-off as studying — time spent training is time not spent working or socialising.
+
+---
+
+### UC3 — Cooperative Training with a Party Member
+
+**Actor:** The player
+**Goal:** Train alongside a party member or named NPC, building both skill XP and relationship XP
+**Trigger:** Player initiates a cooperative drill at a training area that supports paired exercises
+
+**Step by step:**
+
+1. **Player selects a cooperative drill and a training partner** from the available pairings at the current location.
+2. **Both participants train together.** The drill is designed for two — sparring, coordinated exercises, teaching/learning exchanges.
+3. **Both participants gain skill XP.** The partner's skill also improves through the session.
+4. **Relationship XP is awarded.** Cooperative training builds the relationship with the training partner alongside the skill investment.
+
+**Cooperative training pairings:**
+
+| Pairing | Skills trained | Location | Notes |
+|---------|--------------|----------|-------|
+| **Meghan + Terry** | Martial Arts (grappling), Athletics | Gym / Dojo | Relationship progression; Terry's playful training style |
+| **Meghan + Celeste** | Martial Arts (self-defence), Cooking | Gym / Burton's | Meghan teaches Celeste; teaching reinforces Meghan's skill |
+| **Meghan + Nagi** | Elemental Mastery, Spell Deflection | MCI / Shrines | Competitive elemental sparring; combo practice |
+| **Meghan + Nisa** | Ranged coordination, Area Control | Firing Range / Field | Earth + Ice combo training |
+| **Meghan + Arri** | Shield coordination, Counter Spell | MCI / Gym | Lightning + Ice defensive combos |
+| **Full team** | Tactical Adaptability, Area Control | Training grounds | Group tactics; formation practice; role-switching |
+
+**Terry as training partner:** Terry favours grappling-based training. Sparring sessions with Terry double as relationship-building — playful rewards for good performance, mild teasing for failure. The training dynamic deepens over time, revealing character. See [Martial Arts — Training](../../mgaPriv/mechanics/skills/martial-arts.md).
+
+**Celeste as training partner:** Celeste focuses on self-defence instruction. Meghan teaches Celeste, which reinforces Meghan's own retention (teaching trains the skill). See [Martial Arts — Training](../../mgaPriv/mechanics/skills/martial-arts.md).
 
 ---
 
@@ -91,10 +131,6 @@ Physical combat training. The primary venue for melee, grappling, and physical c
 | **Pain Tolerance** | Sparring partner NPC | Sustain activity after taking hits; maintain composure under sustained pressure |
 | **Shield Use** | Gym instructor | Block melee strikes; block ranged projectiles; block magical attacks; timed parry drills |
 | **Dual Wielding** | Gym instructor | Coordinated strike patterns; alternating offence/defence; weapon-switch drills |
-
-**Terry as training partner:** Terry favours grappling-based training. Sparring sessions with Terry double as relationship-building — playful rewards for good performance, mild teasing for failure. The training dynamic deepens over time, revealing character. See [Martial Arts — Training](../../mgaPriv/mechanics/skills/martial-arts.md).
-
-**Celeste as training partner:** Celeste focuses on self-defence instruction. Meghan teaches Celeste, which reinforces Meghan's own retention (teaching trains the skill). See [Martial Arts — Training](../../mgaPriv/mechanics/skills/martial-arts.md).
 
 ### Parkour Gym
 
@@ -155,21 +191,6 @@ Some skills train best in the field rather than a dedicated facility. These do n
 | **Trap Avoidance** | Field instructor | Navigate a trapped environment; identify trigger mechanisms; safe disarm practice |
 | **Area Control** | Tactical instructor | Establish defensive positions; manage engagement zones; control chokepoints |
 | **Tactical Adaptability** | Sparring scenarios | Adapt mid-fight when conditions change; switch strategy on instructor's command |
-
----
-
-## Cooperative Training
-
-Some training areas support training with party members or named NPCs. Cooperative drills train both participants and build relationship XP.
-
-| Pairing | Skills trained | Location | Notes |
-|---------|--------------|----------|-------|
-| **Meghan + Terry** | Martial Arts (grappling), Athletics | Gym / Dojo | Relationship progression; Terry's playful training style |
-| **Meghan + Celeste** | Martial Arts (self-defence), Cooking | Gym / Burton's | Meghan teaches Celeste; teaching reinforces Meghan's skill |
-| **Meghan + Nagi** | Elemental Mastery, Spell Deflection | MCI / Shrines | Competitive elemental sparring; combo practice |
-| **Meghan + Nisa** | Ranged coordination, Area Control | Firing Range / Field | Earth + Ice combo training |
-| **Meghan + Arri** | Shield coordination, Counter Spell | MCI / Gym | Lightning + Ice defensive combos |
-| **Full team** | Tactical Adaptability, Area Control | Training grounds | Group tactics; formation practice; role-switching |
 
 ---
 

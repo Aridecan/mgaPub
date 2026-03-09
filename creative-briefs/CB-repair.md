@@ -20,140 +20,143 @@ Six skills feed into repair performance: Repair (core), Engineering (system arch
 
 ---
 
-## UC1 — Simple Repair (Learning the Mechanic)
+## Use Cases
 
-**Context:** Meghan takes her first repair job at the mechanic shop — a customer's broken power tool with a fried wire harness. 1 fault, 2–3 signals.
+### UC1 — Simple Repair (Learning the Mechanic)
 
-**Player experience:**
+**Actor:** The player
+**Goal:** Learn the two-phase repair loop by fixing a straightforward device
+**Trigger:** Meghan takes her first repair job at the mechanic shop — a customer's broken power tool with a fried wire harness. 1 fault, 2–3 signals.
 
-- The power tool is placed on the workbench — it won't turn on
-- Phase 1: Visual inspection shows a burned-out wire harness — diagnosis is trivial, the damage is obvious
-- Phase 2: The board view appears — a small grid with 2 signal sources on the left and 2 destinations on the right
-- The gap where the harness was is a damaged zone in the middle
-- The player lays wire routes around the damage, connecting source A to destination A and source B to destination B
-- Routes are short, material is plentiful, no bridges needed
-- The repair completes — the tool powers on, the customer pays
+**Step by step:**
+
+1. **The power tool is placed on the workbench** — it won't turn on.
+2. **Phase 1 — Diagnosis.** Visual inspection shows a burned-out wire harness — diagnosis is trivial, the damage is obvious.
+3. **Phase 2 — Signal routing.** The board view appears — a small grid with 2 signal sources on the left and 2 destinations on the right. The gap where the harness was is a damaged zone in the middle.
+4. **The player lays wire routes around the damage,** connecting source A to destination A and source B to destination B. Routes are short, material is plentiful, no bridges needed.
+5. **The repair completes** — the tool powers on, the customer pays.
 
 **What the player learns:** The core loop — inspect the damage, identify the fault, then route signals from source to destination around damaged zones. Materials are consumed by routing. Shorter routes use less material.
 
 ---
 
-## UC2 — Diagnosis Challenge (Finding the Fault)
+### UC2 — Diagnosis Challenge (Finding the Fault)
 
-**Context:** A customer brings a vehicle control unit that "sometimes works." No visible damage.
+**Actor:** The player
+**Goal:** Diagnose an intermittent fault through systematic testing and skill-assisted shortcuts
+**Trigger:** A customer brings a vehicle control unit that "sometimes works" — no visible damage
 
-**Player experience:**
+**Step by step:**
 
-- Visual inspection reveals nothing — the board looks clean
-- The player runs signal tests — sends test signals through paths and reads outputs
-- Path A checks out fine. Path B checks out fine. Path C returns a wrong output.
-- The player isolates Path C and runs component tests on each node along it
-- Node 3 of Path C is the fault — a component that passes idle tests but fails under load
-- A load test confirms: the component works at low signal strength but breaks down at operating levels
-- **Knowledge Recall** kicks in: "This is a Mautorium power coupling — the thermal paste dries out after 6 months"
-- The player could have skipped three tests and gone straight to the likely component
-- Now Phase 2 begins — route around the failed component
+1. **Visual inspection reveals nothing** — the board looks clean.
+2. **The player runs signal tests** — sends test signals through paths and reads outputs. Path A checks out fine. Path B checks out fine. Path C returns a wrong output.
+3. **The player isolates Path C and runs component tests** on each node along it. Node 3 of Path C is the fault — a component that passes idle tests but fails under load.
+4. **A load test confirms:** the component works at low signal strength but breaks down at operating levels.
+5. **Knowledge Recall kicks in:** "This is a Mautorium power coupling — the thermal paste dries out after 6 months." The player could have skipped three tests and gone straight to the likely component.
+6. **Phase 2 begins** — route around the failed component.
 
 **What the player understands:** Diagnosis is not always obvious. Intermittent faults require deeper investigation. Knowledge Recall and Problem Solving shortcut the detective work — experience is worth more than brute-force testing.
 
 ---
 
-## UC3 — Material-Constrained Repair (Tight Budget)
+### UC3 — Material-Constrained Repair (Tight Budget)
 
-**Context:** A standard repair job — 5 signals across a medium board with several damaged zones. Meghan's material inventory is low.
+**Actor:** The player
+**Goal:** Complete a multi-signal repair with insufficient materials for obvious routing, forcing efficient path-finding
+**Trigger:** A standard repair job — 5 signals across a medium board with several damaged zones — and Meghan's material inventory is low
 
-**Player experience:**
+**Step by step:**
 
-- Diagnosis is straightforward — two components failed in a cascading failure
-- Phase 2: The board has 5 signals to route, but multiple damaged zones force long detours
-- The obvious routing (around the large damaged zone) would use more wire than Meghan has
-- The player must find **efficient paths** — threading routes through narrow gaps between damaged zones
-- One route needs to cross another — a bridge component is required, and Meghan only has one
-- The player rearranges routes to minimise crossings, saving the bridge for the one unavoidable intersection
-- The repair completes with material to spare — barely
-- A less efficient routing would have run out of wire on signal 4 of 5, forcing Meghan to buy more materials (eating into profit) or salvage from the shop's junk pile
+1. **Diagnosis is straightforward** — two components failed in a cascading failure.
+2. **Phase 2: The board has 5 signals to route,** but multiple damaged zones force long detours.
+3. **The obvious routing would use more wire than Meghan has.** The player must find efficient paths — threading routes through narrow gaps between damaged zones.
+4. **One route needs to cross another** — a bridge component is required, and Meghan only has one.
+5. **The player rearranges routes to minimise crossings,** saving the bridge for the one unavoidable intersection.
+6. **The repair completes with material to spare — barely.** A less efficient routing would have run out of wire on signal 4 of 5, forcing Meghan to buy more materials (eating into profit) or salvage from the shop's junk pile.
 
 **What the player feels:** Material matters. The routing puzzle isn't just "connect A to B" — it's "connect A to B using as little material as possible." Efficient routing is the difference between profit and loss. Higher Repair skill means less material consumed per route, widening the margin.
 
 ---
 
-## UC4 — Field Repair Under Pressure
+### UC4 — Field Repair Under Pressure
 
-**Context:** Meghan's vehicle breaks down during a mission. She needs to fix it to reach the objective before the window closes.
+**Actor:** The player
+**Goal:** Fix Meghan's vehicle during a mission using limited field materials and improvised salvage
+**Trigger:** Meghan's vehicle breaks down during a mission — she needs to fix it to reach the objective before the window closes
 
-**Player experience:**
+**Step by step:**
 
-- The vehicle won't start — engine turns over but stalls immediately
-- Phase 1: Meghan pops the access panel. Visual inspection shows a melted connector assembly near the fuel injection system
-- **Problem Solving** narrows it down: "Stalling on start means fuel delivery, not ignition — check the injection routing"
-- A signal test confirms: the fuel injection control signals aren't reaching the injectors
-- Phase 2: The board is the vehicle's injection control harness — 4 signals, medium grid, one large damaged zone where the connector melted
-- Meghan has limited field materials — what's in her pack, not a full shop inventory
-- She routes three signals cleanly but the fourth requires a long detour that would use her remaining wire
-- She strips a non-essential wire from the vehicle's interior lighting circuit — salvaged material, just enough
-- The vehicle starts. The interior lights don't work anymore. Good enough for the mission.
+1. **The vehicle won't start** — engine turns over but stalls immediately.
+2. **Phase 1: Meghan pops the access panel.** Visual inspection shows a melted connector assembly near the fuel injection system.
+3. **Problem Solving narrows it down:** "Stalling on start means fuel delivery, not ignition — check the injection routing." A signal test confirms: the fuel injection control signals aren't reaching the injectors.
+4. **Phase 2: The board is the vehicle's injection control harness** — 4 signals, medium grid, one large damaged zone where the connector melted.
+5. **Meghan has limited field materials** — what's in her pack, not a full shop inventory. She routes three signals cleanly but the fourth requires a long detour that would use her remaining wire.
+6. **She strips a non-essential wire from the vehicle's interior lighting circuit** — salvaged material, just enough.
+7. **The vehicle starts.** The interior lights don't work anymore. Good enough for the mission.
 
 **What the player understands:** Field repair is the same puzzle under harder constraints. Less material, no shop to buy from, and time pressure from the mission. Improvisation and salvage fill the gaps. The skills built doing repair jobs pay off when it matters.
 
 ---
 
-## UC5 — Cascading Failure (Multi-Fault Diagnosis)
+### UC5 — Cascading Failure (Multi-Fault Diagnosis)
 
-**Context:** A complex piece of machinery from the mechanic job — an industrial fabricator that's producing defective output.
+**Actor:** The player
+**Goal:** Diagnose and repair a system where the original fault caused secondary damage
+**Trigger:** A complex piece of machinery from the mechanic job — an industrial fabricator that's producing defective output
 
-**Player experience:**
+**Step by step:**
 
-- The fabricator runs but its output is wrong — dimensions are off, material bonds are weak
-- Visual inspection shows no obvious damage
-- Signal tests reveal Path D is carrying the wrong signal strength — the calibration is off
-- The player replaces the calibration component and tests again
-- Output improves but is still wrong — the bonds are still weak
-- A deeper diagnosis reveals: the original calibration failure ran the heating element at wrong temperatures for weeks, which degraded the heating element's wiring
-- **Problem Solving** connects the chain: "Bad calibration → wrong temperatures → heat damage to the heater wiring"
-- The player now has a second fault to fix — the heater's wire harness
-- Phase 2 runs twice: once for the calibration routing (simple, 2 signals) and once for the heater routing (moderate, 4 signals with heat-damaged zones)
-- After both repairs, the fabricator runs correctly
+1. **The fabricator runs but its output is wrong** — dimensions are off, material bonds are weak. Visual inspection shows no obvious damage.
+2. **Signal tests reveal Path D is carrying the wrong signal strength** — the calibration is off.
+3. **The player replaces the calibration component and tests again.** Output improves but is still wrong — the bonds are still weak.
+4. **A deeper diagnosis reveals the cascade:** the original calibration failure ran the heating element at wrong temperatures for weeks, which degraded the heating element's wiring.
+5. **Problem Solving connects the chain:** "Bad calibration → wrong temperatures → heat damage to the heater wiring."
+6. **Phase 2 runs twice:** once for the calibration routing (simple, 2 signals) and once for the heater routing (moderate, 4 signals with heat-damaged zones).
+7. **After both repairs, the fabricator runs correctly.**
 
 **What the player understands:** Complex systems have cascading failures. Fixing the obvious problem doesn't always fix the system. Diagnosis is iterative — repair, test, diagnose again. Knowledge Recall helps: "These fabricators always cook their heater wiring when the calibration drifts."
 
 ---
 
-## UC6 — CAMERA Hardware Repair
+### UC6 — CAMERA Hardware Repair
 
-**Context:** Meghan's CAMERA hardware takes damage during a mission — her surveillance drone clips a wall and the main board cracks.
+**Actor:** The player
+**Goal:** Repair Meghan's damaged surveillance drone using expensive specialised materials
+**Trigger:** Meghan's CAMERA hardware takes damage during a mission — her surveillance drone clips a wall and the main board cracks
 
-**Player experience:**
+**Step by step:**
 
-- The drone's camera feed is dead and the signal relay isn't responding
-- Phase 1: Meghan opens the chassis. The main board has a visible crack across 3 trace paths
-- **Engineering** identifies the affected subsystems: "The crack crosses the camera bus, the signal relay, and the power regulation line — all three need rerouting"
-- Phase 2: The board is the drone's main PCB — 6 signals, large grid, the crack is a long diagonal damaged zone
-- The routing is complex: signals must cross the crack zone at narrow points, and the camera bus signals need shielded wire (standard wire would introduce interference)
-- Meghan has shielded wire for the camera bus but it's expensive — using too much eats into her CAMERA upgrade budget
-- **Planning** shows a ghost overlay suggesting an efficient path that threads two routes through the same narrow gap across the crack
-- The repair completes. The drone is functional again, but Meghan used 3 units of shielded wire that she'd been saving
+1. **The drone's camera feed is dead** and the signal relay isn't responding.
+2. **Phase 1: Meghan opens the chassis.** The main board has a visible crack across 3 trace paths.
+3. **Engineering identifies the affected subsystems:** "The crack crosses the camera bus, the signal relay, and the power regulation line — all three need rerouting."
+4. **Phase 2: The board is the drone's main PCB** — 6 signals, large grid, the crack is a long diagonal damaged zone.
+5. **The routing is complex:** signals must cross the crack zone at narrow points, and the camera bus signals need shielded wire (standard wire would introduce interference).
+6. **Meghan has shielded wire for the camera bus but it's expensive** — using too much eats into her CAMERA upgrade budget.
+7. **Planning shows a ghost overlay** suggesting an efficient path that threads two routes through the same narrow gap across the crack.
+8. **The repair completes.** The drone is functional again, but Meghan used 3 units of shielded wire that she'd been saving.
 
 **What the player understands:** CAMERA hardware repair is the high-end application of the repair system. The signals are more demanding, the materials are more expensive, and the board complexity is higher. Engineering and Planning skills shine here — they show optimal paths that save expensive materials.
 
 ---
 
-## UC7 — The Repair Job (Economic Loop)
+### UC7 — The Repair Job (Economic Loop)
 
-**Context:** Meghan works a shift at the mechanic shop — multiple repair jobs available, each with visible difficulty and payment.
+**Actor:** The player
+**Goal:** Maximise profit from a mechanic shop shift by selecting jobs that match skill level and material inventory
+**Trigger:** Meghan works a shift at the mechanic shop — multiple repair jobs available, each with visible difficulty and payment
 
-**Player experience:**
+**Step by step:**
 
-- The job board shows three available repairs:
-  - Broken comm unit — Easy, 2 signals, pays 50 credits
-  - Vehicle sensor array — Medium, 5 signals, pays 150 credits
-  - Industrial motor controller — Hard, 7 signals, pays 300 credits
-- Meghan has moderate materials in stock and intermediate Repair skill
-- She takes the vehicle sensor array — good pay for her skill level
-- Diagnosis takes 2 tests (Knowledge Recall identified the likely fault). Routing uses 4 of her 6 available wire units
-- Payment: 150 credits. Materials consumed: ~80 credits worth. Profit: ~70 credits
-- She considers the industrial motor controller — higher pay, but she'd burn through her remaining materials and might need to buy more mid-repair
-- She takes the comm unit instead — fast, cheap, guaranteed profit
-- End of shift: 2 repairs completed, ~100 credits profit, Repair skill progressed
+1. **The job board shows three available repairs:**
+   - Broken comm unit — Easy, 2 signals, pays 50 credits
+   - Vehicle sensor array — Medium, 5 signals, pays 150 credits
+   - Industrial motor controller — Hard, 7 signals, pays 300 credits
+2. **Meghan has moderate materials in stock and intermediate Repair skill.** She takes the vehicle sensor array — good pay for her skill level.
+3. **Diagnosis takes 2 tests** (Knowledge Recall identified the likely fault). Routing uses 4 of her 6 available wire units.
+4. **Payment: 150 credits. Materials consumed: ~80 credits worth. Profit: ~70 credits.**
+5. **She considers the industrial motor controller** — higher pay, but she'd burn through her remaining materials and might need to buy more mid-repair.
+6. **She takes the comm unit instead** — fast, cheap, guaranteed profit.
+7. **End of shift:** 2 repairs completed, ~100 credits profit, Repair skill progressed.
 
 **What the player understands:** The repair job is an economic puzzle layered on top of the routing puzzle. Which jobs to accept depends on skill level, material inventory, and the profit-to-cost ratio. Higher skill = more efficient routing = more profit from the same job. The player is incentivised to build Repair skill because it directly increases income.
 

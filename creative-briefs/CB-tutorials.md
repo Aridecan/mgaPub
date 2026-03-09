@@ -1,14 +1,12 @@
-# CB — Offline Encyclopedia / Tutorial System
+# Creative Brief — Offline Encyclopedia / Tutorial System
+
+---
 
 ## Overview
 
 The prologue teaches 11 systems in rapid succession through guided story beats. Once Chapter 1 begins, the rails come off entirely. Players who didn't fully absorb a system during the prologue have no way to revisit the explanation — they must either figure it out or look up an external wiki.
 
 This system gives players a persistent reference they can consult at their own pace, without adding more beats to the already-dense prologue.
-
----
-
-## Two-Tier Structure
 
 The system is split into two tiers by what they cover and where they live:
 
@@ -19,29 +17,96 @@ The system is split into two tiers by what they cover and where they live:
 
 No duplication between tiers — each explains its own domain.
 
+**Related documents:**
+
+- [Prologue / Tutorial](prologue.md) — the 11-beat tutorial sequence that drives unlock triggers
+- [CB — In-Game Menus](CB-ingame-menus.md) — menu states, phone sections, Notes category, OOC menu
+- [UI/UX](../gdd/ui-ux.md) — OOC menu, phone as menu hub, widget system
+- [CB — HUD Modification](CB-hud-modification.md) — widget configuration detail
+
 ---
 
-## Tier 1 — OOC Tutorials (Mechanics)
+## Use Cases
 
-A 5th entry in the out-of-character menu, alongside Save / Load / Settings / Exit. Available at all times, including when the phone is lost.
+### UC1 — Reviewing a Game Mechanic (OOC Tutorial)
 
-### What it covers
+**Actor:** The player
+**Goal:** Review a previously-introduced game mechanic at their own pace
+**Trigger:** Player opens OOC Tutorials from the out-of-character menu (5th entry, alongside Save / Load / Settings / Exit)
 
-Game mechanics that exist independent of the phone — movement, camera modes, combat, stealth, traversal, economy concepts, clothing damage, personal shield, time system, dialogue controls, bed/time skip, DLC content tiers.
+**Step by step:**
 
-### Why OOC
+1. **Player opens the OOC menu and selects Tutorials.** Available at all times, including when the phone is lost.
+2. **The tutorial browser displays all unlocked entries.** Entries are unlocked progressively — each appears after the prologue beat or Chapter 1 moment that first introduces the system. The player cannot read ahead to systems they haven't encountered yet.
+3. **Player selects an entry.** The entry explains the mechanic — what it is, how the controls work, and how it relates to other systems.
+4. **Player optionally uses keyword search** to find a specific topic within OOC entries.
 
-These are "how to play the game" entries. They break diegesis the same way Save/Load does — they exist because the player needs them, not because Meghan needs them. Putting them in the phone would mean losing access to "how do I fight" when the phone is taken, which is exactly when the player might need it most.
+**What the OOC tier covers:** Game mechanics that exist independent of the phone — movement, camera modes, combat, stealth, traversal, economy concepts, clothing damage, personal shield, time system, dialogue controls, bed/time skip, DLC content tiers.
 
-### Visual style
+**Why OOC:** These are "how to play the game" entries. They break diegesis the same way Save/Load does — they exist because the player needs them, not because Meghan needs them. Putting them in the phone would mean losing access to "how do I fight" when the phone is taken, which is exactly when the player might need it most.
 
-Matches the existing OOC menu — clean, minimal, not themed to the game world.
+**Visual style:** Matches the existing OOC menu — clean, minimal, not themed to the game world.
 
-### Progressive unlock
+---
 
-Entries unlock after the prologue beat or Chapter 1 moment that first introduces the system. The player cannot read ahead to systems they haven't encountered yet.
+### UC2 — Learning a Phone Feature (Phone App Guide)
 
-### Entry list
+**Actor:** The player
+**Goal:** Learn how to use a phone app or phone-dependent feature
+**Trigger:** Player opens the App Guides section in the phone's Notes (4th category, alongside field notes, lore entries, and quest notes)
+
+**Step by step:**
+
+1. **Player opens the phone menu and navigates to Notes → App Guides.**
+2. **The guide browser displays all unlocked entries.** Entries unlock when Meghan gains access to the corresponding app or feature.
+3. **Player selects an entry.** The entry explains how to operate the app — navigation, configuration, what the interface elements mean.
+4. **Player optionally uses keyword search** to find a specific topic within phone guides.
+
+**What the phone tier covers:** How to use each phone app — widget configuration, map navigation, STALKER profile reading, inventory management via phone, mission tracking, contacts, delivery app dispatch.
+
+**Why phone-only:** These are diegetic — Meghan reading the built-in help files for her own phone apps. They don't make sense outside the phone context. If the phone is lost, these guides are irrelevant (the apps are also lost).
+
+**Visual style:** Matches the phone UI — feels like built-in app documentation, not a game manual. May adopt the slightly institutional STALKER aesthetic where appropriate (e.g. the Skills/STALKER guide).
+
+---
+
+### UC3 — Tutorial Entry Unlock (Progressive Disclosure)
+
+**Actor:** The system
+**Goal:** Make tutorial entries available only after the player has encountered the system they describe
+**Trigger:** Player completes a prologue beat, encounters a system for the first time in Chapter 1, or gains access to a new phone feature
+
+**Step by step:**
+
+1. **A system is introduced through gameplay.** A prologue beat, a first encounter in Chapter 1, or a new phone feature acquisition.
+2. **The corresponding tutorial entry unlocks.** OOC entries unlock for mechanic systems; phone entries unlock for phone features.
+3. **The player is not notified intrusively** — the entry is simply available the next time they browse the tutorial system.
+
+**Beat 6 unlock — Spicy-only content:** Clothing Damage & Shields unlocks after Beat 6 only if the player chose the Spicy route. If they took the base jumping puzzle, the entry unlocks the first time clothing damage occurs in Chapter 1 instead — the system does not require the Spicy DLC to be documented, only to be encountered.
+
+---
+
+### UC4 — Cross-Tier Navigation
+
+**Actor:** The player
+**Goal:** Find related information across both tiers for a single system
+**Trigger:** Player reads an entry in one tier and needs the complementary information from the other tier
+
+**Step by step:**
+
+1. **Player reads an entry that has a cross-tier counterpart.** For example, OOC "Inventory Basics" explains carry weight, hand slots, and clothing storage.
+2. **A cross-reference link points to the complementary entry.** The link directs the player to Phone "Inventory (Phone View)" which explains the per-storage view, combined grid, drag-and-drop, and reservations.
+3. **Player navigates to the linked entry** in the other tier's browser.
+
+**The dividing line:** If the player could need the information when the phone is lost, it belongs in OOC. If the information is useless without the phone, it belongs in the phone.
+
+**Example — HUD/Widgets:** OOC tutorials do not cover widgets (they are phone-dependent). Phone "Widget Configuration" and "HUD Modification (Advanced)" explain the full widget system from the phone's perspective.
+
+---
+
+## Entry Lists
+
+### OOC Tutorial Entries (Tier 1)
 
 | Entry | Unlocks after | Covers |
 |-------|---------------|--------|
@@ -60,33 +125,7 @@ Entries unlock after the prologue beat or Chapter 1 moment that first introduces
 
 This list is not exhaustive — additional entries may be added as systems are finalised.
 
-### Beat 6 unlock — Spicy-only content
-
-Clothing Damage & Shields unlocks after Beat 6 only if the player chose the Spicy route. If they took the base jumping puzzle, the entry unlocks the first time clothing damage occurs in Chapter 1 instead — the system does not require the Spicy DLC to be documented, only to be encountered.
-
----
-
-## Tier 2 — Phone Tutorials (App Guides)
-
-A 4th category within the Notes section of the phone menu, alongside field notes, lore entries, and quest notes. Only available when Meghan has her phone.
-
-### What it covers
-
-How to use each phone app — widget configuration, map navigation, STALKER profile reading, inventory management via phone, mission tracking, contacts, delivery app dispatch.
-
-### Why phone-only
-
-These are diegetic — Meghan reading the built-in help files for her own phone apps. They don't make sense outside the phone context. If the phone is lost, these guides are irrelevant (the apps are also lost).
-
-### Visual style
-
-Matches the phone UI — feels like built-in app documentation, not a game manual. May adopt the slightly institutional STALKER aesthetic where appropriate (e.g. the Skills/STALKER guide).
-
-### Progressive unlock
-
-Entries unlock when Meghan gains access to the corresponding app or feature.
-
-### Entry list
+### Phone App Guide Entries (Tier 2)
 
 | Entry | Unlocks after | Covers |
 |-------|---------------|--------|
@@ -104,22 +143,6 @@ This list is not exhaustive — additional entries may be added as phone feature
 
 ---
 
-## How the Two Tiers Relate
-
-The OOC tutorials cover *what the system is and how it works mechanically*. The phone tutorials cover *how to operate the phone app that interfaces with the system*.
-
-**Example — Inventory:**
-- OOC "Inventory Basics" explains carry weight, hand slots, and clothing storage
-- Phone "Inventory (Phone View)" explains the per-storage view, combined grid, drag-and-drop, and reservations
-
-**Example — HUD/Widgets:**
-- OOC tutorials do not cover widgets (they are phone-dependent)
-- Phone "Widget Configuration" and "HUD Modification (Advanced)" explain the full widget system from the phone's perspective
-
-The dividing line: if the player could need the information when the phone is lost, it belongs in OOC. If the information is useless without the phone, it belongs in the phone.
-
----
-
 ## Design Principles
 
 - **No duplication** — each entry exists in exactly one tier; cross-references link between them where useful
@@ -128,15 +151,6 @@ The dividing line: if the player could need the information when the phone is lo
 - **No spoilers** — entries describe mechanics, not story; they do not reveal what happens after the point the player has reached
 - **Searchable** — both tiers support keyword search within their respective interfaces
 - **Concise** — entries explain enough to use the system; they are not exhaustive design documents
-
----
-
-## Related
-
-- [Prologue / Tutorial](prologue.md) — the 11-beat tutorial sequence that drives unlock triggers
-- [CB — In-Game Menus](CB-ingame-menus.md) — menu states, phone sections, Notes category, OOC menu
-- [UI/UX](../gdd/ui-ux.md) — OOC menu, phone as menu hub, widget system
-- [CB — HUD Modification](CB-hud-modification.md) — widget configuration detail
 
 ---
 
