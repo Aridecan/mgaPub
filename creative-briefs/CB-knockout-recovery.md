@@ -18,119 +18,122 @@ There is no game over from knockout. There is no retry prompt. The fight continu
 
 ---
 
-## UC1 — Entering Knockout
+## Use Cases
 
-**Trigger:** Character's CP reaches zero. Incoming damage continues to push CP into negative values.
+### UC1 — Entering Knockout
 
-**Player experience:**
+**Actor:** The system
+**Goal:** Transition the player into the brainwave sync minigame when Meghan loses consciousness
+**Trigger:** Meghan's CP reaches zero; incoming damage continues to push CP into negative values
 
-- The screen transitions to Meghan's unconscious perspective — dark, abstract, interior
-- No cut to a separate screen or menu — the transition is visual, representing consciousness fading
-- Battle audio becomes muffled and distant
-- The brainwave display appears: five horizontal wave bands stacked vertically, each labelled (Delta at bottom, Gamma at top)
-- Only the waves required by the knockout depth are active; inactive waves are greyed out
-- The minigame begins immediately — no prompt, no "press to start"
+**Step by step:**
+
+1. **The screen transitions to Meghan's unconscious perspective.** Dark, abstract, interior — no cut to a separate screen or menu. The transition is visual, representing consciousness fading.
+2. **Battle audio becomes muffled and distant.** The fight continues in the background but the player's audio perspective shifts inward.
+3. **The brainwave display appears.** Five horizontal wave bands stacked vertically, each labelled (Delta at bottom, Gamma at top). Only the waves required by the knockout depth are active; inactive waves are greyed out.
+4. **The minigame begins immediately.** No prompt, no "press to start."
 
 **What the player understands:** Meghan is unconscious. The waves represent her brain activity. She needs to get them back in sync to wake up. The action bar buttons — the same ones used for combat — now control the waves.
 
 ---
 
-## UC2 — Tracking a Single Wave
+### UC2 — Tracking a Single Wave
 
-**Context:** Shallowest knockout — only one or two waves active. The player's introduction to the mechanic.
+**Actor:** The player
+**Goal:** Learn the core wave-tracking mechanic during a shallow knockout
+**Trigger:** Shallowest knockout — only one or two waves active
 
-**Player experience:**
+**Step by step:**
 
-- A target waveform scrolls left to right across the Delta band — an irregular, organic squiggle, not a clean sine wave
-- The player's needle sits on the wave band with a position range of 10 steps (5 up, 5 down from centre)
-- Action bar slot 1 moves the needle up; slot 2 moves the needle down
-- **Tap** nudges the needle one step; **hold** ramps continuously
-- The player rides the needle up and down to follow the target waveform as it scrolls
-- A sync indicator shows how closely the needle tracks the target: green (within 1 step), yellow (within 2), red (3+)
-- Matching the wave for the required hold duration completes the sync — the wave locks in, the screen clears, Meghan wakes up
+1. **A target waveform scrolls left to right across the Delta band.** An irregular, organic squiggle, not a clean sine wave.
+2. **The player's needle sits on the wave band with a position range of 10 steps** (5 up, 5 down from centre).
+3. **Action bar slot 1 moves the needle up; slot 2 moves the needle down.** Tap nudges the needle one step; hold ramps continuously.
+4. **The player rides the needle up and down to follow the target waveform as it scrolls.** A sync indicator shows how closely the needle tracks the target: green (within 1 step), yellow (within 2), red (3+).
+5. **Matching the wave for the required hold duration completes the sync.** The wave locks in, the screen clears, Meghan wakes up.
 
 **What the player learns:** The core mechanic. Up button, down button, follow the wave. The same two-button input produces different physical actions depending on the wave — slow sweeps for Delta (hold the button), rapid taps for faster waves.
 
 ---
 
-## UC3 — Managing Multiple Waves
+### UC3 — Managing Multiple Waves
 
-**Context:** Moderate knockout — three waves active (Delta, Theta, Alpha). The plate-spinning begins.
+**Actor:** The player
+**Goal:** Rotate attention across three active wave bands, keeping each in sync long enough for progressive lock-in
+**Trigger:** Moderate knockout — three waves active (Delta, Theta, Alpha)
 
-**Player experience:**
+**Step by step:**
 
-- Three wave bands are active simultaneously, each scrolling at its own speed with its own waveform shape
-- Delta (slots 1/2): slow rolling curves — easy to follow, can be maintained mostly by feel
-- Theta (slots 3/4): gentle undulations — needs periodic attention
-- Alpha (slots 5/6): steady rhythm — needs more active tracking
-- The player cannot perfectly track all three simultaneously — they must rotate attention
-- Unattended waves **drift out of sync** at their band's drift rate. The player sees the sync indicator sliding from green toward red
-- The player develops a pattern: hold Delta by feel, watch Alpha directly, check Theta periodically
+1. **Three wave bands are active simultaneously.** Each scrolls at its own speed with its own waveform shape:
+   - **Delta (slots 1/2)** — slow rolling curves, easy to follow, can be maintained mostly by feel
+   - **Theta (slots 3/4)** — gentle undulations, needs periodic attention
+   - **Alpha (slots 5/6)** — steady rhythm, needs more active tracking
 
-**Drift and destabilisation:** Poorly managed waves affect adjacent bands. If Alpha desyncs badly, Theta may begin drifting faster. The overall system must stay stable, not just individual waves.
-
-**Progressive lock-in:** As CP climbs back from negative, waves lock in from the bottom up — Delta first, then Theta. Each lock-in reduces the player's workload. The player feels the situation improving.
-
----
-
-## UC4 — Deep Knockout (Full Five-Wave Recovery)
-
-**Context:** Heavy negative CP — all five waves active. Maximum difficulty.
-
-**Player experience:**
-
-- All five wave bands active: Delta through Gamma
-- Delta (slots 1/2): slow, predictable — maintained by feel
-- Theta (slots 3/4): gentle but needs checking
-- Alpha (slots 5/6): moderate — steady attention required
-- Beta (slots 7/8): fast oscillation, frequent reversals — demands active tracking
-- Gamma (slots 9/10): jittery, erratic — constant small corrections, the hardest band
-- The player is managing ten buttons across five wave bands at different frequencies
-- This is genuine triage — the player rotates attention, keeps each wave "good enough," and prevents any from fully desyncing
-- The hold duration is longest at this depth — 30–60+ seconds of sustained multi-wave management
-- Lock-in progression rewards persistence: Delta locks first, then Theta, lightening the load progressively
-
-**What the player feels:** The load is overwhelming at first and gradually becomes manageable as waves lock in. The final moments — just Gamma remaining — feel like breaking the surface after being underwater.
+2. **The player cannot perfectly track all three simultaneously.** They must rotate attention — hold Delta by feel, watch Alpha directly, check Theta periodically.
+3. **Unattended waves drift out of sync** at their band's drift rate. The player sees the sync indicator sliding from green toward red.
+4. **Poorly managed waves affect adjacent bands.** If Alpha desyncs badly, Theta may begin drifting faster. The overall system must stay stable, not just individual waves.
+5. **Waves lock in progressively from the bottom up** as CP climbs back from negative — Delta first, then Theta. Each lock-in reduces the player's workload. The player feels the situation improving.
 
 ---
 
-## UC5 — Post-Revival State
+### UC4 — Deep Knockout (Full Five-Wave Recovery)
 
-**Trigger:** Final wave locks in. Consciousness restored.
+**Actor:** The player
+**Goal:** Manage all five wave bands simultaneously through a sustained recovery requiring genuine triage
+**Trigger:** Heavy negative CP — all five waves active
 
-**Player experience:**
+**Step by step:**
 
-- The abstract brainwave display clears — screen transitions back to the game world
-- Battle audio returns to full volume
-- Meghan is wherever she fell — the fight has been happening around her
-- Her CP is at the **post-revival cap**, determined by knockout depth:
+1. **All five wave bands are active simultaneously:**
+   - **Delta (slots 1/2)** — slow, predictable, maintained by feel
+   - **Theta (slots 3/4)** — gentle but needs checking
+   - **Alpha (slots 5/6)** — moderate, steady attention required
+   - **Beta (slots 7/8)** — fast oscillation, frequent reversals, demands active tracking
+   - **Gamma (slots 9/10)** — jittery, erratic, constant small corrections, the hardest band
 
-| Knockout Depth | Post-Revival CP Cap |
-|---------------|-------------------|
-| Shallow | ~50% of normal cap |
-| Moderate | ~30–40% of normal cap |
-| Deep | ~20–25% of normal cap |
+2. **The player is managing ten buttons across five wave bands at different frequencies.** This is genuine triage — the player rotates attention, keeps each wave "good enough," and prevents any from fully desyncing.
+3. **The hold duration is longest at this depth** — 30–60+ seconds of sustained multi-wave management.
+4. **Lock-in progression rewards persistence.** Delta locks first, then Theta, lightening the load progressively. The final moments — just Gamma remaining — feel like breaking the surface after being underwater.
 
-- CP recovers at the **normal recovery rate** toward the post-revival cap — no flat time lockout
-- SP may have partially recovered during the downtime
-- A revived magical girl still needs MP above the transformation threshold to re-transform
-- The existing CP cap degradation model applies on top — the post-revival cap is subject to further degradation from cumulative encounters; only sleep fully resets
+---
+
+### UC5 — Post-Revival State
+
+**Actor:** The system / the player
+**Goal:** Return Meghan to the fight in a fragile but functional state
+**Trigger:** Final wave locks in; consciousness restored
+
+**Step by step:**
+
+1. **The abstract brainwave display clears.** Screen transitions back to the game world. Battle audio returns to full volume.
+2. **Meghan is wherever she fell.** The fight has been happening around her.
+3. **Her CP is at the post-revival cap,** determined by knockout depth:
+
+   | Knockout Depth | Post-Revival CP Cap |
+   |---------------|-------------------|
+   | Shallow | ~50% of normal cap |
+   | Moderate | ~30–40% of normal cap |
+   | Deep | ~20–25% of normal cap |
+
+4. **CP recovers at the normal recovery rate** toward the post-revival cap — no flat time lockout.
+5. **SP may have partially recovered during the downtime.** A revived magical girl still needs MP above the transformation threshold to re-transform.
+6. **The existing CP cap degradation model applies on top.** The post-revival cap is subject to further degradation from cumulative encounters; only sleep fully resets.
 
 **What the player understands:** She's back, but fragile. The reduced cap means a few hits could knock her out again. The fight she wakes up to may have shifted — allies repositioned, enemies advanced, objectives changed. The world did not pause.
 
 ---
 
-## UC6 — Skipping the Minigame (Natural Recovery)
+### UC6 — Skipping the Minigame (Natural Recovery)
 
-**Context:** The player doesn't want to engage with the brainwave minigame — either by preference, because the situation is low-stakes, or for accessibility reasons.
+**Actor:** The player
+**Goal:** Opt out of the brainwave minigame and recover passively, accepting a longer recovery time
+**Trigger:** Player presses the skip input at any point during the brainwave display — including immediately on entry
 
-**Player experience:**
+**Step by step:**
 
-- At any point during the brainwave display — including immediately on entry — the player can press the skip input
-- The minigame exits; the screen stays in the unconscious perspective but the wave tracking interface is removed
-- Meghan recovers naturally: CP climbs from negative toward the post-revival cap at a rate based on her **Meditation skill level** and **base CP recovery rate**
-- **Game time continues advancing** — the fight plays out, allies act, the situation evolves
-- When CP reaches the post-revival cap, Meghan wakes up automatically and the screen transitions back to the game world
+1. **The minigame exits.** The screen stays in the unconscious perspective but the wave tracking interface is removed.
+2. **Meghan recovers naturally.** CP climbs from negative toward the post-revival cap at a rate based on her Meditation skill level and base CP recovery rate.
+3. **Game time continues advancing.** The fight plays out, allies act, the situation evolves.
+4. **When CP reaches the post-revival cap, Meghan wakes up automatically** and the screen transitions back to the game world.
 
 **The tradeoff:** The minigame is always faster than natural recovery. Active wave tracking accelerates the process. Skipping accepts the full time cost — longer unconsciousness, more time allies fight alone, and potentially a lower post-revival cap from extended downtime. But the option is always there.
 
@@ -138,18 +141,18 @@ There is no game over from knockout. There is no retry prompt. The fight continu
 
 ---
 
-## UC7 — Ally Knockout (Party Member Down)
+### UC7 — Ally Knockout (Party Member Down)
 
-**Context:** A party member other than Meghan is knocked out.
+**Actor:** The system
+**Goal:** Handle ally knockouts automatically without requiring the player to play the minigame for non-player characters
+**Trigger:** A party member other than Meghan is knocked out
 
-**Player experience:**
+**Step by step:**
 
-- The knocked-out ally is visually down in the game world — collapsed, inactive
-- The player does **not** play the brainwave minigame for allies — only for Meghan (the player character)
-- Ally recovery happens automatically at a rate influenced by the ally's own Meditation skill level
-- Deeper knockout = longer auto-recovery, same as the player's mechanic but without the interactive element
-- The player can continue fighting, reposition to protect the downed ally, or adjust tactics for the reduced team
-- When the ally recovers, they rejoin at their post-revival CP cap with the same depth-based scaling
+1. **The knocked-out ally is visually down in the game world** — collapsed, inactive.
+2. **Ally recovery happens automatically** at a rate influenced by the ally's own Meditation skill level. Deeper knockout = longer auto-recovery, same as the player's mechanic but without the interactive element.
+3. **The player continues fighting.** They can reposition to protect the downed ally or adjust tactics for the reduced team.
+4. **When the ally recovers, they rejoin at their post-revival CP cap** with the same depth-based scaling.
 
 **Why allies auto-recover:** The brainwave minigame represents Meghan's internal experience of unconsciousness. Allies have the same mechanical system (negative CP, depth-scaled recovery, cap reduction) but the player isn't inside their heads. The minigame is a first-person experience.
 

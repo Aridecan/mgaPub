@@ -24,150 +24,196 @@ Movement is analog. The player controls speed continuously through stick deflect
 
 ---
 
-## Analog Input Model
+## Use Cases
 
-Stick deflection maps to speed on a continuous curve:
+### UC1 — On-Foot Movement (Walk, Run, Sprint)
 
-| Input level | Result |
-|-------------|--------|
-| Slight deflection | Slow walk — quiet, observational pace |
-| Moderate deflection | Normal walk — default exploration speed |
-| Full deflection | Run — fastest non-sprint speed |
-| Full deflection + sprint modifier (held) | Sprint — maximum speed, stamina drain |
+**Actor:** The player
+**Goal:** Move through Terridyn at variable speed using analog input, with terrain and encumbrance modifying performance
+**Trigger:** Any stick deflection or movement key input
 
-There is no walk/run toggle. The player modulates speed by how far they push the stick. Releasing the sprint modifier while at full deflection drops smoothly back to run speed.
+**Step by step:**
+
+1. **Player deflects the stick or presses a movement key.** Stick deflection maps to speed on a continuous curve — there is no walk/run toggle. The player modulates speed by how far they push the stick:
+
+   | Input level | Result |
+   |-------------|--------|
+   | Slight deflection | Slow walk — quiet, observational pace |
+   | Moderate deflection | Normal walk — default exploration speed |
+   | Full deflection | Run — fastest non-sprint speed |
+   | Full deflection + sprint modifier (held) | Sprint — maximum speed, stamina drain |
+
+2. **Speed transitions are smooth.** Releasing the sprint modifier while at full deflection drops smoothly back to run speed. The Motion Matching system selects and blends between gait animations based on the current speed, producing smooth acceleration and deceleration without hard animation boundaries.
+
+3. **Terrain affects speed.** Paved streets are fastest. Grass and dirt reduce speed slightly. Rubble, mud, and steep gradients reduce it further. The player feels the terrain without needing a HUD indicator — Meghan slows down, her animations change, and the Motion Matching system shifts her gait accordingly.
+
+4. **Stamina cost scales with intensity.** Walking costs negligible stamina. Running costs moderate stamina. Sprinting costs high stamina and cannot be sustained indefinitely — the duration depends on STA and the Running skill. When stamina depletes, sprint drops to run, then run slows. Recovery begins when the player reduces intensity.
+
+5. **Encumbrance matters.** Carry weight (STR-dependent) affects top speed and stamina drain. A Meghan carrying a full courier load moves slower and tires faster than an unencumbered one. The effect is proportional, not binary — a light load barely matters, a heavy load is noticeable, and exceeding carry capacity forces a walk.
 
 **Keyboard and mouse:** Walk speed is mapped to a configurable input method — walk toggle, speed key, or analog keyboard support where available. Sprint is a held key. The goal is equivalent control fidelity to gamepad, not a simplified fallback.
 
 **Dead zones and response curves** are configurable in the controller section of the settings menu. Players with stick drift or accessibility needs can adjust the input curve without losing the analog speed model.
 
-**Motion Matching integration:** Speed transitions (walk → run → sprint and back) are driven by the analog input value feeding directly into the Motion Matching system. The animation system selects and blends between gait animations based on the current speed, producing smooth acceleration and deceleration without hard animation boundaries.
+---
+
+### UC2 — Climbing a Building
+
+**Actor:** The player
+**Goal:** Scale a vertical or near-vertical surface using Athletics or Parkour, managing stamina and fall risk
+**Trigger:** Player approaches a climbable surface and initiates a climb
+
+**Step by step:**
+
+1. **Player identifies the surface type.** The type of surface determines which skill governs the attempt. Terridyn's vertical environment spans multiple height zones — low-rise residential, mid-rise commercial, and high-rise industrial/corporate — each presenting different climbing challenges and surface types.
+
+2. **Athletics climbing (STR/FOR) handles raw strength surfaces.** Sheer walls, ship hulls, smooth vertical faces, cliffs — surfaces with minimal handholds where the climber relies on grip strength and endurance. Stamina drain is high. Fall risk at low skill is significant.
+
+3. **Parkour climbing (AGI/STR) handles technical urban surfaces.** Building ledges, drainage pipes, scaffolding, fire escapes, vaults over obstacles, mantles onto rooftops — surfaces with identifiable hand and foot placement points. The skill is about reading the surface and chaining moves efficiently, not brute strength. Stamina drain is moderate. Higher skill enables faster sequences and longer chains.
+
+4. **Motion Matching provides procedural hand/foot placement.** The player does not manually place hands — they direct Meghan's path and the system handles context-sensitive hand and foot positioning on climbing surfaces. The result should feel responsive and grounded, not floaty.
+
+5. **Stamina drains throughout the climb.** Climbing is expensive. The player can see stamina depleting and must plan routes that include rest points (ledges, flat surfaces, pipe junctions). Running out of stamina while climbing triggers a fall — severity depends on height and what's below.
+
+6. **Low skill increases fall risk.** At low Athletics or Parkour, certain surfaces are simply too difficult. The player can attempt them, but failure probability is high. The system communicates this through Meghan's animations — hesitation, slipping, laboured movement. This is not a hard gate; it is a risk/reward signal.
 
 ---
 
-## Base Locomotion — Walk, Run, Sprint
+### UC3 — Chaining Parkour Across Rooftops
 
-The foundation of all movement. The player is always in one of these states unless actively climbing, swimming, crawling, or in a vehicle.
+**Actor:** The player
+**Goal:** Cross gaps and obstacles using jumps, wall kicks, rail slides, and swing points in fluid chains
+**Trigger:** Player approaches a gap, obstacle, or swing point during traversal
 
-**Terrain affects speed.** Paved streets are fastest. Grass and dirt reduce speed slightly. Rubble, mud, and steep gradients reduce it further. The player feels the terrain without needing a HUD indicator — Meghan slows down, her animations change, and the Motion Matching system shifts her gait accordingly.
+**Step by step:**
 
-**Stamina cost scales with intensity.** Walking costs negligible stamina. Running costs moderate stamina. Sprinting costs high stamina and cannot be sustained indefinitely — the duration depends on STA and the Running skill. When stamina depletes, sprint drops to run, then run slows. Recovery begins when the player reduces intensity.
+1. **Basic jump is universally available.** Covers small gaps, low obstacles, and single-height elevation changes. Stamina cost is low. Motion Matching handles takeoff, airborne, and landing animations based on distance and height.
 
-**Encumbrance matters.** Carry weight (STR-dependent) affects top speed and stamina drain. A Meghan carrying a full courier load moves slower and tires faster than an unencumbered one. The effect is proportional, not binary — a light load barely matters, a heavy load is noticeable, and exceeding carry capacity forces a walk.
+2. **Parkour chains unlock at higher skill.** At higher Parkour levels, the player can chain jumps with wall kicks, rail slides, and redirects. The system reads the environment and offers chain opportunities when the geometry supports them — the player commits with a directional input and the sequence plays out. Failed chains (mistiming, insufficient skill) break the sequence and Meghan lands where she is.
 
----
+3. **Swing points extend horizontal reach.** Fixed environmental objects (pipes, bars, cables, clotheslines) support swing traversal. The player engages a swing point with a contextual input while airborne or running. Parkour skill determines swing distance and the ability to chain swing-to-swing.
 
-## Climbing
+4. **Stamina budgeting governs chain length.** Each jump, wall kick, and swing costs stamina. A long parkour chain across rooftops costs significant total stamina. The player must gauge whether they can complete a sequence before committing.
 
-Climbing is surface-dependent. The type of surface determines which skill governs the attempt.
-
-**Athletics climbing (STR/FOR):** Raw strength surfaces — sheer walls, ship hulls, smooth vertical faces, cliffs. These surfaces have minimal handholds; the climber relies on grip strength and endurance. Stamina drain is high. Fall risk at low skill is significant.
-
-**Parkour climbing (AGI/STR):** Technical urban surfaces — building ledges, drainage pipes, scaffolding, fire escapes, vaults over obstacles, mantles onto rooftops. These surfaces have identifiable hand and foot placement points. The skill is about reading the surface and chaining moves efficiently, not brute strength. Stamina drain is moderate. Higher skill enables faster sequences and longer chains.
-
-**Procedural hand/foot placement:** Motion Matching provides context-sensitive hand and foot positioning on climbing surfaces. The player does not manually place hands — they direct Meghan's path and the system handles the animation. The result should feel responsive and grounded, not floaty.
-
-**Stamina drain while climbing.** Climbing is expensive. The player can see stamina depleting and must plan routes that include rest points (ledges, flat surfaces, pipe junctions). Running out of stamina while climbing triggers a fall — severity depends on height and what's below.
-
-**Fall risk at low skill.** At low Athletics or Parkour, certain surfaces are simply too difficult. The player can attempt them, but failure probability is high. The system communicates this through Meghan's animations — hesitation, slipping, laboured movement. This is not a hard gate; it is a risk/reward signal.
+**Mixed-use transition zones as parkour sweet spots.** The boundaries between Terridyn's height zones — where low-rise residential meets mid-rise commercial, or mid-rise meets high-rise industrial — create the most varied rooftop geometry. These transition areas offer the richest parkour chains: staggered rooflines, exposed pipes, ventilation infrastructure, and variable gaps that reward creative routing.
 
 ---
 
-## Jumping and Swinging
+### UC4 — Crawling and Low-Profile Movement
 
-Vertical and horizontal gap crossing. Jumping is universally available; chained sequences and swing traversal require Parkour investment.
+**Actor:** The player
+**Goal:** Move through spaces using a low-profile posture — for stealth, confined navigation, or tactical positioning
+**Trigger:** Player enters crawl mode at any time, or encounters a space requiring crawl clearance
 
-**Basic jump:** Available to all. Covers small gaps, low obstacles, and single-height elevation changes. Stamina cost is low. Motion Matching handles takeoff, airborne, and landing animations based on distance and height.
+**Step by step:**
 
-**Parkour chains:** At higher Parkour levels, the player can chain jumps with wall kicks, rail slides, and redirects. The system reads the environment and offers chain opportunities when the geometry supports them — the player commits with a directional input and the sequence plays out. Failed chains (mistiming, insufficient skill) break the sequence and Meghan lands where she is.
+1. **Player drops to a crawl.** Crawling is a general-purpose movement posture, not just for tight spaces — the player can drop to a crawl anywhere. Two modes are available with different trade-offs.
 
-**Swing points:** Fixed environmental objects (pipes, bars, cables, clotheslines) that support swing traversal. The player engages a swing point with a contextual input while airborne or running. Parkour skill determines swing distance and the ability to chain swing-to-swing.
+2. **Hands-and-knees crawl offers speed at moderate profile.** Faster movement, higher profile. The player moves at a reduced but meaningful speed. Quieter than walking but louder than belly crawl. Use cases include open-ground stealth approach, moving through occupied spaces with concealment, and navigating confined spaces.
 
-**Stamina cost per action.** Each jump, wall kick, and swing costs stamina. A long parkour chain across rooftops costs significant total stamina. The player must gauge whether they can complete a sequence before committing.
+3. **Belly crawl (soldier crawl) offers minimum profile.** Slower movement, lowest possible profile. The player moves slowly but is extremely hard to detect visually. Near-silent at low speed. Used for stealth approaches across open ground, vent navigation, moving under vehicles, and traversing collapsed structures.
 
----
+4. **Stealth skill governs noise output across all crawl states.** Crawling speed affects noise output, but the Stealth skill provides noise reduction on top of the base crawl noise. A high-Stealth player moving on hands-and-knees may be quieter than a low-Stealth player on their belly.
 
-## Crawling
-
-Two distinct crawl modes with different trade-offs.
-
-**Hands-and-knees crawl:** Faster movement, higher profile. The player moves at a reduced but meaningful speed. Useful for navigating low passages, moving through occupied spaces with some concealment, and traversing areas where standing is not possible.
-
-**Belly crawl (soldier crawl):** Slower movement, lowest possible profile. The player moves slowly but is extremely hard to detect visually. Used for stealth approaches, vent navigation, and moving through spaces with very low clearance.
-
-**Stealth integration.** Crawling speed affects noise output. Hands-and-knees is quieter than walking but louder than belly crawl. Belly crawl at low speed is nearly silent. The Stealth skill governs noise reduction across all crawl states — a high-Stealth player moving on hands-and-knees may be quieter than a low-Stealth player on their belly.
-
-**Navigation through restricted spaces.** Vents, under-vehicle gaps, collapsed structures, and tight crawlspaces require crawling. These spaces are environmental puzzles — the player sees them, identifies them as traversable, and chooses whether the route is worth the time and exposure.
+5. **Restricted spaces require crawling.** Vents, under-vehicle gaps, collapsed structures, and tight crawlspaces require crawling. These spaces are environmental puzzles — the player sees them, identifies them as traversable, and chooses whether the route is worth the time and exposure.
 
 ---
 
-## Swimming
+### UC5 — Swimming
 
-Athletics-driven water traversal. Terridyn has rivers, underground waterways, and industrial channels.
+**Actor:** The player
+**Goal:** Cross or navigate bodies of water, from calm canals to submerged passages
+**Trigger:** Player enters water
 
-**Calm water:** Accessible at low Athletics. The player can cross rivers and navigate canals without significant risk. Stamina drain is moderate. Speed is slower than walking on land.
+**Step by step:**
 
-**Rough water:** Currents, rapids, and turbulent industrial outflows. Higher Athletics required to maintain control. Low skill risks being swept downstream or pulled under. Stamina drain is high.
+1. **Calm water is accessible at low Athletics.** The player can cross rivers and navigate canals without significant risk. Stamina drain is moderate. Speed is slower than walking on land.
 
-**Underwater traversal:** At high Athletics, the player can dive and navigate submerged passages. Breath hold duration scales with FOR. Underwater navigation opens hidden routes and access points not available from the surface.
+2. **Rough water demands higher Athletics.** Currents, rapids, and turbulent industrial outflows require higher Athletics to maintain control. Low skill risks being swept downstream or pulled under. Stamina drain is high.
+
+3. **Underwater traversal opens at high Athletics.** The player can dive and navigate submerged passages. Breath hold duration scales with FOR. Underwater navigation opens hidden routes and access points not available from the surface.
+
+**Terridyn's waterways.** Terridyn has rivers, underground waterways, and industrial channels — water traversal is not a novelty; it is a meaningful route option.
 
 ---
 
-## Vehicles
+### UC6 — Riding Vehicles
 
-Vehicles are traversal tools with their own skill progression, not a mode change.
+**Actor:** The player
+**Goal:** Travel faster across Terridyn using the vehicle progression from bicycle to hoverbike
+**Trigger:** Player mounts an available vehicle
 
-**Bicycle:** Available early. Low Driving requirement. Faster than running, no fuel cost, quiet. The courier job's primary tool in the early game. Handles predictably; skill investment improves cornering and speed.
+**Step by step:**
 
-**Motorbike:** Mid-game availability. Moderate Driving requirement. Significantly faster than bicycle; fuel cost; louder. Opens longer delivery routes and faster city traversal. Handling at low skill is squirrely — the player feels the difference between Driving 15 and Driving 40.
+1. **Bicycle is available early.** Low Driving requirement. Faster than running, no fuel cost, quiet. The courier job's primary tool in the early game. Handles predictably; skill investment improves cornering and speed.
 
-**Hoverbike:** Late-game availability. High Driving requirement. Fastest ground traversal; expensive to fuel and maintain; loud. Represents mastery of the Driving skill tree. Handling is responsive and rewarding at high skill; dangerous and difficult at low skill.
+2. **Motorbike becomes available mid-game.** Moderate Driving requirement. Significantly faster than bicycle; fuel cost; louder. Opens longer delivery routes and faster city traversal. Handling at low skill is squirrely — the player feels the difference between Driving 15 and Driving 40.
+
+3. **Hoverbike becomes available late-game.** High Driving requirement. Fastest ground traversal; expensive to fuel and maintain; loud. Represents mastery of the Driving skill tree. Handling is responsive and rewarding at high skill; dangerous and difficult at low skill.
+
+**Driving skill gates handling quality, not access.** Vehicles are traversal tools with their own skill progression, not a mode change. The player can mount a vehicle at any Driving level, but control quality reflects investment.
 
 **Courier job integration.** Vehicle progression aligns with the courier job's demands. Early deliveries are bikeable. Mid-game contracts require motorbike range. Late-game high-value deliveries reward hoverbike speed. The player who has been couriering has the Driving skill to handle whatever vehicle the job demands.
 
 ---
 
-## Content Tier: Modesty Movement (Spicy)
+### UC7 — Moving Quietly
 
-When Meghan's inhibition is high and she is in a state of indecency (clothing destroyed or removed beyond her comfort threshold), locomotion animations change. She attempts to cover herself while moving — one arm across the chest, hunched posture, shorter strides.
+**Actor:** The player
+**Goal:** Traverse the environment with minimal noise, using speed modulation and Stealth skill investment
+**Trigger:** Player crouches during movement or reduces speed to avoid detection
 
-**The effect is cosmetic and speed-modifying, not mode-locking.** All traversal modes remain available. Modesty movement reduces speed because the character is dividing her attention between moving and covering. It does not prevent climbing, crawling, or any other mode — it makes them slower and visually different.
+**Step by step:**
 
-**Inhibition gates the intensity.** At high inhibition (early game, unexposed Meghan), the modesty animations are pronounced — significant speed reduction, obvious distress. As inhibition decreases through story progression and experience, the modesty animations relax. At low inhibition, Meghan moves normally regardless of clothing state.
+1. **Player crouches while moving.** Crouched speed is slower than walking; noise output is significantly reduced. Stealth skill governs how much noise reduction crouching provides. At high Stealth, crouched movement is nearly silent.
 
-**The system communicates character growth.** Early-game Meghan's modesty movement is a visible expression of who she is — someone who has never been in this situation. Late-game Meghan's comfort in the same situation shows how far she has come. The traversal system reflects character development without a single line of dialogue.
+2. **Player modulates speed to control noise.** Moving slower is always quieter. The player chooses their speed based on how close they are to detection. A slow crouch through a guarded corridor versus a fast crouch past a distracted guard — the player reads the situation and modulates input accordingly.
 
----
+3. **Advanced stealth movement rewards investment.** At high skill levels, the Stealth skill allows faster crouched movement without proportional noise increase. The player who has invested heavily in Stealth can move at meaningful speed while remaining quiet — a tangible reward for skill investment.
 
-## Content Tier: Restrained Movement (Super Spicy)
+4. **Parkour + Stealth combo unlocks silent traversal.** At high Parkour + high Stealth, advanced traversal modes become available quietly. Silent climbing, quiet vaulting, ceiling traversal through industrial pipe networks. These are late-game capabilities that combine two significant skill investments — they are not available early and they are not available through either skill alone.
 
-Restraints restrict traversal based on what they bind. This section establishes principles; specific restraint-to-traversal mappings are deferred to the restraint feature brief.
-
-**Governing principle:** A restraint removes the traversal modes that require the restrained body part.
-
-| Restraint | Traversal locked | Traversal available |
-|-----------|-----------------|-------------------|
-| Hands bound | Climbing, swinging, hands-and-knees crawl | Walking, running (reduced balance), belly crawl, swimming (limited) |
-| Feet bound | Running, sprinting, jumping, swimming | Walking (hobbled), hands-and-knees crawl, belly crawl |
-| Hands + feet bound | Most modes | Minimal shuffle, belly crawl (slow) |
-
-**Escape Artist and Binding interaction.** A restrained player can attempt to escape using the Escape Artist skill. Until escape succeeds, traversal is limited. The traversal system does not need to know about the escape attempt — it reads the current restraint state and applies the appropriate lockouts.
-
-**Specifics deferred.** Individual restraint items (rope, cuffs, cable ties, cursed outfit pieces) and their precise traversal effects are defined in the restraint feature brief, not here. The traversal system receives a restraint state and applies the principle above.
+**Stealth traversal is not a separate mode.** It is normal traversal performed quietly. The player can crouch, slow down, and choose quieter movement options at any time.
 
 ---
 
-## Stealth Movement
+### UC8 — Traversal While Exposed (Spicy)
 
-Stealth traversal is not a separate mode — it is normal traversal performed quietly. The player can crouch, slow down, and choose quieter movement options at any time.
+**Actor:** The player
+**Goal:** Continue traversal when Meghan's clothing state exceeds her indecency threshold
+**Trigger:** Meghan's clothing is destroyed or removed beyond her comfort threshold while inhibition is above zero
 
-**Crouched movement.** The player can crouch while moving. Crouched speed is slower than walking; noise output is significantly reduced. Stealth skill governs how much noise reduction crouching provides. At high Stealth, crouched movement is nearly silent.
+**Step by step:**
 
-**Speed-noise trade-off.** Moving slower is always quieter. The player chooses their speed based on how close they are to detection. A slow crouch through a guarded corridor versus a fast crouch past a distracted guard — the player reads the situation and modulates input accordingly.
+1. **Locomotion animations change.** Meghan attempts to cover herself while moving — one arm across the chest, hunched posture, shorter strides.
 
-**Advanced stealth movement.** At high skill levels, the Stealth skill allows faster crouched movement without proportional noise increase. The player who has invested heavily in Stealth can move at meaningful speed while remaining quiet — a tangible reward for skill investment.
+2. **Speed is reduced but no modes are locked.** The effect is cosmetic and speed-modifying, not mode-locking. All traversal modes remain available. Modesty movement reduces speed because the character is dividing her attention between moving and covering. It does not prevent climbing, crawling, or any other mode — it makes them slower and visually different.
 
-**Parkour integration at high skill.** At high Parkour + high Stealth, advanced traversal modes become available quietly. Silent climbing, quiet vaulting, ceiling traversal through industrial pipe networks. These are late-game capabilities that combine two significant skill investments — they are not available early and they are not available through either skill alone.
+3. **Inhibition gates the intensity.** At high inhibition (early game, unexposed Meghan), the modesty animations are pronounced — significant speed reduction, obvious distress. As inhibition decreases through story progression and experience, the modesty animations relax. At low inhibition, Meghan moves normally regardless of clothing state.
+
+**Character growth expressed through traversal.** Early-game Meghan's modesty movement is a visible expression of who she is — someone who has never been in this situation. Late-game Meghan's comfort in the same situation shows how far she has come. The traversal system reflects character development without a single line of dialogue.
+
+---
+
+### UC9 — Traversal While Restrained (Super Spicy)
+
+**Actor:** The player
+**Goal:** Navigate with limited traversal options based on active restraints
+**Trigger:** Meghan is restrained (hands, feet, or both)
+
+**Step by step:**
+
+1. **Restraints lock traversal modes that require the restrained body part.** This is the governing principle — a restraint removes the traversal modes that require the restrained body part:
+
+   | Restraint | Traversal locked | Traversal available |
+   |-----------|-----------------|-------------------|
+   | Hands bound | Climbing, swinging, hands-and-knees crawl | Walking, running (reduced balance), belly crawl, swimming (limited) |
+   | Feet bound | Running, sprinting, jumping, swimming | Walking (hobbled), hands-and-knees crawl, belly crawl |
+   | Hands + feet bound | Most modes | Minimal shuffle, belly crawl (slow) |
+
+2. **Escape Artist interacts with restraints.** A restrained player can attempt to escape using the Escape Artist skill. Until escape succeeds, traversal is limited. The traversal system does not need to know about the escape attempt — it reads the current restraint state and applies the appropriate lockouts.
+
+3. **Specifics deferred to restraint feature brief.** Individual restraint items (rope, cuffs, cable ties, cursed outfit pieces) and their precise traversal effects are defined in the restraint feature brief, not here. The traversal system receives a restraint state and applies the principle above.
 
 ---
 
