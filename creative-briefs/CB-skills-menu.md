@@ -1,4 +1,6 @@
-# CB — Skills Menu
+# Creative Brief — Skills Menu
+
+---
 
 ## Overview
 
@@ -6,53 +8,48 @@ The Skills section of the phone menu is Meghan reading her own **S.T.A.L.K.E.R. 
 
 S.T.A.L.K.E.R. background: [S.T.A.L.K.E.R.](../../mgaPriv/mechanics/stalker.md) *(private repo — full lore detail)*.
 
----
+**Related documents:**
 
-## What the Menu Shows
-
-Three linked sections:
-
-1. **Profile header** — who STALKER thinks Meghan is
-2. **Attributes & Skills** — STALKER's current assessment of her capabilities
-3. **Licences & Widgets** — what her assessment qualifies her to unlock and purchase
+- [Skills Overview](../../mgaPriv/mechanics/skills.md) — full skill list, attribute pairing, progression model
+- [CB-hud-modification](CB-hud-modification.md) — widget configuration (where purchased widgets are equipped)
 
 ---
 
-## Section 1 — Profile Header
+## Use Cases
 
-Displayed at the top of the skills screen:
+### UC1 — Viewing Meghan's STALKER Profile
 
-| Field | Content |
-|-------|---------|
-| Name | Meghan Higgins |
-| STALKER ID | Assigned on arrival to Terridyn |
-| Assessment status | Active / Under review / Flagged |
-| Last updated | Near-real-time timestamp — STALKER updates continuously |
-| Overall classification | Labour tier / skill bracket — changes as she advances |
+**Actor:** The player
+**Goal:** Review Meghan's current attributes, skill ranks, and progression toward next ranks
+**Trigger:** Player opens the Skills section from the phone menu
 
-The "last updated" timestamp reinforces the fiction: STALKER is always watching. Every skill-relevant action she takes updates this number.
+**Step by step:**
 
----
+1. **Profile header displays at the top.** Who STALKER thinks Meghan is:
 
-## Section 2 — Attributes & Skills
+   | Field | Content |
+   |-------|---------|
+   | Name | Meghan Higgins |
+   | STALKER ID | Assigned on arrival to Terridyn |
+   | Assessment status | Active / Under review / Flagged |
+   | Last updated | Near-real-time timestamp — STALKER updates continuously |
+   | Overall classification | Labour tier / skill bracket — changes as she advances |
 
-### Attributes
+2. **Attributes section shows twelve attributes** as current values with a trend indicator (rising / stable / declining) based on recent activity. Attributes are STALKER's high-level read on her capability domains — physical, mental, social, technical, and others.
 
-Twelve attributes displayed as current values with a trend indicator (rising / stable / declining) based on recent activity. Attributes are STALKER's high-level read on her capability domains — physical, mental, social, technical, and others. Full attribute list in the mechanics documentation.
+3. **Skills section shows fifty-plus skills grouped by category.** Each skill entry shows:
 
-### Skills
+   | Element | Description |
+   |---------|-------------|
+   | **Skill name** | Plain name — no flavour text in the list view |
+   | **Current rank** | Numerical rank or named tier |
+   | **Progress bar** | How far to the next rank; driven by relevant in-game activity |
+   | **Licence badge** | One of four states — see below |
+   | **Cap indicator** | Shown when rank ceiling is reached and a licence is needed to continue |
 
-Fifty-plus skills grouped by category. Each skill entry shows:
+4. **All skills appear in one unified view** — civilian and magical girl alike. There is no separate magical girl section. Every skill has a progress bar showing how close it is to the next rank.
 
-| Element | Description |
-|---------|-------------|
-| **Skill name** | Plain name — no flavour text in the list view |
-| **Current rank** | Numerical rank or named tier |
-| **Progress bar** | How far to the next rank; driven by relevant in-game activity |
-| **Licence badge** | One of four states — see below |
-| **Cap indicator** | Shown when rank ceiling is reached and a licence is needed to continue |
-
-#### Licence Badge States
+**Licence badge states:**
 
 | State | Meaning |
 |-------|---------|
@@ -61,39 +58,34 @@ Fifty-plus skills grouped by category. Each skill entry shows:
 | **Licensed** | Licence purchased; skill cap extended |
 | **Cap reached** | At rank ceiling; licence required to continue — shown prominently |
 
-Skills are grouped into logical categories in the display (combat, technical, social, physical, magical, etc.). Categories are collapsible. A filter or search field allows finding a specific skill without scrolling the full list.
+**Skills are grouped into logical categories** (combat, technical, social, physical, magical, etc.). Categories are collapsible. A filter or search field allows finding a specific skill without scrolling the full list.
 
-### All Skills — Including Magical Girl Skills
-
-All skills appear in the STALKER readout — civilian and magical girl alike. Every skill has a progress bar showing how close it is to the next rank. There is no separate magical girl section; the single view covers everything.
-
-The implication for the fiction: Meghan's STALKER profile carries a skill set that does not match her civilian employment history. A university student with maxed combat, magical, and tactical skills is an anomaly in the system. STALKER records this dispassionately.
-
-Nobody can pull her profile directly — the corporate pact means STALKER shares no personal data. But eligibility queries are a different matter. If someone queries whether she qualifies for a security contractor licence, or a combat specialist contract, STALKER will answer yes — and that answer is visible. The anomaly is not readable as a file, but it can be inferred from what she is eligible for. Whether anyone is running those queries is a separate question.
+**The "last updated" timestamp** reinforces the fiction: STALKER is always watching. Every skill-relevant action she takes updates this number.
 
 ---
 
-## Section 3 — Licences & Widgets
+### UC2 — Purchasing a Licence
 
-### Licences
+**Actor:** The player
+**Goal:** Purchase a licence to extend a skill cap or unlock widget eligibility
+**Trigger:** Player navigates to the Licences & Widgets section of the skills screen and selects an available licence
 
-Licences are purchased directly from this screen — a digital transaction through STALKER; cost deducted in-game currency, licence applied immediately to her profile.
+**Step by step:**
 
-Three states:
+1. **Player browses the licence list.** Three states are visible:
 
-| State | Display |
-|-------|---------|
-| **Locked** | Skill threshold not met; shows required rank |
-| **Available** | Threshold met; shows purchase price and what it unlocks |
-| **Purchased** | Active; shows what it has unlocked |
+   | State | Display |
+   |-------|---------|
+   | **Locked** | Skill threshold not met; shows required rank |
+   | **Available** | Threshold met; shows purchase price and what it unlocks |
+   | **Purchased** | Active; shows what it has unlocked |
 
-Each licence entry shows clearly what it unlocks — a skill cap increase, widget purchase eligibility, or both. Players should never need to guess whether a licence is worth buying.
+2. **Player selects an available licence.** Each entry shows clearly what it unlocks — a skill cap increase, widget purchase eligibility, or both.
+3. **Transaction completes as a digital purchase through STALKER.** Cost deducted in in-game currency, licence applied immediately to her profile.
 
-### Widgets
+**Widget entries in the skills menu** show widget licences Meghan holds and which widgets they make available for purchase. The skills menu does **not** configure widgets — that is done in the HUD Modification menu (see [CB-hud-modification](CB-hud-modification.md)).
 
-The Skills menu shows widget licences Meghan holds and which widgets they make available for purchase. It does **not** configure the widgets — that is done in the HUD Modification menu (see [CB-hud-modification](CB-hud-modification.md) *(forthcoming)*).
-
-Widget entries in the skills menu show:
+Widget entries show:
 
 | Element | Description |
 |---------|-------------|
@@ -105,37 +97,24 @@ This gives the player a complete picture of what they have access to and what is
 
 ---
 
-## Viewing Ally Profiles
+### UC3 — Viewing an Ally's STALKER Profile
 
-STALKER will not share anyone's data. But a person can share their own.
+**Actor:** The player
+**Goal:** Review a party member's attributes, skills, and licence status via phone-to-phone share
+**Trigger:** Meghan is physically close to Nisa, Nagi, or Arri and opens their profile tab
 
-If Meghan is physically close to Nisa, Nagi, or Arri, she can view their STALKER profile via a phone-to-phone share. She is looking at their device; STALKER has shared nothing.
+**Step by step:**
 
-**First use:** Meghan sends a share request from her phone. The ally accepts. This is the moment of established trust — a brief interaction that plays out once per ally.
+1. **First use: Meghan sends a share request from her phone.** The ally accepts. This is the moment of established trust — a brief interaction that plays out once per ally.
+2. **Subsequent uses: no prompt.** The earlier acceptance implies standing permission. Meghan opens the ally's profile tab directly; the game treats it as understood that she asks and they hand it over.
+3. **The ally profile view uses the same institutional layout** as Meghan's own readout, with a clear header identifying whose profile is displayed. A visual indicator distinguishes it from Meghan's own profile — the view is borrowed, not owned.
+4. **Everything visible on their own skills screen is shown:** attributes, skill ranks, progress bars, and licence status. The full picture of how STALKER currently assesses them.
 
-**Subsequent uses:** No prompt. The earlier acceptance implies standing permission. Meghan opens the ally's profile tab directly; the game treats it as understood that she asks and they hand it over. This avoids the request flow becoming a repetitive interruption during party management.
+**The profile is read-only.** Meghan cannot purchase licences on their behalf, trigger any transactions, or save a copy of their data. When she closes the view or moves out of range, she sees nothing. There is no persistent record of what she looked at.
 
-### What she can see
+**The fiction:** All four of them have the same problem: STALKER profiles that don't match their civilian cover. A courier with maxed tactical skills. A student with combat certifications that shouldn't exist. Seeing each other's profiles is a moment of recognition — they can see exactly what STALKER sees, and it looks just as strange on Nagi and Nisa as it does on Meghan. Whether that's reassuring or alarming is up to the player to decide.
 
-Everything visible on their own skills screen: attributes, skill ranks, progress bars, and licence status. The full picture of how STALKER currently assesses them.
-
-### What she cannot do
-
-The profile is read-only. Meghan cannot:
-
-- Purchase licences on their behalf
-- Trigger any transactions
-- Save a copy of their data
-
-When she closes the view or moves out of range, she sees nothing. There is no persistent record of what she looked at.
-
-### Presentation
-
-The ally profile view uses the same institutional layout as Meghan's own readout, with a clear header identifying whose profile is displayed. A visual indicator distinguishes it from Meghan's own profile — the view is borrowed, not owned.
-
-### The fiction
-
-All four of them have the same problem: STALKER profiles that don't match their civilian cover. A courier with maxed tactical skills. A student with combat certifications that shouldn't exist. Seeing each other's profiles is a moment of recognition — they can see exactly what STALKER sees, and it looks just as strange on Nagi and Nisa as it does on Meghan. Whether that's reassuring or alarming is up to the player to decide.
+**The anomaly:** Meghan's STALKER profile carries a skill set that does not match her civilian employment history. A university student with maxed combat, magical, and tactical skills is an anomaly in the system. STALKER records this dispassionately. Nobody can pull her profile directly — the corporate pact means STALKER shares no personal data. But eligibility queries are a different matter. If someone queries whether she qualifies for a security contractor licence, or a combat specialist contract, STALKER will answer yes — and that answer is visible. The anomaly is not readable as a file, but it can be inferred from what she is eligible for. Whether anyone is running those queries is a separate question.
 
 ---
 

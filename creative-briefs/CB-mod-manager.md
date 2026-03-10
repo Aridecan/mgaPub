@@ -21,9 +21,132 @@ The game provides tools to load and run mods correctly. What those mods contain 
 
 ---
 
-## JSON Manifest Schema
+## Use Cases
 
-Each entry in the mod index JSON represents one mod. Fields:
+### UC1 — Adding a Mod Server
+
+**Actor:** The player
+**Goal:** Configure one or more community server URLs so the mod browser can discover available mods
+**Trigger:** Player opens the Server Configuration panel from the mod manager screen
+
+**Step by step:**
+
+1. **Player opens the server configuration panel.** A Catalog URL field points to a server hosting the catalog JSON (the mod index).
+2. **Player adds a server URL.** Multiple server URLs are supported (add/remove list). Each server is fetched independently; results are merged in the Available view.
+3. **Player clicks Refresh** to fetch all configured server URLs on demand. Last refresh timestamp is shown.
+
+**The game does not validate what is on the server beyond schema conformance** — community servers are community responsibility.
+
+---
+
+### UC2 — Browsing and Installing a Mod
+
+**Actor:** The player
+**Goal:** Find a mod in the Available view and install it with all dependencies resolved
+**Trigger:** Player opens the Available view in the mod manager
+
+**Step by step:**
+
+1. **The Available view lists all mods found across all configured servers,** excluding mods already installed.
+2. **Player searches and filters.** Text search by mod name or author; filter by language support, compatibility with current game version, or show incompatible versions (hidden by default).
+3. **Each mod card shows:** thumbnail, name, author, version, compatibility indicator (✓ compatible / ⚠ untested / ✗ incompatible), languages supported, download size (mod package; text and vocals shown separately if available), and short description.
+4. **Player clicks Install on a mod card.** The game resolves the full dependency tree recursively.
+5. **Dependency validation determines the next step:**
+   - **All dependencies available and compatible** → confirmation screen lists the selected mod + all dependencies to be installed, total download size, and which packages (mod / text / vocals) will be downloaded.
+   - **One or more dependencies are incompatible with the current game version** → incompatibility warning popup (see below).
+   - **A required dependency is not available on any configured server** → installation is blocked, missing GUID reported.
+6. **Player confirms.** Downloads begin (mod + all uninstalled prerequisites).
+7. **On completion, mod appears in the Installed view** (disabled by default — player must enable it).
+
+**Incompatibility warning popup:**
+
+> **Potential Incompatibility**
+>
+> One or more mods in this install chain have not been validated for your current game version (v X.Y.Z):
+>
+> - Mod Name (validated for v X.Y.0)
+>
+> Installing may cause instability or unexpected behaviour.
+>
+> - **Install Anyway** — proceed at your own risk
+> - **Cancel** — do not install
+
+The game does not block installation — it warns and lets the player decide.
+
+---
+
+### UC3 — Managing Installed Mods
+
+**Actor:** The player
+**Goal:** Enable, disable, update, or delete installed mods while respecting dependency chains
+**Trigger:** Player opens the Installed view in the mod manager
+
+**Step by step:**
+
+1. **The Installed view lists all locally installed mods with their current state.** Each mod card shows: name, author, installed version, enabled/disabled toggle, update available indicator, which packages are installed, compatibility indicator, and dependency status.
+
+2. **Enable/Disable toggle** — enables or disables the mod for the current playthrough. Disabling does not uninstall.
+   - Enabling a mod with disabled dependencies prompts: *"This mod requires [Mod X, Mod Y]. Enable them as well?"*
+   - Disabling a mod that other enabled mods depend on prompts: *"The following mods depend on [this mod] and will also be disabled: [Mod A, Mod B]. Continue?"*
+
+3. **Update** — downloads the newer version; shown only when an update is available.
+
+4. **Delete** — permanently removes the mod from disk. Deleting a mod that other installed mods depend on triggers a cascade warning:
+
+   > **Dependency Warning**
+   >
+   > The following installed mods depend on [Mod Name] and will also be deleted:
+   >
+   > - Dependent Mod A
+   > - Dependent Mod B
+   >
+   > - **Delete All** — delete this mod and all dependents
+   > - **Cancel** — keep everything
+
+   The game will not leave orphaned mods with broken dependency chains. If a prerequisite is deleted, everything that requires it goes with it.
+
+5. **Download missing packages** — text or vocals packages can be downloaded after the initial install.
+
+---
+
+### UC4 — Reviewing Load Order
+
+**Actor:** The player
+**Goal:** Understand which mods take priority and identify potential asset conflicts
+**Trigger:** Player opens the Load Order view in the mod manager
+
+**Step by step:**
+
+1. **A vertical list shows all enabled mods in their resolved load order,** highest priority at the top. Mods higher in the list shadow assets from mods lower in the list — if two mods provide the same asset, the higher one wins.
+2. **The load order is derived from the dependency graph, not manually arranged.** A mod that depends on another mod is always searched before its dependency (the dependent shadows the dependency). Mods with no dependency relationship to each other are ordered alphabetically or by install date (TBD).
+3. **The player can identify potential conflicts** — two mods at similar priority levels that may override each other's assets.
+4. **The load order updates in real time** as mods are enabled, disabled, or deleted.
+
+This mirrors the search order system documented in [Boot Manager — Pak Search Order](../gdd/boot-manager.md).
+
+---
+
+### UC5 — Per-Playthrough Mod Activation
+
+**Actor:** The player
+**Goal:** Enable a mod for one playthrough while keeping it inactive in another
+**Trigger:** Player creates a new game or changes mod activation for the active playthrough
+
+**Step by step:**
+
+1. **Installing a mod makes it available globally.** Activation is per-playthrough — a mod must be enabled for a specific playthrough to affect it.
+2. **Mod activation is managed in two places:**
+   - During **New Game** creation (step 3 of the new playthrough flow — see [CB-main-menu](CB-main-menu.md))
+   - From the **Installed** view on the mod manager screen (enable/disable toggles apply to the active playthrough)
+3. **This allows a player to have the same mod installed but active only in one playthrough** — e.g. active in a personal run, inactive in a streaming run.
+
+---
+
+## Reference
+
+### JSON Manifest Schema
+
+Each entry in the mod index JSON represents one mod:
 
 ```json
 {
@@ -71,21 +194,17 @@ Each entry in the mod index JSON represents one mod. Fields:
 
 ### Download Packages
 
-Each mod can have up to three separate download packages:
-
 | Package | Purpose | Required |
 |---------|---------|----------|
 | **mod** | Core mod content — gameplay, assets, scripts | Yes |
 | **localization_text** | Text strings, subtitles, UI text for supported languages | No |
 | **localization_vocals** | VO audio for supported languages — large; optional download | No |
 
-Separating these allows players to download only what they need. A player running the game in English does not need to download Japanese VO packs. The mod browser shows which packages are available and lets the player choose which to install.
+Separating these allows players to download only what they need. A player running the game in English does not need to download Japanese VO packs.
 
----
+### Dependency System
 
-## Dependency System
-
-Each mod declares only its **direct dependencies** (one level). The game resolves the full tree recursively from these declarations.
+Each mod declares only its **direct dependencies** (one level). The game resolves the full tree recursively.
 
 **Example:**
 - Mod A declares: depends on [B, C]
@@ -98,143 +217,6 @@ Each mod declares only its **direct dependencies** (one level). The game resolve
 - The resolved tree is shown to the player as a confirmation list before downloading: *"Installing this mod will also install: Mod B, Mod C, Mod D"*
 - **Circular dependency detection:** if resolution finds a cycle (A → B → A), installation is blocked and the cycle is reported
 - Removing a mod that other installed mods depend on shows a warning listing the dependents and asks for confirmation
-
----
-
-## The Mod Manager Screen
-
-The mod manager screen has three views and a server configuration panel. It is accessible from the main menu.
-
-### Server Configuration
-
-A panel accessible from the mod manager screen.
-
-- **Catalog URL field** — points to a server hosting the catalog JSON (the mod index). The game fetches this file to populate the Available view
-- Multiple server URLs are supported (add/remove list)
-- Each server is fetched independently; results are merged in the Available view
-- **Refresh** button — re-fetches all configured server URLs on demand
-- Last refresh timestamp shown
-- The game does not validate what is on the server beyond schema conformance — community servers are community responsibility
-
----
-
-### View 1 — Available
-
-Lists all mods found across all configured server URLs, excluding mods already installed.
-
-**Filters and search:**
-- Text search by mod name or author
-- Filter by language support
-- Filter by compatibility with current game version
-- Filter: show incompatible versions (hidden by default)
-
-**Mod card shows:**
-- Thumbnail
-- Name, author, version
-- Compatibility indicator: ✓ compatible / ⚠ untested / ✗ incompatible with current build
-- Languages supported
-- Download size (mod package; text and vocals shown separately if available)
-- Short description
-
-**Install flow:**
-1. Player clicks Install on a mod card
-2. Game resolves the full dependency tree recursively
-3. **Dependency validation:**
-   - All dependencies available and compatible → confirmation screen lists: the selected mod + all dependencies to be installed, total download size, which packages (mod / text / vocals) will be downloaded
-   - One or more dependencies are incompatible with the current game version, or the mod itself is not listed as compatible → **incompatibility warning popup** (see below)
-   - A required dependency is not available on any configured server → installation is blocked, missing GUID reported
-4. Player confirms → downloads begin (mod + all uninstalled prerequisites)
-5. On completion, mod appears in the Installed view (disabled by default — player must enable it)
-
-**Incompatibility warning popup:**
-
-When the dependency chain includes a mod not validated for the current game version, a popup is displayed:
-
-> **Potential Incompatibility**
->
-> One or more mods in this install chain have not been validated for your current game version (v X.Y.Z):
->
-> - Mod Name (validated for v X.Y.0)
->
-> Installing may cause instability or unexpected behaviour.
->
-> - **Install Anyway** — proceed at your own risk
-> - **Cancel** — do not install
-
-The game does not block installation — it warns and lets the player decide.
-
----
-
-### View 2 — Installed
-
-Lists all locally installed mods with their current state.
-
-**Mod card shows:**
-- Name, author, installed version
-- **Enabled / Disabled** toggle
-- Update available indicator (if server has a newer version)
-- Which packages are installed (mod / text / vocals) — allows downloading missing packages after the fact
-- Compatibility indicator with current game build
-- Dependency status: all dependencies met / missing dependency (with GUID)
-
-**Actions per mod:**
-
-- **Enable / Disable** toggle — enables or disables the mod for the current playthrough. Disabling a mod does not uninstall it
-- **Update** — downloads the newer version; shown only when an update is available
-- **Delete** — permanently removes the mod from disk (see dependency cascade below)
-- Download missing **text** or **vocals** packages if not previously installed
-
-**Enable/disable behaviour:**
-
-- Enabling a mod that has disabled dependencies will prompt: *"This mod requires [Mod X, Mod Y]. Enable them as well?"* — player can enable all or cancel
-- Disabling a mod that other enabled mods depend on will prompt: *"The following mods depend on [this mod] and will also be disabled: [Mod A, Mod B]. Continue?"* — player confirms or cancels
-
-**Delete behaviour — dependency cascade:**
-
-Deleting a mod that other installed mods depend on triggers a cascade warning:
-
-> **Dependency Warning**
->
-> The following installed mods depend on [Mod Name] and will also be deleted:
->
-> - Dependent Mod A
-> - Dependent Mod B
->
-> - **Delete All** — delete this mod and all dependents
-> - **Cancel** — keep everything
-
-The game will not leave orphaned mods with broken dependency chains. If a prerequisite is deleted, everything that requires it goes with it.
-
----
-
-### View 3 — Load Order
-
-Displays the current mod load order — the pak search order that the MBM will use when the session starts. This mirrors the search order system documented in [Boot Manager — Pak Search Order](../gdd/boot-manager.md).
-
-**What the player sees:**
-
-A vertical list of all enabled mods in their resolved load order, highest priority at the top. Mods higher in the list shadow assets from mods lower in the list — if two mods provide the same asset, the higher one wins.
-
-The load order is **derived from the dependency graph**, not manually arranged. A mod that depends on another mod is always searched before its dependency (the dependent shadows the dependency). Mods with no dependency relationship to each other are ordered alphabetically or by install date (TBD).
-
-**What the player can do:**
-
-- View the resolved order to understand which mods take priority
-- Identify potential conflicts — two mods at similar priority levels that may override each other's assets
-
-The load order updates in real time as mods are enabled, disabled, or deleted.
-
----
-
-## Per-Playthrough Activation
-
-Installing a mod makes it available globally. **Activation is per-playthrough** — a mod must be enabled for a specific playthrough to affect it.
-
-Mod activation for a playthrough is managed:
-- During **New Game** creation (step 3 of the new playthrough flow — see [CB-main-menu](CB-main-menu.md))
-- From the **Installed** view on the mod manager screen (enable/disable toggles apply to the active playthrough)
-
-This allows a player to have the same mod installed but active only in one playthrough — e.g. active in a personal run, inactive in a streaming run.
 
 ---
 

@@ -23,13 +23,64 @@ The Phone Menu and Lost Phone Menu are documented in detail in [In-Game Menus](C
 
 ---
 
-## Title Menu
+## Use Cases
 
-The title menu is the first screen the player reaches after the first-launch wizard (or directly on subsequent launches). Visual language matches the rest of the game: **clean and minimal**. Menu items are a vertical list. Background is a static or gently animated scene — specific art TBD.
+### UC1 — Continuing a Game
+
+**Actor:** The player
+**Goal:** Resume the most recent session with a single click
+**Trigger:** Player selects Continue from the title menu
+
+**Step by step:**
+
+1. **Continue appears above New Game** once at least one save exists. It is hidden until then.
+2. **Context is shown directly below the button** in small muted text:
+   ```
+   Continue
+     Playthrough 1 · Chapter 2 · Saved 14 Feb 2331, 21:43
+   ```
+3. **Selecting Continue loads without any additional confirmation** — one click, straight into the game. No save browser required.
+
+**Players managing multiple playthroughs** can see at a glance whether Continue is pointing at the right one; if not, they use Load Game to select a different playthrough instead.
 
 ---
 
-## Title Menu Items
+### UC2 — Starting a New Game
+
+**Actor:** The player
+**Goal:** Create a new playthrough with a name, content tier, and mod selection
+**Trigger:** Player selects New Game from the title menu
+
+**Step by step:**
+
+1. **Name the playthrough.** Default names auto-increment ("Playthrough 1", "Playthrough 2"); player can rename.
+2. **Content tier.** Select from configured content categories (see [CB-settings-menu](CB-settings-menu.md) — Content section); inherits current global content settings as default.
+3. **Mods.** Select which installed mods are active for this playthrough; mods can be changed later from within the playthrough.
+4. **Confirm.** Creates the playthrough folder and starts the game from the prologue.
+
+**First launch shortcut:** If this is the very first launch and the first-launch wizard has just completed, step 2 is pre-filled from the wizard's content selections.
+
+---
+
+### UC3 — Loading a Saved Game
+
+**Actor:** The player
+**Goal:** Browse playthroughs and saves to load a specific session
+**Trigger:** Player selects Load Game from the title menu
+
+**Step by step:**
+
+1. **Load Game opens the playthrough and save browser.** All existing playthroughs are listed with their saves.
+2. **Player selects a playthrough, then a save within it.**
+3. **The selected save loads.**
+
+**Greyed-out condition:** Load Game is disabled when no playthrough folders exist on disk — first launch before any New Game has been started, or a fresh install with no transferred saves. Once any playthrough folder exists — even one with only an autosave — Load Game becomes active. The greyed-out state uses the same visual treatment as other disabled UI elements: reduced opacity, no hover highlight, no click response.
+
+---
+
+## Title Menu Reference
+
+### Menu Items
 
 Listed top to bottom in display order:
 
@@ -42,30 +93,11 @@ Listed top to bottom in display order:
 | **Settings** | Opens the settings menu (see [CB-settings-menu](CB-settings-menu.md)) | Always enabled |
 | **Exit to Desktop** | Closes the game | Always enabled |
 
-### Continue — Detail
+### Visual Design
 
-Continue loads without any additional confirmation — one click, straight into the game. Directly below the Continue button, in small muted text, the context of what it will load is shown:
+Visual language matches the rest of the game: **clean and minimal**. Menu items are a vertical list. Background is a static or gently animated scene — specific art TBD.
 
-```
-Continue
-  Playthrough 1 · Chapter 2 · Saved 14 Feb 2331, 21:43
-```
-
-This tells the player exactly where they are returning to before they commit. Players managing multiple playthroughs can see at a glance whether Continue is pointing at the right one; if not, they use Load Game to select a different playthrough instead.
-
----
-
-## Load Game — Greyed Out Condition
-
-Load Game is disabled when no playthrough folders exist on disk. This covers:
-- First launch before any New Game has been started
-- A fresh install with no transferred saves
-
-Once any playthrough folder exists — even one with only an autosave — Load Game becomes active. The greyed-out state uses the same visual treatment as other disabled UI elements in the game: reduced opacity, no hover highlight, no click response.
-
----
-
-## SubscribeStar Icon
+### SubscribeStar Icon
 
 A small SubscribeStar icon is placed in one corner of the main menu screen — suggested placement: **bottom right**. It does not compete with the menu items.
 
@@ -75,9 +107,7 @@ The icon should be visible but unobtrusive — present for players who want to s
 
 On controller, the icon is reachable via the menu navigation flow — it appears as a focusable element after the last menu item, or can be accessed via a separate shoulder button shortcut.
 
----
-
-## Build / Version Display
+### Build / Version Display
 
 The build version and date are shown in a corner of the main menu — suggested placement: **bottom left**, opposite the SubscribeStar icon. Format:
 
@@ -86,19 +116,6 @@ v0.x.x — Build YYYY-MM-DD
 ```
 
 This is especially important for weekly builds so players can confirm which version they are running before reporting issues. Text is small and muted — readable, not prominent.
-
----
-
-## New Game Flow
-
-Selecting **New Game** opens a short playthrough creation sequence:
-
-1. **Name the playthrough** — default names auto-increment ("Playthrough 1", "Playthrough 2"); player can rename
-2. **Content tier** — select from configured content categories (see [CB-settings-menu](CB-settings-menu.md) — Content section); inherits current global content settings as default
-3. **Mods** — select which installed mods are active for this playthrough; mods can be changed later from within the playthrough
-4. **Confirm** — creates the playthrough folder and starts the game from the prologue
-
-If this is the very first launch and the first-launch wizard has just completed, step 2 is pre-filled from the wizard's content selections.
 
 ---
 

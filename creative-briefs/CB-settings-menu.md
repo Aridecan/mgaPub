@@ -1,4 +1,6 @@
-# CB — Settings Menu
+# Creative Brief — Settings Menu
+
+---
 
 ## Overview
 
@@ -8,24 +10,102 @@ Visual language: **clean and minimal**. The settings menu is functional infrastr
 
 Supports **full controller and keyboard/mouse input from launch**. The UI auto-detects the last-used input device and swaps prompts accordingly ("Press A" / "Press Enter"). No manual selection required.
 
----
+**Related documents:**
 
-## First-Launch Wizard
-
-On first launch only, a skippable wizard runs before the main menu. It covers the settings most likely to affect comfort and compliance from the first minute of play.
-
-**Steps:**
-1. **Language** — game language and subtitle language
-2. **Display** — resolution and window mode only; full display settings available in the menu
-3. **Content** — adult content categories; age acknowledgement required to unlock anything above Base
-
-A **Skip** option is available at any point. Skipping sends the player directly to the main menu with defaults applied. The wizard does not repeat on subsequent launches. All wizard settings are adjustable in the settings menu at any time.
-
-The streamer/content-creator question from the save system first-boot flow is incorporated into the **Content** step of this wizard rather than appearing as a separate dialog.
+- [CB-ingame-menus](CB-ingame-menus.md) — menu states and phone integration
+- [CB-main-menu](CB-main-menu.md) — title menu (settings accessible from here)
+- [CB-controls](CB-controls.md) — complete binding tables
+- [Difficulty Framework](../gdd/difficulty.md) — combat-only difficulty system
+- [Save System](../gdd/save-system.md) — playthrough folder design, content settings per-playthrough
 
 ---
 
-## Menu Structure
+## Use Cases
+
+### UC1 — First-Launch Wizard
+
+**Actor:** The player
+**Goal:** Configure the most comfort-critical settings before the first minute of play
+**Trigger:** First launch only — runs before the main menu
+
+**Step by step:**
+
+1. **Language** — game language and subtitle language.
+2. **Display** — resolution and window mode only; full display settings available in the menu.
+3. **Content** — adult content categories; age acknowledgement required to unlock anything above Base. The streamer/content-creator question from the save system first-boot flow is incorporated into this step rather than appearing as a separate dialog.
+
+**A Skip option is available at any point.** Skipping sends the player directly to the main menu with defaults applied. The wizard does not repeat on subsequent launches. All wizard settings are adjustable in the settings menu at any time.
+
+---
+
+### UC2 — Customising Difficulty
+
+**Actor:** The player
+**Goal:** Fine-tune combat difficulty beyond the Easy/Normal/Hard presets
+**Trigger:** Player selects Custom in the Difficulty dropdown under Gameplay settings
+
+**Step by step:**
+
+1. **Selecting Custom expands an additional settings panel** below the dropdown, following the same expand/collapse pattern as Display → Advanced.
+2. **The panel contains eleven combat-only parameters,** each as a labelled slider or dropdown:
+
+   | Parameter | Type | Default (Normal) |
+   |-----------|------|-------------------|
+   | Enemy Aggression | Dropdown | Medium |
+   | Enemy Read Speed | Dropdown | Medium |
+   | AI Adaptiveness | Dropdown | Mixed |
+   | Resource Exploitation | Dropdown | Partial |
+   | Pursuit Tenacity | Dropdown | Standard |
+   | Reaction Windows | Dropdown | Standard |
+   | Incoming Damage | Slider | 1.0× |
+   | Outgoing Damage | Slider | 1.0× |
+   | Group Coordination | Dropdown | Medium |
+   | Recovery Rate | Dropdown | Standard |
+   | Cancellation Cost | Dropdown | Standard |
+
+3. **Changing any parameter from a preset's values** automatically switches the Difficulty dropdown to Custom.
+4. **Selecting Easy, Normal, or Hard** resets all parameters to that bundle and collapses the panel.
+
+**Difficulty affects combat systems only** — it does not touch the life-sim (school, economy, jobs, CP drain, time pressure). See [Difficulty Framework](../gdd/difficulty.md) for the full design.
+
+---
+
+### UC3 — Configuring Dual Audio Channels for Streaming
+
+**Actor:** The player (streamer/content creator)
+**Goal:** Route game audio and music to separate output devices for independent OBS capture
+**Trigger:** Player opens Audio settings and assigns Music Output to a different device
+
+**Step by step:**
+
+1. **MGA routes audio through two separate output channels:**
+
+   | Channel | Contains |
+   |---------|----------|
+   | **Game Audio** | SFX, voice, ambient, UI sounds |
+   | **Music** | All music only |
+
+2. **Both channels default to the system's primary output device.** Players with virtual audio routing (e.g. VB-Cable) can route the Music channel to a separate device.
+3. **The player sets Music Output to a separate device.** This allows OBS to capture game audio without music, avoiding licensing issues.
+
+---
+
+### UC4 — Configuring Content Settings
+
+**Actor:** The player
+**Goal:** Enable or disable adult content categories for the active playthrough
+**Trigger:** Player opens Content settings
+
+**Step by step:**
+
+1. **An age acknowledgement is required on first access.** Once acknowledged, individual categories can be toggled freely.
+2. **Content settings are per-playthrough, not global.** Changing content settings here updates the active playthrough's configuration.
+3. **Player configures individual content toggles** — see Content settings table below.
+4. **Streamer Mode applies Base-tier preset** to the active playthrough, overriding individual toggles.
+
+---
+
+## Settings Reference
 
 ### 1. Display
 
@@ -73,8 +153,6 @@ The resolution dropdown is **populated from the display's supported modes** at r
 5120×1440  (32:9 Super Ultrawide)
 ```
 
-The aspect ratio label appears in a muted secondary colour alongside the resolution — present and readable without competing with the numbers.
-
 Reference resolution list by aspect ratio (all subject to monitor support):
 
 | 16:9 | 16:10 | 21:9 | 32:9 |
@@ -119,7 +197,7 @@ DLSS requires an NVIDIA RTX GPU. FSR (AMD FidelityFX Super Resolution) works on 
 | Effects Quality | Dropdown | High | Particle and magical effect fidelity — Low / Medium / High / Ultra |
 | View Distance | Slider | 75% | |
 
-*Visual effects* — toggles for effects that are stylistic rather than technical; off by default for some:
+*Visual effects* — toggles for effects that are stylistic rather than technical:
 
 | Setting | Type | Default | Notes |
 |---------|------|---------|-------|
@@ -134,15 +212,6 @@ DLSS requires an NVIDIA RTX GPU. FSR (AMD FidelityFX Super Resolution) works on 
 ---
 
 ### 2. Audio
-
-MGA routes audio through **two separate output channels**. This allows streamers to capture game audio and music independently in OBS or similar software, dropping the music channel to avoid licensing issues without losing game sound.
-
-| Channel | Contains |
-|---------|----------|
-| **Game Audio** | SFX, voice, ambient, UI sounds |
-| **Music** | All music only |
-
-Both channels default to the system's primary output device. Players with virtual audio routing (e.g. VB-Cable) can route the Music channel to a separate device for independent OBS capture.
 
 | Setting | Type | Default | Notes |
 |---------|------|---------|-------|
@@ -205,7 +274,7 @@ Two sub-tabs: **Keyboard & Mouse** and **Controller**. Both are fully rebindable
 | **LB** | LB held | Face buttons, D-pad |
 | **LT+LB** | Both held | Face buttons |
 
-The player selects which modifier layer they are editing, then assigns face buttons and D-pad within that layer. This makes the full 10-slot action bar mapping visible and editable without having to physically hold triggers during the rebind process. Conflict detection applies across all layers — assigning a function to LT+X warns if LT+X is already mapped elsewhere.
+The player selects which modifier layer they are editing, then assigns face buttons and D-pad within that layer. This makes the full 10-slot action bar mapping visible and editable without having to physically hold triggers during the rebind process. Conflict detection applies across all layers.
 
 **Per-profile rebinds** — if widget profiles exist per HUD (see [CB-hud-modification](CB-hud-modification.md)), control profiles may follow the same pattern, allowing different binding layouts for different gameplay contexts. This is an open question.
 
@@ -213,9 +282,7 @@ The player selects which modifier layer they are editing, then assigns face butt
 
 ### 4. Camera
 
-Controls the CAMERA drone orbit behavior around Meghan. The drone is the physical third-person camera object in the game world; these settings govern how it responds to player input (see [UI/UX](../gdd/ui-ux.md) for the drone system design).
-
-Separate values are stored for KB+M and controller input.
+Controls the CAMERA drone orbit behavior around Meghan. Separate values are stored for KB+M and controller input.
 
 | Setting | Type | Default | Notes |
 |---------|------|---------|-------|
@@ -231,7 +298,7 @@ Separate values are stored for KB+M and controller input.
 | Camera Height | Slider | 50% | Drone hover height relative to Meghan |
 | Auto-Center | Toggle | On | Camera swings behind Meghan when moving |
 | Auto-Center Delay | Slider | Medium | How quickly auto-center triggers; Short / Medium / Long |
-| Camera Lag | Slider | 25% | 0% = snappy; 100% = floaty; preference varies; some players experience motion sickness at extremes |
+| Camera Lag | Slider | 25% | 0% = snappy; 100% = floaty; preference varies |
 | Camera Collision | Toggle | On | Drone pulls toward Meghan when geometry is in the way |
 
 ---
@@ -240,43 +307,17 @@ Separate values are stored for KB+M and controller input.
 
 | Setting | Type | Default | Notes |
 |---------|------|---------|-------|
-| Difficulty | Dropdown | Normal | Easy / Normal / Hard / Custom — see [Difficulty Framework](../gdd/difficulty.md) |
+| Difficulty | Dropdown | Normal | Easy / Normal / Hard / Custom — see UC2 |
 | Autosave | Dropdown | 10 min | Off / 5 / 10 / 15 / 20 / 30 min |
-| Pause in In-Game Menu | Toggle | Off | When on, world time pauses while any in-game menu is open (both phone and out-of-character); default off — the world continues normally and the game's pacing is designed around this |
+| Pause in In-Game Menu | Toggle | Off | When on, world time pauses while any in-game menu is open |
 | Tutorial Hints | Toggle | On | |
 | HUD Opacity | Slider | 100% | Scales all widget opacity |
 | Notifications | Toggle | On | Skill level-up log, mission updates, etc. |
 | Notification Duration | Slider | Medium | How long non-critical notifications stay on screen |
 
-#### Difficulty — Custom Panel
-
-Selecting **Custom** in the Difficulty dropdown expands an additional settings panel below, following the same expand/collapse pattern as Display → Advanced. The panel contains eleven combat-only parameters, each as a labelled slider or dropdown:
-
-| Parameter | Type | Default (Normal) |
-|-----------|------|-------------------|
-| Enemy Aggression | Dropdown | Medium |
-| Enemy Read Speed | Dropdown | Medium |
-| AI Adaptiveness | Dropdown | Mixed |
-| Resource Exploitation | Dropdown | Partial |
-| Pursuit Tenacity | Dropdown | Standard |
-| Reaction Windows | Dropdown | Standard |
-| Incoming Damage | Slider | 1.0× |
-| Outgoing Damage | Slider | 1.0× |
-| Group Coordination | Dropdown | Medium |
-| Recovery Rate | Dropdown | Standard |
-| Cancellation Cost | Dropdown | Standard |
-
-Changing any parameter from a preset's values automatically switches the Difficulty dropdown to Custom. Selecting Easy, Normal, or Hard resets all parameters to that bundle and collapses the panel.
-
-Difficulty affects combat systems only — it does not touch the life-sim (school, economy, jobs, CP drain, time pressure). See [Difficulty Framework](../gdd/difficulty.md) for the full design.
-
 ---
 
 ### 6. Content
-
-An age acknowledgement is required on first access. Once acknowledged, individual categories can be toggled freely.
-
-Content settings are **per-playthrough**, not global. Changing content settings here updates the active playthrough's configuration. See [Save System](../gdd/save-system.md) for playthrough folder design.
 
 | Setting | Type | Default | Notes |
 |---------|------|---------|-------|
@@ -287,6 +328,8 @@ Content settings are **per-playthrough**, not global. Changing content settings 
 | Combat Intensity | Dropdown | Standard | Standard / Reduced (reduces visual gore, if any) |
 | Streamer Mode | Toggle | Off | Applies Base-tier preset to active playthrough; overrides individual toggles above |
 | Streaming Platform | Dropdown | — | Visible when Streamer Mode is On; selects platform content preset (Twitch / YouTube / Other) |
+
+Content settings are **per-playthrough**, not global.
 
 ---
 
