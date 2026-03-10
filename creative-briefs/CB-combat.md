@@ -302,7 +302,7 @@ Grab → Grappled → Pinned → Binding
 
 Each stage escalates control and restricts the target's options. The chain can be broken at any stage if the target escapes.
 
-**Action bar mode swap:** When a Grab initiates (RT hold / E hold connects), the action bar automatically swaps to **grapple mode** — a state-specific layout showing only grapple-relevant actions (advance, maintain, escape, bind, release, etc.). The grapple contest is played through action bar choices, not a separate minigame. When the grapple ends (escape, release, or binding completion), the bar restores to the regular layout. See [Action Bar System — Action Bar Modes](../../mgaPriv/mechanics/skill-bar.md) for the full mode system and available actions per grapple state.
+**Action bar mode swap:** When a Grab initiates (RT hold / E hold connects), the action bar automatically swaps to **grapple mode** and the **lane-based grapple contest** begins — a real-time minigame where both sides play cards into 5 lanes, with unmitigated cards pushing a momentum track toward pin or escape. The grapple contest replaces simple contested skill rolls with active player input from both perspectives. When the grapple ends (escape, release, or binding completion), the bar restores to the regular layout. See [Grapple Struggle Creative Brief](CB-grapple.md) for the full minigame design and [Action Bar System — Action Bar Modes](../../mgaPriv/mechanics/skill-bar.md) for available actions per grapple state.
 
 **Initiating a grab (player as attacker):**
 
