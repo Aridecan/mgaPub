@@ -24,7 +24,9 @@ Before leaving the documentation phase, the last loose ends got tied off.
 - **Crystal Purification** (5 UCs) — processing raw crystals
 - **Grapple** (6 UCs) — lane-based card contest, 5 lanes, 8 cards per side, real-time bidirectional. This supersedes the earlier 8-pointed star concept entirely
 
-That brings the total to **36 creative briefs, ~236 use cases.** The brief library is done.
+That brings the total to **36 creative briefs, ~236 use cases.** The creative brief library — phase 2 of documentation — is done.
+
+**Phases 3 and 4 are paused.** Feature briefs (player-facing design) and technical briefs (implementation specs) both need a basic city in-engine to write against. You can't describe how systems behave *in the world* without having the world to reference — that just leads to rewrites once the geometry is real. So the documentation work is on hold until the city blockout exists. That's the main reason for the shift into engine work described below.
 
 **Enemy AI creative brief** also got written — 16 use cases covering perception, engagement, fleeing, group tactics, morale, and signal parity. The architecture decisions (nav mesh vs nav graph, utility AI + GOAP + BT hybrid) are still blocked on engine prototyping, but the player-facing design is documented.
 
@@ -61,16 +63,19 @@ The river drops ~76.5 m across its ~18.8 km course through the city. At that gra
 
 The solution: **6 lock/dam/weir complexes** evenly spaced along the river, each absorbing ~12.76 m of elevation change. The locks step the river down in controlled increments, keeping flow velocity in the **0.5–0.8 m/s range** between structures — actually swimmable, with effort.
 
-Each lock complex is a single mega-structure approximately **405 m long × 120 m wide × 24 m tall**. That's not small. But in a city where the prestige centre has 150-story towers and the highway system stacks four decks high, a 24 m dam spanning the river doesn't look out of place — it looks like infrastructure.
+A correction here: the original lock sizing was based on 200 m barges. That was my mistake — I looked up the length of 15 m wide barges and got back "200," which turned out to be 200 *feet*, not metres. Actual barge length: **65–76 m**. That let the lock chambers shrink significantly.
+
+Each lock complex is now approximately **220 m long × 120 m wide × 24 m tall**. Still substantial, but much more manageable to place on the map and far more believable as infrastructure at Terridyn's 8.5% population level.
 
 The design details are worth highlighting:
 
-- **Lock chamber** fits 4 barges side by side (65 m wide, 205 m long). Entry and exit gates are 20 m wide — single-file entry, then barges stage inside
+- **Lock chamber** is 100 m long × 65 m wide, flanked by a 60 m dam on each side (totalling 220 m end to end). The chamber fits 4 barges side by side with barely room to spare — 76 m barges in a 100 m chamber, 15 m wide each in a 65 m slot. Entry and exit gates are 20 m wide — single-file entry, then barges stage inside
 - **Weirs** run alongside each lock, operating 24/7 for flow regulation. Water cascades the full 24 m of the downstream face — permanent white water visible and audible from blocks away. At night, the spray catches neon light from the surrounding city
 - **Bridge decks** sit on top of each dam, 24 m above the lower pool. Loaded ore barges pass at approximately bridge deck level — standing on the bridge looking downstream, ore piles are at your feet
+- **Fish ladders** are present at each complex — minimal, bare-compliance installations. They exist not because anyone in corporate governance cares about river ecology, but because the C-suite executives need their recreational fishing. The fish populations are a perk, not a priority
 - **Corporate control**: each lock is owned and operated by a corporation. Controlling a lock means controlling ore and slag flow through that section of the river. Lock scheduling becomes a corporate corruption opportunity — whose barges get priority?
 
-Six guaranteed river crossings (the lock bridges) plus surface-road drawbridges between them. The locks are major landmarks, potential quest locations, sabotage targets, and corporate chokepoints. Each one consumes nearly a full 500 m streaming cell.
+Six guaranteed river crossings (the lock bridges) plus surface-road drawbridges between them. The locks are major landmarks, potential quest locations, sabotage targets, and corporate chokepoints. Each one fits comfortably within a 500 m streaming cell — which also makes them much easier to design and optimise as individual assets.
 
 ### Atmospheric Pressure Model
 
