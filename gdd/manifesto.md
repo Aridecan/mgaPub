@@ -8,6 +8,16 @@ These are the principles that guide every decision made in the development of *O
 
 A game developer has no right to a player's time. Time spent in this game is a gift, and it will be treated as one. This means no padding, no artificial barriers to progress, no systems designed to manufacture engagement at the expense of enjoyment. Every hour a player spends here should feel like their choice.
 
+### 1a. The Parametric Rule
+
+Every time-dependent system in the game must be expressible as a function of world time: **state = f(t)**. No system may depend on being ticked forward step by step to produce correct results. If the player skips 6 hours, the world state at t+6h must be computed directly — not by fast-forwarding a simulation through 6 hours of intermediate steps.
+
+This applies to all scheduled and cyclic systems: lock water levels, NPC routines, traffic patterns, weather, shop inventories, crop growth, quest timers, lighting. If a system cannot express its state as a parametric function of time, it is redesigned until it can.
+
+The practical consequence: the game never needs to "catch up" after a time skip. The player is never made to wait for the world to settle into the correct state. Time skips are instantaneous because every system already knows where it should be.
+
+**Exception:** Systems that are inherently reactive and non-deterministic — combat, stealth encounters with patrolling enemies, active chase sequences — cannot be reduced to parametric functions because their state depends on player input at every step. When any such system is active, time skip is disabled. The rule is: if the system requires tick-by-tick simulation, it must also be a system where the player is actively engaged and would not want to skip time anyway.
+
 ---
 
 ## 2. Systems Before Content
