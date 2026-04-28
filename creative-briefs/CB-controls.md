@@ -28,9 +28,9 @@ All bindings are **fully rebindable** through the settings menu (see [Settings M
 
 | Input                  | Action                                              |
 | ---------------------- | --------------------------------------------------- |
-| Left Stick             | Move (analog speed curve)                           |
+| Left Stick             | Move — view-relative (1st person), screen-relative (3rd person) |
 | Left Stick full + L3   | Sprint toggle                                       |
-| Right Stick            | Camera / Look                                       |
+| Right Stick            | Look (1st person) / Orbit camera (3rd person)       |
 | R3 (right stick click) | Dodge                                               |
 | A (bottom face)        | Jump                                                |
 | RT press/release       | Contextual action (interact, pick up, activate)     |
@@ -87,15 +87,16 @@ A (bottom face) is never modified — it is always Jump. RT is never modified �
 
 | Action                                      | Key                |
 | ------------------------------------------- | ------------------ |
-| Look                                        | Mouse              |
-| Forward / Back / Strafe                     | W / S / A / D      |
+| Look (1st person) / Orbit camera (3rd person + RMB) | Mouse      |
+| Move (view-relative in 1st person, screen-relative in 3rd person) | W / S / A / D |
 | Walk                                        | Left Ctrl          |
 | Sprint                                      | Shift              |
 | Jump                                        | Space              |
 | Dodge                                       | V                  |
 | Contextual Action (interact, pick up, grab) | E                  |
 | Action slots 1–10                           | 1–9, 0             |
-| Zoom (scope, binoculars)                    | Right Mouse Button |
+| Zoom (scope, binoculars) — 1st person       | Right Mouse Button |
+| Zoom (scope, binoculars) — 3rd person       | Middle Mouse Button (RMB is camera orbit) |
 | Camera zoom in / out                        | Scroll Wheel       |
 | Posture down                                | C                  |
 | Posture up                                  | Z                  |
@@ -107,6 +108,63 @@ A (bottom face) is never modified — it is always Jump. RT is never modified �
 
 
 Keyboard users have direct access to all 10 action bar slots without modifier layers. The number row provides 1:1 mapping — what you see on the bar is what you press. This is the primary advantage of KB+M over controller for combat.
+
+---
+
+## Camera Mode Controls
+
+Movement and camera inputs behave differently depending on the active camera mode (1st person / 3rd person). The toggle is F5 (KB+M) or LB+LT+Y (controller). See [Camera Creative Brief](CB-camera.md) for the CAMERA drone system.
+
+### First Person (Eye Implants)
+
+Standard FPS controls — mouse directly controls where Meghan looks.
+
+**KB+M:**
+
+| Input | Action |
+| ----- | ------ |
+| Mouse | Pan and tilt — directly controls Meghan's view direction |
+| W / S | Move forward / backward relative to view direction |
+| A / D | Strafe left / right relative to view direction |
+
+**Controller:**
+
+| Input | Action |
+| ----- | ------ |
+| Right Stick | Pan and tilt — directly controls Meghan's view direction |
+| Left Stick | Move relative to view direction (forward/strafe) |
+
+Movement is **view-relative** — W always moves toward where the camera is looking. Turning is immediate and continuous. This is the standard FPS model.
+
+### Third Person (CAMERA Drone)
+
+The CAMERA drone orbits Meghan. Camera movement requires explicit input; the camera tracks Meghan but does not turn with her movement.
+
+**KB+M:**
+
+| Input | Action |
+| ----- | ------ |
+| RMB + Mouse left/right | Orbit the CAMERA drone horizontally around Meghan |
+| RMB + Mouse up/down | Orbit the CAMERA drone vertically (up/down) around Meghan |
+| Scroll Wheel | Zoom the drone closer to / further from Meghan |
+| W | Move Meghan toward the top of the screen |
+| S | Move Meghan toward the bottom of the screen |
+| A | Move Meghan toward the left of the screen |
+| D | Move Meghan toward the right of the screen |
+
+**Controller:**
+
+| Input | Action |
+| ----- | ------ |
+| Right Stick | Orbit the CAMERA drone around Meghan (horizontal and vertical) |
+| Left Stick | Move Meghan relative to screen direction |
+| LB + D-pad Up/Down | Camera zoom in / out |
+
+Movement is **screen-relative** — W (or left stick up) moves Meghan toward the top of the screen, not toward where the camera is looking. The camera continues to track Meghan but does not rotate with her movement. The player explicitly orbits the camera with RMB+mouse (KB+M) or right stick (controller).
+
+**Why screen-relative in 3rd person:** In third-person, the camera sits behind and above Meghan. View-relative movement (where W = toward camera look direction) creates a disconnect when the camera is angled — the player pushes "forward" but Meghan moves at an angle to the screen. Screen-relative movement keeps the visual feedback intuitive: push up, character moves up on screen.
+
+**Camera tracking:** The CAMERA drone automatically follows Meghan's position. It does not auto-rotate to face the direction of movement — the player controls the orbit independently. This gives full control over framing without the camera fighting the player's intent.
 
 ---
 
@@ -173,13 +231,13 @@ All keys and controller bindings are fully remappable through the settings menu.
 2. Player pushes the stick fully — Meghan runs. No sprint yet; full deflection is her default jog
 3. Player approaches a door — a contextual prompt appears ("RT: Open"). Player presses and releases RT — door opens
 4. Player sees an item on the ground — prompt changes ("RT: Pick up"). Press/release RT picks it up
-5. Player pushes the right stick — the camera orbits. The CAMERA drone follows standard third-person behaviour
+5. Player pushes the right stick — the CAMERA drone orbits around Meghan. Meghan does not turn with the camera — the player controls framing independently of movement
 6. Player presses D-pad Down — Meghan crouches. Prompt: "D-pad Up to stand." Player presses D-pad Up — back to standing
 7. Player finds a low gap under a fence — prompt suggests crouching. D-pad Down twice (crouch → crawl) lets Meghan through
 
 **KB+M experience:**
 
-1. W moves forward, mouse controls the camera — standard third-person movement
+1. W moves Meghan toward the top of the screen. RMB + mouse orbits the CAMERA drone — screen-relative movement in third person
 2. E interacts with doors and items — a single key for all contextual actions
 3. C to crouch, Z to stand back up. C again from crouch enters crawl
 4. Shift to sprint when the player wants to move faster
