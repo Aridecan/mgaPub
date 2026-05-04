@@ -149,4 +149,4 @@ The project is in the engine now. Everything from here forward leaves marks on t
 
 ---
 
-*MGA is a solo-developed adult action RPG currently in pre-production. Follow development at the [Project Tangent SubscribeStar](https://subscribestar.adult/pwright).*
+*MGA is a solo-developed adult action RPG currently in pre-production. Follow development at the [Project Tangent SubscribeStar](https://subscribestar.adult/aridecan).*
