@@ -80,12 +80,12 @@ The 30 Color 1 slots and 30 Color 2 slots define the colour vocabulary available
 
 | Channel | Role |
 |---------|------|
-| **R** | Selects which Color 1 slot (1–30) applies to this pixel region |
-| **G** | Selects which Color 2 slot (1–30) applies to this pixel region |
+| **R** | Selects which Color 1 slot (1–N) applies to this pixel region |
+| **G** | Selects which Color 2 slot (1–N) applies to this pixel region |
 | **B** | Mix ratio — lerp between the selected Color 1 and Color 2 |
 | **A** | Alpha |
 
-The R and G channels divide the mesh surface into up to 30 independently addressable colour zones each. The B channel blends between the two selected palette entries, allowing two-tone materials: a fabric with warp and weft colours, skin with a blush layer, hair with a highlight band. Changing the look of any zone is a material instance parameter edit, not a texture repaint.
+The R and G channels divide the mesh surface into up to N independently addressable colour zones each, where **N is the master's `MaxIndex`** parameter (default 30, set per-master to match the texture's authored zone count). Selector math is `Round(channel × MaxIndex)` clamped to `[1, MaxIndex]`, so R and G must be authored in `1/N` steps — e.g. R ∈ {1/2, 2/2} for a 2-zone master, R ∈ {1/30, …, 30/30} for a 30-zone master. The B channel blends between the two selected palette entries, allowing two-tone materials: a fabric with warp and weft colours, skin with a blush layer, hair with a highlight band. Changing the look of any zone is a material instance parameter edit, not a texture repaint.
 
 ### SARE Texture — Surface Properties
 

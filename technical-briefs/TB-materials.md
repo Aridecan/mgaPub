@@ -79,10 +79,12 @@ The full per-texture channel layout (canonical reference is [Art Direction](../g
 
 | Texture | UV | R | G | B | A |
 |---|---|---|---|---|---|
-| Primary | 0 | Color 1 zone selector | Color 2 zone selector | Mix factor | Alpha |
+| Primary | 0 | Color 1 zone selector (`Round(R × MaxIndex)`, clamped 1..MaxIndex) | Color 2 zone selector (same math on G) | Mix factor | Alpha |
 | SARE | 0 | Subsurface scattering | Ambient occlusion | Roughness | Emission boost |
 | MOHW | 0 | Metallic | Outline weight modulator | Highlight band intensity | Wetness mask |
 | Definition | 1 | Inline line data (channel use TBD) | — | — | — |
+
+`MaxIndex` is a `MF_UVsToParameters` input that each master sets to its zone count (default 30). Primary R/G must be authored in `1/N` steps to land cleanly on zones — see [Art Direction](../gdd/art-direction.md#primary-texture--rgba) for the full encoding rule.
 
 ---
 
