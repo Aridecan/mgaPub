@@ -87,22 +87,42 @@ The 30 Color 1 slots and 30 Color 2 slots define the colour vocabulary available
 
 The R and G channels divide the mesh surface into up to 30 independently addressable colour zones each. The B channel blends between the two selected palette entries, allowing two-tone materials: a fabric with warp and weft colours, skin with a blush layer, hair with a highlight band. Changing the look of any zone is a material instance parameter edit, not a texture repaint.
 
-### Secondary Texture — Surface Properties
+### SARE Texture — Surface Properties
 
-A second texture carries surface property data in packed channels:
+A second texture carries surface property data in packed channels (acronym from its channel allocation):
 
 | Channel | Role |
 |---------|------|
-| **R** | Subsurface scattering mask / intensity |
-| **G** | Ambient occlusion |
-| **B** | Roughness |
-| **A** | Emission boost |
+| **R** | **S**ubsurface scattering mask / intensity |
+| **G** | **A**mbient occlusion |
+| **B** | **R**oughness |
+| **A** | **E**mission boost |
 
 This texture is authored once per mesh and does not change with colour variations. Subsurface scattering on the R channel is the primary driver of skin warmth and the soft look of flesh in lit areas.
 
+### MOHW Texture — Extended Surface Properties
+
+A third texture carries additional surface and rendering parameters that don't fit in the SARE's four channels (acronym from its channel allocation):
+
+| Channel | Role |
+|---------|------|
+| **R** | **M**etallic |
+| **G** | **O**utline weight modulator (per-pixel inverse-hull thickness multiplier) |
+| **B** | **H**ighlight band intensity (anisotropic-style highlight strength on hair, metal, glossy surfaces) |
+| **A** | **W**etness mask (drives wet-surface roughness blend for rain / puddle states) |
+
+The MOHW is authored on the same UV layout as the Primary and SARE (UV0). Like the SARE, it does not change with colour variations.
+
+**Channel authoring rules:**
+
+- **R (Metallic):** Paint solid regions at exactly 0 (dielectric) or exactly 1 (pure metal). Intermediate values are permitted only at transition pixels — chipped paint over bare metal, tarnish/oxidation gradients, mipmap-filtered edges. Do not author large areas at intermediate values; the result is physically meaningless and reads muddy.
+- **B (Highlight band intensity):** Continuous 0–1. This is the correct channel for stylised "shiny but not metal" effects (varnished wood, polished plastic, wet skin) — do not abuse Metallic for these.
+- **G (Outline weight modulator):** Continuous 0–1, multiplied against the master's base outline weight.
+- **A (Wetness mask):** Continuous 0–1, drives the wet-surface roughness blend.
+
 ### Definition Texture — In-Line Detail
 
-A third texture is applied using a secondary UV set (beta UV), independent of the primary UV layout. Its role is interior line definition: the fold lines, anatomical detail, fabric seams, and crease marks that give the anime aesthetic its drawn quality.
+A fourth texture is applied on the UV1 channel (beta UV), independent of the primary UV layout. Its role is interior line definition: the fold lines, anatomical detail, fabric seams, and crease marks that give the anime aesthetic its drawn quality.
 
 Because beta UV is independent, definition lines can be positioned and scaled separately from the diffuse mapping. This texture does not interact with the palette system — it carries drawn line data directly.
 
@@ -125,9 +145,9 @@ Interior lines — anatomy, clothing folds, seam detail — are handled by the d
 
 | Asset type | Textures | Notes |
 |------------|----------|-------|
-| Character mesh | Primary (RGBA) + Secondary (RGBA) + Definition (beta UV) | 3 textures per mesh; colour via material instance |
+| Character mesh | Primary (RGBA) + SARE (RGBA) + MOHW (RGBA) + Definition (beta UV) | 4 textures per mesh; colour via material instance |
 | Costume variant | Material instance only | No additional texture if zones match existing mesh |
-| Environment asset | Primary + Secondary; Definition where needed | Same system; fewer colour zones typically required |
+| Environment asset | Primary + SARE + MOHW; Definition where needed | Same system; fewer colour zones typically required |
 
 **The key efficiency:** colour variation is a material instance change. A costume in a different colour, an NPC skin tone variant, a faction-coloured prop — none of these require new textures. The palette and the double-index system make variation cheap.
 
@@ -148,7 +168,7 @@ These assets arrive with their own materials and textures, which are discarded. 
 
 1. **Import** — Asset imported into Unreal Engine with Nanite compatibility enabled as a standard step
 2. **Material replacement** — Original materials stripped; custom double-index palette material applied
-3. **Texture authoring** — Primary RGBA texture, secondary surface properties texture, and definition texture (where needed) authored for the mesh using the beta UV layout
+3. **Texture authoring** — Primary RGBA, SARE surface-properties RGBA, MOHW extended-properties RGBA, and Definition (where needed) authored for the mesh, with Definition on the UV1 beta layout
 4. **Palette assignment** — Material instance parameters set to assign the appropriate Color 1 and Color 2 palette slots for the asset's role and context
 
 The result is an asset that looks native to MGA's visual language despite not being modelled for it. The palette discipline enforces visual consistency: an asset is only finished when it speaks the same colour vocabulary as the rest of the game.
@@ -159,10 +179,14 @@ The anime/manga aesthetic is achieved at the material and shader layer, not the 
 
 ---
 
+## Related
+
+- [TB-materials](../technical-briefs/TB-materials.md) — master material list, instance naming patterns, hierarchy rules
+
 ## Open Items
 
 - Inverse hull weight / scaling values — to be calibrated during shader development
 - Whether the 4-tone band thresholds are globally uniform or exposed as per-material parameters
 - Signature colour assignments — partially established through character identity; to be formally locked into the palette
-- Environment palette usage — what subset of the 98 entries is available to environmental assets vs characters
+- ~~Environment palette usage~~ — RESOLVED: ground (`M_Master_Ground`) uses the full palette to enable debug-bounds visualisation; environmental discipline is editorial. See [TB-materials](../technical-briefs/TB-materials.md).
 - Whether the definition texture uses a fixed line colour or samples from the palette
