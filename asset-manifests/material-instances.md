@@ -36,13 +36,13 @@ Flat decal-domain materials projected onto road meshes. Cel banding off (dirt-st
 
 Non-cel, no inverse hull. Multi-layer vertex blend + tri-planar fallback for slopes.
 
-| Instance | Use | Replaces | Status |
-|---|---|---|---|
-| `MI_Ground_Asphalt_Road` | Standard road mid-segment surface | `GreyboxMat` | Placeholder |
-| `MI_Ground_Asphalt_Intersection` | Intersection surface (allows future divergence — worn paint, oil staining, different wear pattern) | `GreyboxMat` | Placeholder |
-| `MI_Ground_Sidewalk_Primary` | Standard sidewalk slab | `GreyboxMat` | Placeholder |
-| `MI_Ground_Sidewalk_Corner` | Sidewalk corner mesh (wraps intersection corners) | `GreyboxMat` | Placeholder |
-| `MI_Ground_Sidewalk_CurbCut` | Curb-cut ramp surface (wheelchair / driveway access) | `GreyboxMat` | Placeholder |
+| Instance | Use | Palette slot(s) | Replaces | Status |
+|---|---|---|---|---|
+| `MI_Ground_Asphalt_Road` | Standard road mid-segment surface | C1=85 (0.251 grey, ≈ asphalt) | `GreyboxMat` | Placeholder |
+| `MI_Ground_Asphalt_Intersection` | Intersection surface (allows future divergence — worn paint, oil staining, different wear pattern) | C1=85 | `GreyboxMat` | Placeholder |
+| `MI_Ground_Sidewalk_Primary` | Standard sidewalk slab | C1=85 | `GreyboxMat` | Placeholder |
+| `MI_Ground_Sidewalk_Corner` | Sidewalk corner mesh (wraps intersection corners) | C1=85 | `GreyboxMat` | Placeholder |
+| `MI_Ground_Sidewalk_CurbCut` | Curb-cut ramp surface (wheelchair / driveway access) | C1=85 | `GreyboxMat` | Placeholder |
 
 ---
 
@@ -50,9 +50,9 @@ Non-cel, no inverse hull. Multi-layer vertex blend + tri-planar fallback for slo
 
 Cel-shaded; tri-planar fallback for large vertical slabs.
 
-| Instance | Use | Replaces | Status |
-|---|---|---|---|
-| `MI_RoadInfra_Abutment` | Road abutment — vertical retaining / end wall structure | `GreyboxMat2` | Placeholder |
+| Instance | Use | Palette slot(s) | Replaces | Status |
+|---|---|---|---|---|
+| `MI_RoadInfra_Abutment` | Road abutment — vertical retaining / end wall structure | C1=86 (0.122 near-black grey; visually plausible concrete) | `GreyboxMat2` | Placeholder |
 
 ---
 
@@ -60,10 +60,10 @@ Cel-shaded; tri-planar fallback for large vertical slabs.
 
 Placeholder materials currently in scene that this manifest is replacing:
 
-| Greybox | Replaced by |
-|---|---|
-| `GreyboxMat` | `MI_Ground_Asphalt_Road`, `MI_Ground_Asphalt_Intersection`, `MI_Ground_Sidewalk_Primary`, `MI_Ground_Sidewalk_Corner`, `MI_Ground_Sidewalk_CurbCut` |
-| `GreyboxMat2` | `MI_RoadInfra_Abutment` |
+| Greybox | Source value | Closest palette slot | Replaced by |
+|---|---|---|---|
+| `GreyboxMat` | 0.1927 (49/255) flat grey | Slot 85 (0.251) | `MI_Ground_Asphalt_Road`, `MI_Ground_Asphalt_Intersection`, `MI_Ground_Sidewalk_Primary`, `MI_Ground_Sidewalk_Corner`, `MI_Ground_Sidewalk_CurbCut` |
+| `GreyboxMat2` | 0.0588 (15/255) flat grey | Slot 86 (0.122) chosen for visual fit; slot 87 (0.0) is numerically equivalent | `MI_RoadInfra_Abutment` |
 
 ---
 
