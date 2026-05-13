@@ -115,7 +115,7 @@ The MID for the blend material is created once on construction and stored in a `
 
 ```
 RefreshRoads():
-    bounds = ComputeRoadBounds()              // see GetBounds below
+    bounds = ComputeRoadBounds()              // local helper — union of loaded WorldBLDGeo actor bounds
     if bounds is empty:
         Print "No road actors found — nothing to refresh"
         return
@@ -213,20 +213,32 @@ Notes on the implementation:
 - The vector params are built by `Make Linear Color` nodes that pack the XY components into RGBA.
 - Ends with `Draw Material To Render Target` (target = `WorkingRT`, material = `BlendMID`) → Return Node with `WorkingRT`.
 
-### Override: `GetBounds`
+### No `GetBounds` override in 5.7
+
+Older UE5 versions exposed a BP-overridable `GetBounds` that the brush used to declare the world-space FBox it would affect. **In 5.7 this is no longer exposed for Blueprint subclasses** — confirmed by searching the override list, function list, inherited variables, and event additions. The engine instead drives the brush per loaded landscape chunk and supplies the chunk's footprint via `Render Area World Transform` and `Render Area Size` *inside* each `Render Layer` call.
+
+This is benign for our brush:
+
+- The engine calls `Render Layer` for every loaded landscape chunk under the `Roads` edit layer, whether or not a road intersects that chunk.
+- Each call is cheap (four parameter sets on the MID + one `DrawMaterialToRenderTarget` against a small per-chunk render target).
+- The blend material's sentinel check (`R == Sentinel → output L`) ensures non-road pixels pass through unchanged. The output is identical to what a bounds-restricted version would have produced.
+
+In effect, "what `GetBounds` used to declare" is now (a) the loaded landscape extent on the engine side, and (b) the sentinel-marked road footprint inside `RoadHeightsRT` on the data side.
+
+**Optional explicit short-circuit.** If you ever notice landscape evaluation taking longer than you'd like, add a chunk-vs-capture overlap check at the top of `Render Layer`'s True branch:
 
 ```
-GetBounds() → FBox:
-    box = empty FBox
-    actors = GetAllActorsOfClass(RoadActorClass)
-    for actor in actors:
-        box += actor.GetActorBounds(includeFromChildActors=true)
-    if box is empty:
-        return ParentLandscape.GetLoadedBounds()    // fallback so brush isn't degenerate
-    return box
+chunkMin   = RenderAreaWorldTransform.Location.XY
+chunkMax   = chunkMin + RenderAreaSize
+captureMin = CaptureOriginXY
+captureMax = CaptureOriginXY + CaptureSizeXY
+
+if not (chunkMin.X < captureMax.X AND chunkMax.X > captureMin.X
+    AND chunkMin.Y < captureMax.Y AND chunkMax.Y > captureMin.Y):
+    return Combined Result        // chunk fully outside road capture, skip the draw
 ```
 
-`GetBounds()` is what tells the landscape system *where* this brush can affect terrain. Recomputing from live actors means the brush footprint follows whatever's loaded — naturally World-Partition-friendly.
+For a 16km landscape with a city-sized road footprint, this skips the draw call for the majority of chunks. The math is four float comparisons — trivial. Add only if you see a real performance issue; baseline 5.7 dispatch is already cheap enough that it's not normally worth the extra nodes.
 
 ### UE 5.7 API notes
 
@@ -315,7 +327,7 @@ The UV math accounts for the fact that the brush's working region and the SceneC
 Roads and landscape both stream with WP. The brush inherits the right behaviour for free:
 
 - `GetAllActorsOfClass(RoadActorClass)` returns only loaded actors. The SceneCapture's show-only list contains only the loaded set.
-- `GetBounds()` computes from loaded actors only. The brush footprint shrinks to whatever's loaded.
+- `Render Layer` is called per loaded landscape chunk only. Chunks outside the loaded WP region are never evaluated. The brush footprint shrinks to whatever's loaded automatically — no explicit bounds declaration needed in 5.7.
 - The landscape's Edit Layer system only writes to loaded landscape regions. Saved data lives per region.
 
 Workflow: load a region, click Refresh Roads, save. Repeat per region. Regions don't need to be loaded simultaneously.
