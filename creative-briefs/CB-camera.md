@@ -10,6 +10,12 @@ The drone is battery-powered Calibran technology. The Chapter 3–4 work with Im
 
 This brief covers the player experience of the CAMERA system: how the third-person camera works, how the drone is managed, how it is upgraded, how team drones are built, and how party switching works once allies have their own drones.
 
+### Design constraint — audio is character-anchored, not drone-anchored
+
+The CAMERA drone does **not** transmit ambient world audio. Whatever the player hears in-game is what the controlled magical girl would hear *from her own position*, regardless of where the CAMERA drone is hovering. Moving the drone behind a wall doesn't muffle a nearby conversation; flying it across the street toward a noise source doesn't make that source audible. The drone provides vision, telemetry, and team comms (encrypted channel — see lore document); it does not function as a remote microphone.
+
+This is a deliberate simplification, preserved across all CAMERA upgrade tiers: world-audio occlusion is computed from one position (the character's), not two (the character's and the drone's). The player can reposition the camera freely without the audio mix shifting underneath them.
+
 **Related documents:**
 
 - [CB-hud-modification](CB-hud-modification.md) — widget point budget, dual-cap system, widget porting, widget profiles
@@ -126,6 +132,8 @@ After joining MD, Meghan works with Imara to upgrade the Calibran drone using Xt
 | Late game | Full | Exotic materials from quest chains |
 
 Upgrading the CAMERA hardware cap only expands one side of the dual-cap system. The effective widget budget is whichever cap (phone or CAMERA) is lower. The player must also upgrade their phone to realise the full benefit.
+
+**What upgrades do NOT add:** Audio capability is never added by any upgrade tier, including the late-game exotic-material tiers. The character-anchored audio rule (see Overview) holds for the entire game — the drone remains visual / telemetry / team-comms only no matter how far the player progresses the hardware.
 
 **Continues through Ch.3 and Ch.4+:** The upgrade path is not a single event. New upgrade tiers become available as the story progresses and new materials are discovered. The workshop remains accessible for the duration of the game.
 
