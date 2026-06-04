@@ -30,7 +30,11 @@ Early development. Design documentation is actively being written.
 ```
 mgaPub/
 ├── gdd/                  Game Design Document
-├── creative-briefs/      Feature-level design briefs (30 briefs)
+├── creative-briefs/      Player-experience briefs / use cases (CB-*)
+├── feature-briefs/       Player-facing design briefs (FB-*)
+├── technical-briefs/     Implementation briefs (TB-*)
+├── asset-manifests/      Material instance / asset inventories
+├── dev-logs/             Monthly developer reports
 ├── dev-videos/           Dev video scripts
 └── README.md
 ```

@@ -37,7 +37,7 @@ Full diegetic and design detail is in [UI/UX](../gdd/ui-ux.md). This brief defin
    | Section | Contents | Notes |
    |---------|----------|-------|
    | **HUD Modification** | Configure active widget sets for eye implants and CAMERA drone | See [CB-hud-modification](CB-hud-modification.md) |
-   | **Map** | City map, points of interest, fast travel if unlocked | — |
+   | **Map** | City map, points of interest, fast travel if unlocked | See [FB-gps-map](../feature-briefs/FB-gps-map.md) for the player-facing design and [TB-gps-map-pipeline](../technical-briefs/TB-gps-map-pipeline.md) for the data pipeline |
    | **Notes** | Meghan's collected notes, lore entries, observations, and app guides | See UC4 |
    | **Missions** | Active and completed job contracts; tracks bounties, deliveries, repairs, hacking jobs, and waitressing shifts only — story progression is not tracked here | See [CB-notes-and-discovery](CB-notes-and-discovery.md) |
    | **Skills** | Full skill and attribute view; progression tracking | See [CB-skills-menu](CB-skills-menu.md) |

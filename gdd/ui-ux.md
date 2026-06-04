@@ -130,7 +130,7 @@ Outside of widget configuration, the smartphone is the primary interface for all
 | Phone section | Contents |
 |--------------|----------|
 | **Widgets** | Configure active eye implant and drone widget sets |
-| **Map** | City map, fast travel (if unlocked), points of interest |
+| **Map** | City map, fast travel (if unlocked), points of interest — see [FB-gps-map](../feature-briefs/FB-gps-map.md) and [TB-gps-map-pipeline](../technical-briefs/TB-gps-map-pipeline.md) |
 | **Skills** | Full skill and attribute view; progression tracking |
 | **Inventory** | Equipment, items, and consumables — see [Inventory](inventory.md) |
 | **Notes** | Field notes, lore entries, quest notes, and app guides — see [CB-ingame-menus](../creative-briefs/CB-ingame-menus.md) |
