@@ -36,8 +36,13 @@ mgaPub/
 ├── asset-manifests/      Material instance / asset inventories
 ├── dev-logs/             Monthly developer reports
 ├── dev-videos/           Dev video scripts
+├── attributions.md       Real-world sources adapted into the game
 └── README.md
 ```
+
+### Source transparency
+
+When external real-world material is adapted into MGA, the source is credited at multiple layers — in-game credits, this public attributions file, and per-doc citation footers. The principle is documented as [Manifesto Principle 15 — Source Transparency](gdd/manifesto.md#15-source-transparency); the running attribution list lives in [attributions.md](attributions.md).
 
 ---
 

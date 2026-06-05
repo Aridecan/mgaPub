@@ -128,3 +128,20 @@ No protagonist, no ally, no healthy relationship in this game uses the word "wor
 The word "worthless" — and the psychology behind it — is reserved for antagonists. Characters who call others worthless, or who demand that others refer to themselves as worthless, are signalling something the world recognises: genuine cruelty, not kink. It is a villain marker. The audience and the characters both understand this. When a player hears "worthless" in this game, they are hearing a person who has crossed a line the setting does not forgive.
 
 The Gorean novels that popularised submissive self-deprecation speech ("this worthless one," "this girl") were written by a philosophy professor examining oppressive cultures — a study of how power structures dehumanise. Parts of the BDSM community took the examination as a manual. MGA does not repeat that mistake. The game depicts power dynamics; it does not endorse the destruction of self-worth as a feature of those dynamics.
+
+---
+
+## 15. Source Transparency
+
+When external real-world material is adapted into MGA — a calculation, a concept, a piece of analysis, a historical reference, a specific text or image — the source is credited. Credit is not optional, and it is not hidden in private design docs. The principle has four standing surfaces:
+
+1. **In-game credits roll.** A clearly labelled *Inspirations & Sources* section in the final credits lists every real-world author / work / academic whose material was directly adapted into the game's content. Players who finish the game see this.
+2. **Public attributions document.** A living file at [`mgaPub/attributions.md`](../attributions.md) — kept current with every commit that adds adapted material — carries the formal citation, what was adapted, where it appears in-game, and a link to the design doc that uses it. Anyone tracking development can read it.
+3. **Per-doc citation footers.** Every internal lore document that adapts external material carries a *Real-world source* footer with full attribution. The credit lives where the adaptation lives; it cannot get lost in a reorganisation.
+4. **Diegetic citation when it fits.** When an in-fiction document inside the game (a paper, a book, a textbook entry) is itself citing the real-world source as a historical reference, the citation appears as a real academic footnote inside that document, visible to the player. The Kaupff paper on magical-girl transformation physics (see [calibran-magical-girl-physics](../../mgaPriv/world/calibran-magical-girl-physics.md)) is the pattern — Yanagita Rikao is cited inside the in-fiction text, not just in a design-doc footer.
+
+**Scope:**
+- **Adapted** material — specific numbers, concepts, ideas, names, or text taken from a source — gets full citation at all applicable layers above.
+- **Influenced by** material — genre fit, tone reference, broad inspirations — is acknowledged informally (dev logs, interviews) but does not require formal citation.
+
+The principle exists because we are building on the work of others. Acknowledging that is the minimum honest act. It is also, incidentally, what makes the world feel like a place with a real intellectual history: Calibran academics citing 21st-century Earth physicists is more interesting than Calibran academics inventing the same calculation from scratch.
