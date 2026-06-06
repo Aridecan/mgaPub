@@ -465,6 +465,74 @@ Buildings and sidewalks cover most over-width along roads — visible precision 
 
 ---
 
+## Packaging & cook behaviour
+
+The brush is **editor-time tooling**. At runtime, the player walks on a landscape whose heights are pre-computed; the brush, its render target, and its encoding material are not needed. The cooked pak should carry the landscape proxies (with the brush's delta already baked into their heightmaps) and nothing else from the brush stack.
+
+This works automatically *if* a couple of conventions are followed.
+
+### What gets baked into the cooked landscape
+
+- The brush writes into a Landscape **Edit Layer**. Edit-layer deltas are stored as part of the landscape data and persisted on save.
+- During the cook, UE's landscape build pass composites all edit layers into the final heightmap and weightmaps of each landscape proxy. World Partition proxies carry the same composited data, per cell.
+- Result: the cooked landscape proxy contains the **road-conformed heightmap** with no runtime dependency on the brush.
+
+For belt-and-braces correctness, run **Build → Landscape** in the editor before committing the level. The automated landscape build during cook handles this for standard edit-layer setups, but a fresh manual build guarantees the saved level state already reflects the composite.
+
+### What must be excluded from the cook
+
+The brush actor, its render target, and the encoding material will cook if anything references them from shipping content. They must not — `RT_RoadHeights` alone is ~ 268 MB of R32F data and has no business in a pak.
+
+| Asset | Default cook behaviour | Exclusion lever |
+|-------|------------------------|------------------|
+| `BP_RoadConformityBrush` instance in level | Cooks as an actor | Set `bIsEditorOnlyActor = true` on the class (Class Defaults → Cooking → *Is Editor Only Actor*). UE's reference walker then treats every asset reachable *only* through this actor as editor-only too. |
+| `RT_RoadHeights` (R32F render target) | Cooks if referenced from non-editor-only code | Stripped automatically once the brush class is editor-only. As paranoia: tick *Editor Only* on the asset itself. |
+| `M_RoadHeightEncode` | Cooks if referenced from non-editor-only actor | Stripped automatically with the brush. |
+| `M_LandscapeBrush_RoadConformity` and its referenced MFs | Cooks if referenced from non-editor-only actor | Stripped automatically with the brush. |
+| `RoadGeo` actors and their meshes | **Cook normally — leave alone.** | These are the actual visible road meshes; they remain in the shipping build. |
+
+The pattern is: **mark the brush actor as editor-only and let UE's reference-walker take care of its dependency graph.** Don't tag individual materials as editor-only — that fights the override pipeline during editor refreshes.
+
+### CI / packaging workflow
+
+The canonical ordering for a clean ship:
+
+1. In the editor, lay or remove `RoadGeo` actors as needed.
+2. Run `RefreshRoads` on the brush. Confirm the heightmap delta is visible in the level.
+3. Tune brush params (scale, offsets, ZBias) and re-refresh until satisfied. Brush params do not survive into the cook — only the resulting pixels do.
+4. **Save the landscape and the level.** The edit-layer composite is now committed to disk.
+5. Commit to source control.
+6. CI cook proceeds normally. The brush class being editor-only excludes the brush stack from the pak.
+
+If CI cooks *before* a refresh, the **old** baked heights ship. There is no runtime fallback — the brush does not run during cook unless explicitly invoked. The refresh-then-save discipline is load-bearing.
+
+### Verification
+
+After the first CI cook with the brush marked editor-only, audit the cooked pak to confirm the brush stack is excluded:
+
+- Open `Window → Developer Tools → Reference Viewer` on a cooked landscape proxy and verify no edge to `RT_RoadHeights` or `M_RoadHeightEncode`.
+- Run `UnrealPak.exe -List` (or the equivalent pak-inspection tool) on the cooked pak and grep for `RoadConformity`, `RoadHeights`, and `RoadHeightEncode`. Expected matches: zero.
+- File-size regression: track the cooked pak size between builds. A 268 MB swing after a brush asset rename is the easy signal that the editor-only flag broke somewhere.
+
+The first cook after marking the brush editor-only is the load-bearing audit; subsequent cooks just need the file-size check.
+
+### Tweaks-after-cook workflow
+
+If a hill turns out to be too steep and a road needs to be removed after the level is otherwise final:
+
+1. Delete the relevant `RoadGeo` actors in editor.
+2. Re-refresh the brush — terrain in those blocks reverts to its underlying landscape height.
+3. Manually sculpt clean-up at the edges if needed.
+4. Save landscape + level.
+5. Re-export a road-height PNG and run `road_map_check.py` — the deleted blocks now classify as `missing` instead of `present`. The diff against the previous export is the audit trail for the removal.
+6. Commit; CI cook picks up the new baked heights on next build.
+
+### Future: CI cooking pipeline brief
+
+A dedicated **TB-ci-cook** is on the future-work list to formalise the full CI build pipeline — DLC pak split, localisation pak handling, mod-pak slot reservation, content-only vs. code+content cooks, the editor-only-asset audit gate, regression detection. The packaging section above is the brush-specific slice of what that broader brief will cover; the rest of the cook pipeline lives in that future doc.
+
+---
+
 ## Open items / gotchas
 
 - **`Affects Heightmap = true`** required in Class Defaults.
