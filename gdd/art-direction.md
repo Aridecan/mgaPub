@@ -14,18 +14,39 @@ MGA uses an anime/manga aesthetic throughout. Meshes are authored to anime conve
 
 ---
 
-## Cel Shader — 4-Tone Banded Lighting
+## Cel Shader — 2-Tone Banded Lighting
 
-Lighting uses a 4-tone cel shader. Diffuse contribution from the primary light source is evaluated against each surface normal and quantised into four discrete bands rather than a smooth gradient.
+Lighting uses a 2-tone cel shader. Diffuse contribution from the primary light source is evaluated against each surface normal and quantised into two discrete bands rather than a smooth gradient.
 
 | Band | Role |
 |------|------|
-| Highlight | Specular peak; anime-style bright rim |
-| Base | The character's intended read colour under normal lighting |
-| Shadow | First shadow band; mid-tone drop |
-| Deep shadow | Darkest band; used in occlusion and extreme angles |
+| Lit | The character's intended read colour under primary light |
+| Shadow | The cooler/darker step where the primary light fails to reach the surface |
 
-Bands are determined by the angle between the surface normal and the primary light direction. Band thresholds are tunable per material to allow different materials (skin, fabric, metal) to respond differently to the same light.
+The split is determined by the angle between the surface normal and the primary light direction, against a single threshold per material. The threshold is tunable per material to allow different materials (skin, fabric, metal) to respond differently to the same light, but the rendered output is always two tones — not three, not four.
+
+**Why two and not four.** A 2-band shader makes the shadow shape the *only* meaningful sculpting variable, which is exactly the variable an artist wants to control deliberately. Adding additional bands introduces extra thresholds that compound across geometry in ways that don't always cooperate with the shape language. The 2-band model is the de facto standard for modern stylised cel-shaded titles (*Genshin Impact*, *Honkai*, *Persona*, *Guilty Gear Strive*) for exactly this reason; 3+ band approaches read closer to hand-painted 2D cel work, which doesn't fit a real-time PBR-meets-cel pipeline.
+
+### Specular highlight — separate pass
+
+Specular contribution is handled outside the diffuse banding as its own pass. A stepped specular evaluates the half-vector against the surface normal and emits a flat anime-style highlight — typically one bright zone, optionally a second falloff zone, with a hard edge. The specular intensity is driven by MOHW.B (highlight band intensity) per [material instance](#material-instance-parameters). Specular threshold is tunable per material.
+
+This separation lets a character's diffuse shadow be sculpted independently of their highlight placement — the highlight follows the light direction; the shadow follows the surface curvature; they don't compete for the same threshold.
+
+### Rim light — separate pass
+
+A fresnel-based rim light is layered on as a third pass — a stepped anime-style rim that emphasises the silhouette against the background. Rim intensity, colour, and threshold are tunable per material. The rim and the inverse-hull outline serve different purposes: the outline is a hard silhouette read; the rim is a lighting cue that gives the form volume against its environment.
+
+### Summary
+
+The full lighting stack at a glance:
+
+| Pass | Contribution | Threshold count | Tunable |
+|------|--------------|-----------------|---------|
+| Diffuse (2-tone band) | Lit / Shadow | 1 | Per material |
+| Specular highlight | Stepped anime highlight | 1 (optionally 2 for falloff) | Per material |
+| Rim light | Stepped fresnel rim | 1 | Per material |
+| Inverse-hull outline | Silhouette stroke | n/a | Per master (Architecture / Character / etc.) |
 
 ---
 
@@ -51,7 +72,7 @@ The 6 signature colours are reserved for the five magical girls and Tierney. Onl
 
 </details>
 
-**Palette intent:** The palette is intentionally bright and cheerful. This is a deliberate choice on two levels. Technically, saturated and well-separated colours are easier to work with under cel shading — banding reads cleanly, zones are distinct, and the four lighting tones produce legible results without muddy mid-values. Thematically, the brightness creates an emotional counterbalance to the dystopian society operating on Terridyn. The world is corporate-controlled, half-empty, and quietly dangerous; the visual language refuses to reflect that darkness back at the player. The game looks like a place where good things can happen, because they can. This tonal balance is established from the first frame and holds consistently — so that when characters like Sir Gallopington arrive, they feel native to the world rather than tonally incongruous.
+**Palette intent:** The palette is intentionally bright and cheerful. This is a deliberate choice on two levels. Technically, saturated and well-separated colours are easier to work with under cel shading — banding reads cleanly, zones are distinct, and the two lighting tones produce legible results without muddy mid-values. With only two diffuse tones to do the visual work, each colour's lit and shadow values need to be well-separated; the saturated palette buys that separation for free. Thematically, the brightness creates an emotional counterbalance to the dystopian society operating on Terridyn. The world is corporate-controlled, half-empty, and quietly dangerous; the visual language refuses to reflect that darkness back at the player. The game looks like a place where good things can happen, because they can. This tonal balance is established from the first frame and holds consistently — so that when characters like Sir Gallopington arrive, they feel native to the world rather than tonally incongruous.
 
 **Palette discipline:** The restricted palette enforces visual consistency across the game. Characters, environments, and UI all speak the same colour language. New assets that require a new colour require a palette discussion — the palette is not expanded casually.
 
@@ -186,7 +207,7 @@ The anime/manga aesthetic is achieved at the material and shader layer, not the 
 ## Open Items
 
 - Inverse hull weight / scaling values — to be calibrated during shader development
-- Whether the 4-tone band thresholds are globally uniform or exposed as per-material parameters
+- Whether the diffuse shadow-band, specular, and rim thresholds are globally uniform or exposed as per-material parameters (lean: per-material — the whole point of the separate-pass model is independent control)
 - Signature colour assignments — partially established through character identity; to be formally locked into the palette
 - ~~Environment palette usage~~ — RESOLVED: ground (`M_Master_Ground`) uses the full palette to enable debug-bounds visualisation; environmental discipline is editorial. See [TB-materials](../technical-briefs/TB-materials.md).
 - Whether the definition texture uses a fixed line colour or samples from the palette

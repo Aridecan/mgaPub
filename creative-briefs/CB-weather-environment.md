@@ -10,7 +10,7 @@ All environmental data is deterministic and driven by the almanac library. Sun p
 
 The almanac currently provides sun/moon positions, sunrise/sunset with six twilight phases, weather conditions (Sunny through Snow), per-hour temperature, moon illumination fractions, and seasonal determination. Three extensions are needed: wind speed/direction, thunderstorm as a distinct condition, and fog/mist as a distinct condition. These are library-level changes, not creative brief scope, but the brief references them as data dependencies.
 
-Weather rendering must respect the anime art style established in [Art Direction](../gdd/art-direction.md). The cel shader's 4-tone banding, the 98-entry colour palette, and the geometry-based outline system all constrain how weather effects are rendered. Post-processing is avoided where a shader or particle solution exists. Rain is particles, not a full-screen overlay. Fog is volumetric, not a depth-based post-process blur.
+Weather rendering must respect the anime art style established in [Art Direction](../gdd/art-direction.md). The cel shader's 2-tone diffuse banding (plus separate stepped specular and rim passes), the 98-entry colour palette, and the geometry-based outline system all constrain how weather effects are rendered. Post-processing is avoided where a shader or particle solution exists. Rain is particles, not a full-screen overlay. Fog is volumetric, not a depth-based post-process blur.
 
 **Related documents:**
 
@@ -55,7 +55,7 @@ The almanac provides exact sun azimuth and altitude for any hour, plus eight twi
 
 **Directional light:** Azimuth and altitude from the almanac sun position table drive the UE5 directional light rotation directly. Colour temperature shifts from warm (sunrise/sunset) through neutral (midday) to absent (night). Intensity scales with altitude — low sun produces weaker, warmer light; high sun produces strong, neutral light.
 
-**Sky colour:** A gradient lookup driven by sun altitude. The cel shader's 4-tone banding applies to the sky material — the sky has visible colour bands at transitions rather than photorealistic gradients, consistent with the anime art style.
+**Sky colour:** A gradient lookup driven by sun altitude. The sky material reads via banded steps rather than continuous gradients, consistent with the anime art style — visible colour bands at sun-altitude transitions. The sky band count is allowed to exceed the character-shader 2-tone limit (the sky needs more tonal granularity than character lighting; using a multi-step gradient ramp is acceptable for sky alone and does not violate the diffuse-shader design).
 
 **Ambient audio responds to time of day:**
 
@@ -433,7 +433,7 @@ These are library-level changes to the almanac codebase, not rendering or gamepl
 - How weather integrates with the time-skip system — does skipping hours skip weather transitions or resolve them instantly at the target time?
 - Seasonal foliage — does Terridyn's alien megaflora have deciduous cycles or is it primarily evergreen?
 - Weather impact on vehicle handling — does rain/snow/ice affect the bicycle, motorbike, and hoverbike differently? (See [CB-traversal — Vehicles](CB-traversal.md))
-- Precipitation interaction with the cel shader — do rain and snow particles receive the 4-tone banding or are they rendered outside the cel shader pass?
+- Precipitation interaction with the cel shader — do rain and snow particles receive the 2-tone banding or are they rendered outside the cel shader pass?
 - Night brightness formula — exact calculation from moon phase, moon altitude, cloud cover, and light pollution
 - Whether weather conditions affect magical girl transformation sequences (transforming in rain — do the particles interact?)
 - Sound propagation in snow — how much does accumulated snow reduce the effective Perception detection radius?

@@ -27,7 +27,7 @@ All masters live under `Content/MGA/Materials/Master/`. All instances live next 
 
 ### Why `M_Master_Ground` skips cel and outline
 
-A flat ground surface has near-constant N·L across its area, so the 4-tone band collapses to a single band — the cel pass does zero visible work for non-zero shader cost. Inverse hull on co-planar ground meshes produces no useful silhouette (the rim faces lie in the same plane). Continuous PBR shading also reads cleaner under wetness, puddle, and decal-layered conditions, which roads need.
+A flat ground surface has near-constant N·L across its area, so the 2-tone band collapses to a single tone — the cel pass does zero visible work for non-zero shader cost. Inverse hull on co-planar ground meshes produces no useful silhouette (the rim faces lie in the same plane). Continuous PBR shading also reads cleaner under wetness, puddle, and decal-layered conditions, which roads need.
 
 Vertical kerbs and the median curb-face still want cel banding — those use `MI_*` instances on `M_Master_Architecture`, not `M_Master_Ground`.
 
@@ -105,7 +105,7 @@ Colour, palette assignment, zone selectors, mix ratios, blush amount, outline we
 
 These remain unresolved but do not block the master list above:
 
-- 4-tone band thresholds: globally uniform vs per-master parameter
+- 2-tone band threshold (diffuse shadow edge), specular threshold, and rim threshold: globally uniform vs per-master parameter — likely per-master per Art Direction's separate-pass design intent
 - Signature colour palette assignments (partial)
 - Definition-texture line colour: fixed vs palette-sampled
 - Inverse hull weight / scaling values
