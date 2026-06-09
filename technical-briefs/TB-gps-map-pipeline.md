@@ -123,7 +123,9 @@ Current script writes CSV; **TODO** add `--save-json` for downstream consumption
 - **Lock markers** at the active pool transitions (Lock 6 removed → 5 markers).
 - Writes `exports/city_grid/downtown_blocks.svg`; `--preview <png>` also rasterises via PIL (no system SVG rasteriser required).
 
-Emits the TB layer-group structure, `id`/`class`/`data-*` conventions below. **Still deferred:** the district layer (`layer-districts` empty until Stage 2), street-name and block-address text layers (need `{LOC:gps.*}` tags), bridges, and runtime-overlay groups (left empty for UE injection).
+- **Block-address labels** — literal `db…` text (yellow, `.block-label` class) at each drawn block's centroid in `layer-blocks-text`. Per the TB these are NOT localised. On-water blocks (dropped) get no label.
+
+Emits the TB layer-group structure, `id`/`class`/`data-*` conventions below. **Still deferred:** the district layer (`layer-districts` empty until Stage 2), the street-name text layer (needs `{LOC:gps.*}` tags), bridges, and runtime-overlay groups (left empty for UE injection).
 
 Full specification follows:
 
