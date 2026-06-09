@@ -39,14 +39,19 @@ Each stage is independently re-runnable. A change to the road network re-runs St
 
 ---
 
-## Stage 1 — Geometry truth (`road_map_check.py`)
+## Stage 1 — Geometry truth (`road_map_check.py` / `road_map_check_rt.py`)
 
-**Implemented.** See script in `reference/road_map_check.py`.
+**Implemented.** Two variants:
+
+- `reference/road_map_check_rt.py` — **preferred.** Targets the clean 4096² `RT_RoadHeights` export (white grid on black) using the documented UE world→texel transform (no hand anchors). See `memory/roadheights-rt-transform.md`.
+- `reference/road_map_check.py` — original, for a small hand-anchored PNG; needs four pixel-space L3-corner anchors updated per export.
 
 **Inputs:**
 - `exports/city_grid/junctions.json` — procedural grid (committed)
-- A road-height render-target PNG exported from UE
-- Four pixel-space anchor points (the L3 corners of the visible area), updated per export
+- A road-height render-target PNG exported from UE (the RT variant uses `Imports/RT_RoadHeights_Tex.png`)
+- (`road_map_check.py` only) Four pixel-space anchor points (the L3 corners of the visible area), updated per export
+
+Output today is `exports/city_grid/block_availability.csv` (per-block N/E/S/W edge scores + status). **TODO** add `--save-json` for downstream consumption.
 
 **Output:** `block_status.json` — per-block classification:
 
@@ -110,7 +115,17 @@ Current script writes CSV; **TODO** add `--save-json` for downstream consumption
 
 ## Stage 3 — SVG render (`gps_map_render.py`)
 
-**Not yet built.** Specification:
+**First cut implemented** (`reference/gps_map_render.py`) — renders the layers we already have, ahead of Stage 2:
+
+- **Roads** from `junctions.json` segments, by tier (L1/L2/L3), **culled to the built area** by sampling the `RT_RoadHeights` texture along each segment centreline (same verified transform as Stage 1). Because the river reads as black/no-road in the RT, this also masks the river corridor in one pass. `--no-cull` draws the full designed grid.
+- **Block road-status** fills from `block_availability.csv` (`block-present` / `block-partial` / `block-missing` classes).
+- **River** water polygon built by offsetting the survey centreline by its per-point width (`river_survey_…_splines_….json`).
+- **Lock markers** at the active pool transitions (Lock 6 removed → 5 markers).
+- Writes `exports/city_grid/downtown_blocks.svg`; `--preview <png>` also rasterises via PIL (no system SVG rasteriser required).
+
+Emits the TB layer-group structure, `id`/`class`/`data-*` conventions below. **Still deferred:** the district layer (`layer-districts` empty until Stage 2), street-name and block-address text layers (need `{LOC:gps.*}` tags), bridges, and runtime-overlay groups (left empty for UE injection).
+
+Full specification follows:
 
 **Output:** a single SVG file (`downtown_blocks.svg`) covering the L3-bounded downtown with all visual layers from [FB-gps-map § Visual Layers](../feature-briefs/FB-gps-map.md#visual-layers).
 
@@ -276,7 +291,8 @@ Typical iteration:
 
 - `--save-json` mode for `road_map_check.py` (Stage 1 output for downstream consumption)
 - `district_assign.py` itself — needs writing
-- `gps_map_render.py` — needs writing
+- `gps_map_render.py` — first cut done (roads+culling, blocks, river, locks); remaining: district fills (post-Stage 2), street/block text with `{LOC:}` tags, bridges
+- Stage 3 reads `block_availability.csv` directly today; switch to `block_annotations.json` once Stage 2 exists
 - Concrete styling choices for the in-game vs dev SVG (colour palette, line weights, font choices); will need a small design pass
 - UE-side SVG handling — investigate plugin options vs custom solution; pick the one that matches the project's tech stack
 - String-table integration — confirm the project's chosen localisation framework and conventions
