@@ -126,8 +126,9 @@ Current script writes CSV; **TODO** add `--save-json` for downstream consumption
 - Writes `exports/city_grid/downtown_blocks.svg`; `--preview <png>` also rasterises via PIL (no system SVG rasteriser required).
 
 - **Block-address labels** — literal `db…` text (yellow, `.block-label` class) at each drawn block's centroid in `layer-blocks-text`. Per the TB these are NOT localised. On-water blocks (dropped) get no label.
+- **Road-name labels** — one black (`.road-label`) label per kept segment in `layer-streets`, rotated along the road, at the segment midpoint. The name is resolved by nearest-intersection lookup against `roads_organized.json` (matching-orientation short name: `23N`, `11W`, `MERIDIAN`, `MAIN`), carried as the visible text plus `data-name-short`/`data-tier`. This is the **dev/annotation styling** (human-readable names so block + road call-outs are easy in Illustrator); the in-game variant should swap the visible text for `{LOC:gps.street.*}` tags (see Output Variants) — still TODO.
 
-Emits the TB layer-group structure, `id`/`class`/`data-*` conventions below. **Still deferred:** the district layer (`layer-districts` empty until Stage 2), the street-name text layer (needs `{LOC:gps.*}` tags), bridges, and runtime-overlay groups (left empty for UE injection).
+Emits the TB layer-group structure, `id`/`class`/`data-*` conventions below. **Still deferred:** the district layer (`layer-districts` empty until Stage 2), `{LOC:gps.street.*}` tag mode for the in-game street labels, bridges, and runtime-overlay groups (left empty for UE injection).
 
 Full specification follows:
 
