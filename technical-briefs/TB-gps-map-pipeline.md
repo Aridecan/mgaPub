@@ -117,8 +117,8 @@ Current script writes CSV; **TODO** add `--save-json` for downstream consumption
 
 **First cut implemented** (`reference/gps_map_render.py`) — renders the layers we already have, ahead of Stage 2:
 
-- **Roads** from `junctions.json` segments, by tier (L1/L2/L3), **culled to the built area** by sampling the `RT_RoadHeights` texture along each segment centreline (same verified transform as Stage 1). Because the river reads as black/no-road in the RT, this also masks the river corridor in one pass. `--no-cull` draws the full designed grid.
-- **Block road-status** fills from `block_availability.csv` (`block-present` / `block-partial` / `block-missing` classes).
+- **Roads** from `junctions.json` segments, by tier (L1/L2/L3), **culled to the built area** by walking the `RT_RoadHeights` texture along each segment centreline (~6 m spacing, same verified transform as Stage 1) and rejecting any segment whose longest continuous non-road gap exceeds ~30 m. A present road is white along its whole length; a river/void crossing has a long black run, so this culls river-crossing grid segments cleanly (validated: 0 of 259 river-crossers kept, vs 56 under a naive fraction test). Bridges are NOT in `junctions.json` — they belong in the deferred `layer-bridges`. `--no-cull` draws the full designed grid.
+- **Block road-status** fills from `block_availability.csv` (`block-present` / `block-partial` / `block-missing` classes). Blocks that sit **on the river** (centre or ≥2 corners inside the survey water polygon) are dropped — the water layer represents them — so no block fill crosses the river. Dry removed voids (e.g. the rectangular hole) are retained.
 - **River** water polygon built by offsetting the survey centreline by its per-point width (`river_survey_…_splines_….json`).
 - **Lock markers** at the active pool transitions (Lock 6 removed → 5 markers).
 - Writes `exports/city_grid/downtown_blocks.svg`; `--preview <png>` also rasterises via PIL (no system SVG rasteriser required).
