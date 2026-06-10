@@ -320,8 +320,8 @@ Typical iteration:
 
 - `--save-json` mode for `road_map_check.py` (Stage 1 output for downstream consumption)
 - ~~`district_assign.py` itself — needs writing~~ **DONE (2026-06-10)** — reads `districts.json` + generated schools/campuses → `block_annotations.json`
-- `gps_map_render.py` — areas/schools/campuses + legend done (colour-coded fills, labels); remaining: street/block text with `{LOC:}` tags, bridges
-- **Next:** Stage 3 reads `districts.json` + re-derives schools/campuses today; switch it to consume `block_annotations.json` (Stage 2 output) so the map is driven by the single canonical per-block file
+- `gps_map_render.py` — areas/schools/campuses + legend done; **loop closed (2026-06-10)**: every block polygon now carries `data-district / data-owner / data-land-use` from `block_annotations.json`, and `--color-by land_use` renders a zone map (palette from `districts.json` `land_use_colors`, carried through Stage 2). Remaining: street/block text with `{LOC:}` tags, bridges
+- **Partial convergence:** Stage 3 consumes `block_annotations.json` for per-block attrs + land-use colour, but still re-derives the school/campus *overlays* via its own generators (deterministic, matches). Full convergence (read all placement from Stage 2) + the shared `city_grid_lib` are the remaining cleanup
 - Concrete styling choices for the in-game vs dev SVG (colour palette, line weights, font choices); will need a small design pass
 - UE-side SVG handling — investigate plugin options vs custom solution; pick the one that matches the project's tech stack
 - String-table integration — confirm the project's chosen localisation framework and conventions
