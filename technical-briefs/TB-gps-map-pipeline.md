@@ -25,9 +25,9 @@ junctions.json          ─┐
 roads_organized.json    ─┤
 road-height PNG export  ─┴─→  road_map_check.py       ──→  block_status.json   (Stage 1)
                                                           ↓
-districts_input (PNG +   ─→  district_assign.py        ──→  block_annotations.json   (Stage 2)
-  CSV legend, or CSV)         ↓
-                              merges status + districts
+districts.json (areas) + ─→  district_assign.py        ──→  block_annotations.json   (Stage 2)
+  generated schools/camps     ↓
+                              merges road status + districts + schools
                                                           ↓
 block_annotations.json   ─→  gps_map_render.py         ──→  downtown.svg   (Stage 3)
                                                               ├─→  in-game asset (UE import)
@@ -69,12 +69,32 @@ Current script writes CSV; **TODO** add `--save-json` for downstream consumption
 
 ## Stage 2 — District annotation (`district_assign.py`)
 
-**Not yet built.** Specification:
+**Built (2026-06-10).** `reference/district_assign.py` reads the hand-authored
+area placements + the generated school/campus placements and writes
+`exports/city_grid/block_annotations.json`.
 
-**Input format (recommended hybrid):**
-- **Coarse PNG overlay** — a painted image at the same dimensions and orientation as the road-height export, where each district is a flat colour region. Authoring is fast (paint-bucket in any image editor).
-- **CSV legend** — `colour_hex,district_name,owner,land_use,tags` mapping each colour in the PNG to its district metadata.
-- **Per-block override CSV** — optional second CSV `db,district_name,owner,land_use,notes` for blocks whose assignment differs from the painted colour (typically named landmarks: Central Park parking, Lock 4 footprint, the Liza Shipwright Mall, etc.). Override CSV wins over PNG-derived assignment.
+**Input format (as built):**
+- **`districts.json`** — the hand-authored source of truth for every named
+  district / corp: a list of areas, each with `key, label, owner, land_use,
+  tags, color` and an explicit `blocks` list of `db` addresses. Chosen over the
+  painted-PNG approach below because corp/landmark footprints are *precise* db
+  block lists, not fuzzy regions — explicit JSON is exact and diff-friendly.
+  A `generated` block records the school/campus generator params.
+- **Generated overlays** — primary schools (2×2 = 3-school-block L + park) and
+  combined secondary campuses (12-block L per superblock) are placed
+  procedurally by the generators in `gps_map_render.py` (even lattice, within
+  one superblock, on buildable land, off-water), and stamped into the output.
+
+**Future input option (deferred):** a **coarse painted-PNG overlay + CSV legend**
+remains the right tool for the *broad residential / mixed-use fill* (fuzzy
+zones over hundreds of blocks) once that phase begins — paint-bucket authoring,
+one colour per land-use band. It would layer *under* the explicit `districts.json`
+(explicit wins). Not needed for the precise corp/education placement done so far.
+
+> **Note — shared helpers:** Stage 2 currently `import`s grid geometry, the
+> river survey, the area loader, and the school/campus generators from
+> `gps_map_render.py` (Stage 3). That's backwards dependency-wise; the clean
+> refactor is a shared `city_grid_lib.py` imported by both. Deferred.
 
 **Schema:** each block carries two orthogonal dimensions plus optional tags:
 
@@ -299,9 +319,9 @@ Typical iteration:
 ## Open Items
 
 - `--save-json` mode for `road_map_check.py` (Stage 1 output for downstream consumption)
-- `district_assign.py` itself — needs writing
-- `gps_map_render.py` — first cut done (roads+culling, blocks, river, locks); remaining: district fills (post-Stage 2), street/block text with `{LOC:}` tags, bridges
-- Stage 3 reads `block_availability.csv` directly today; switch to `block_annotations.json` once Stage 2 exists
+- ~~`district_assign.py` itself — needs writing~~ **DONE (2026-06-10)** — reads `districts.json` + generated schools/campuses → `block_annotations.json`
+- `gps_map_render.py` — areas/schools/campuses + legend done (colour-coded fills, labels); remaining: street/block text with `{LOC:}` tags, bridges
+- **Next:** Stage 3 reads `districts.json` + re-derives schools/campuses today; switch it to consume `block_annotations.json` (Stage 2 output) so the map is driven by the single canonical per-block file
 - Concrete styling choices for the in-game vs dev SVG (colour palette, line weights, font choices); will need a small design pass
 - UE-side SVG handling — investigate plugin options vs custom solution; pick the one that matches the project's tech stack
 - String-table integration — confirm the project's chosen localisation framework and conventions
