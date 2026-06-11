@@ -84,6 +84,13 @@ area placements + the generated school/campus placements and writes
   combined secondary campuses (12-block L per superblock) are placed
   procedurally by the generators in `gps_map_render.py` (even lattice, within
   one superblock, on buildable land, off-water), and stamped into the output.
+- **Residential / mixed-use fill** — every still-unassigned buildable, off-water
+  block becomes open-market fabric, its `land_use` set by **distance from the
+  world origin** per the `residential_fill` rings in `districts.json`
+  (Prestige centre / Corporate mid-ring → `mixed`; Mixed-use transition / Core
+  edge → `residential`), following the concentric height-zoning in
+  `terridyn-city.md`. ~1,682 blocks; leaves only non-buildable/on-water
+  `unassigned`.
 
 **Future input option (deferred):** a **coarse painted-PNG overlay + CSV legend**
 remains the right tool for the *broad residential / mixed-use fill* (fuzzy
