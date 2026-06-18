@@ -48,6 +48,19 @@ The full lighting stack at a glance:
 | Rim light | Stepped fresnel rim | 1 | Per material |
 | Inverse-hull outline | Silhouette stroke | n/a | Per master (Architecture / Character / etc.) |
 
+### Implementation — UE 5.8 Toon BSDF (Substrate) *(target; migrating off the hand-built passes)*
+
+The passes above define the **look**. As of **UE 5.8**, the **implementation** moves to native Substrate nodes, replacing the hand-built shading network. The material is structured **front-end / back-end**:
+
+- **Front-end (unchanged) — base colour.** The palette / Primary-texture selection: `MF_UVsToParameters` + `MF_SelectColorFromPalette` resolve the zone selectors and mix into the surface base colour, and unpack the SARE / MOHW / Definition parameters. (See [Colour Palette](#colour-palette).)
+- **Back-end → Toon BSDF.** The new **Substrate Toon BSDF** node replaces the custom cel network. The 2-tone diffuse band (and, pending confirmation, the stepped specular and rim) are configured by a **Toon Profile asset** bound to the BSDF, rather than three separate hand-built passes. The front-end base colour and channel params feed the BSDF's inputs.
+- **Emission → Unlit BSDF.** The emission boost (SARE.A) is carried by a **Substrate Unlit BSDF** node.
+- **Combine.** The Toon BSDF and the Unlit BSDF are summed via a **Substrate Add** node for the final output.
+- **Outline unchanged.** The inverse-hull outline stays a separate **geometry** pass — not part of the BSDF back-end.
+- **Scope.** Cel masters only (Character, Hair, Eye, Cloth, Architecture, Foliage, Decal-when-toggled). The **non-cel** masters — **Ground, Water, Glass** — keep their existing Substrate BSDFs and do **not** use the Toon BSDF.
+
+**To confirm in-editor at 5.8 adoption:** whether the Toon Profile subsumes all of diffuse-band / specular / rim (likely) or only the diffuse band; the exact mapping of SARE (SSS/AO/Roughness) and MOHW (Metallic/Outline-weight/Highlight/Wetness) onto Toon BSDF inputs vs. Toon Profile settings; Toon Profile asset naming (proposal `TP_<Family>` — `TP_Character`, `TP_Cloth`, …).
+
 ---
 
 ## Colour Palette

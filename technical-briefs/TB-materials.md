@@ -39,6 +39,21 @@ Vertical kerbs and the median curb-face still want cel banding — those use `MI
 
 ---
 
+## Shading Backend — UE 5.8 Toon BSDF (planned)
+
+Each cel master splits into a **front-end** (base-colour selection) and a **back-end** (shading). As of **UE 5.8** the back-end is native Substrate nodes, replacing the hand-built cel network described in [Art Direction](../gdd/art-direction.md#cel-shader--2-tone-banded-lighting).
+
+- **Front-end (unchanged):** `MF_UVsToParameters` + `MF_SelectColorFromPalette` + the 98-entry palette resolve the Primary zone selectors into base colour and unpack the SARE / MOHW / Definition params.
+- **Back-end:** the **Substrate Toon BSDF** node, with cel banding (and likely specular + rim) configured by a bound **Toon Profile asset**. Replaces the separate diffuse-band / specular / rim passes.
+- **Emission boost (SARE.A):** a **Substrate Unlit BSDF** node.
+- **Output:** Toon BSDF **+** Unlit BSDF combined via a **Substrate Add** node.
+- **Outlines:** inverse-hull, unchanged — a geometry pass, not part of the BSDF graph.
+- **Scope:** the **cel** masters in the table above. The **non-cel** masters (`M_Master_Ground`, `M_Master_Water`, `M_Master_Glass`) keep their existing Substrate BSDFs and do **not** adopt the Toon BSDF.
+
+**New asset type — Toon Profile** (proposed prefix `TP_`, e.g. `TP_Character`, `TP_Cloth`): each cel master/instance family binds one; it carries the cel ramp / banding (and possibly specular + rim) settings. The channel→BSDF-input mapping and whether the profile fully subsumes specular + rim are to be confirmed during 5.8 adoption. Until then the [Art Direction](../gdd/art-direction.md) pass spec remains the description of the target *look*.
+
+---
+
 ## Instance Naming Patterns
 
 Three patterns by master family. The prefix is always `MI_`.
