@@ -17,6 +17,7 @@ This brief defines the **player-facing design** of the map. The data pipeline an
 - [CB-ingame-menus](../creative-briefs/CB-ingame-menus.md) — phone menu container that hosts the Map app
 - [CB-notes-and-discovery](../creative-briefs/CB-notes-and-discovery.md) — Notes → map-pin pipeline (leads create pins)
 - [CB-traversal](../creative-briefs/CB-traversal.md) — navigation context the map supports
+- [CB-hud-modification](../creative-briefs/CB-hud-modification.md) — the HUD/AR layer the address waypoint projects onto (eye-AR vs camera, widget budget)
 
 ---
 
@@ -25,6 +26,12 @@ This brief defines the **player-facing design** of the map. The data pipeline an
 The map is a real consumer GPS app on Meghan's phone, not a privileged-access surveillance overlay. What it shows is what a civilian app would show — publicly available street data, public landmarks, transit information, public-facing district names. **Private information is not on the map by default** — corporate facility internals, gang territory boundaries, mission-specific objectives are added only when Meghan acquires them (intel pickups, quest completions, hacking outcomes).
 
 Time does not pause while the map is open. Reading the map in a dangerous situation is a player choice with consequences (see [CB-ingame-menus](../creative-briefs/CB-ingame-menus.md)).
+
+### No navigation, by design
+
+The map **does not route.** No turn-by-turn, no suggested path, no "fastest way there." The only thing it adds beyond display is a **waypoint** the player drops on an address, which projects to the HUD — the player works out their own way there (see *Address Waypoints & the HUD Link* below).
+
+**Why (in fiction):** in a city where everything networked is hackable, **routing is a trap.** Public turn-by-turn was cheap, ubiquitous, and trivially compromised — gangs and corporate enforcers learned to **hijack a target's directions and walk them into a quiet block.** Enough people got robbed, grabbed, or worse following a hacked route that the public stopped trusting machine navigation, and nobody ever found it worth securing the affordable tier. So the consumer GPS gives you a *destination*, not a *route* — trusting your own eyes beats trusting the network. The only people with reliable turn-by-turn are the **elites**, whose secured routing rides the same **privileged InfoDyne data back-channel** that quietly sells everyone else's records — one more thing money (and the corrupt channel) buys. For everyone else, **knowing the city is a survival skill.** That fiction turns "no routing" from a missing feature into a worldbuilding-and-gameplay pillar.
 
 ---
 
@@ -145,6 +152,39 @@ Fast travel is unlocked progressively (mechanic specifics TBD — likely via mon
 
 Behaviour depends on phone-and-transformation rules (see [UI/UX](../gdd/ui-ux.md#phone-and-transformation)). Default: the phone is in the pocket dimension during transformation, so the map is unavailable. Workarounds (the toss, the bag, etc.) allow retaining the phone but with their own trade-offs. The map UI itself doesn't change when accessed as Ava — the phone just becomes available.
 
+### UC9 — Setting an Address Waypoint
+
+**Actor:** The player
+**Goal:** Mark a destination, get a HUD bearing toward it, then find your own way
+**Trigger:** Search/select an address (UC3) → "Set as waypoint"; or long-press a map point → "Waypoint"
+
+Resolves the address to an approximate point (see *Address Waypoints & the HUD Link*) and projects a **HUD bearing** the player navigates by. **No route is drawn.** The waypoint persists until cleared/replaced; simultaneous waypoints are limited by the phone's plan (1 on the base plan; more via subscription).
+
+---
+
+## Address Waypoints & the HUD Link
+
+The one capability the map adds beyond display: turn an **address** into a **HUD waypoint** the player reaches under their own navigation.
+
+### The two-tier HUD indicator
+- **Compass-edge bearing + distance** — always shown while a waypoint is active. A marker on the HUD compass points toward the destination with a live distance readout, **even with no line of sight.** The primary "which way" cue.
+- **Floating AR diamond** — a world-anchored marker that bobs gently up/down at the waypoint's location, **visible only when the player has line of sight to that spot.** The compass gets you toward it; the diamond confirms it once you can actually see it. (Reinforces the design: the city does the work, the marker just confirms.)
+
+### Where the waypoint anchors (geocoding)
+The waypoint resolves from the **street address**, not a per-building marker, so it is **deliberately approximate**:
+- Addresses use a **hundred-block scheme** — each segment between cross-streets is a hundred range (Main→1st = 0–99, 1st→2nd = 100–199, …); the hundreds digits count cross-streets from the Main/Meridian baseline, the last two digits interpolate position along that segment.
+- **Even/odd selects the side of the street**; the waypoint locks to that side.
+- Result: the marker lands at the right block-face on the right side — close, not pinpoint. The player eyeballs the actual door. This is intentional (no hand-holding) and **fully data-driven** from the street grid + numbering rule — no per-building entrance data needed. Implementation: [TB-gps-map-pipeline § Addresses, Businesses, and Waypoints](../technical-briefs/TB-gps-map-pipeline.md#addresses-businesses-and-waypoints-runtime-data).
+
+### Waypoint slots (the satire)
+The phone's **base plan supports one** active waypoint. More slots are a **paid phone upgrade / subscription** — an in-fiction monthly fee to set a second or third destination. (The free tier near-certainly harvests and resells your location data; the *top* tier is the secured elite routing.) Paying a subscription to set a third waypoint **is** the corporate-overreach satire the game is about.
+
+### The phone link (why the map can fail)
+The GPS and all its AR elements are **served by the phone**, over a short-range **personal-area network (PAN, Bluetooth-class, ~10 m)** to Meghan's AR display:
+- The map, the compass bearing, and the AR diamond **only function within ~10 m of the phone.**
+- The "you are here" marker is the **phone's** position, not Meghan's body.
+- **Lose or ditch the phone → lose the map and the waypoint.** Going phone-less is *going dark* — a real stealth/tradeoff lever (you also drop whatever the phone leaks) — and it gives the **Ava-form** behaviour a consistent rule: transform → phone to the pocket dimension → beyond 10 m → no map.
+
 ---
 
 ## Localisation
@@ -190,3 +230,6 @@ The annotated dev map is what gets handed to the author during city design to as
 - **Private overlays' acquisition pacing** — how often does Meghan acquire new map overlays? Each one is a small reward; the rate needs to feel earned not paced-out.
 - **Map persistence across save** — does the player's pin set persist across saves? (Almost certainly yes, but worth confirming.)
 - **MGA1 scope** — downtown only? Or downtown + outer belt? Outer belt is largely outside player movement at MGA1 launch but visible at the city zoom. Probably show outer belt as low-detail context.
+- **Waypoint anchor precision** — hundred-block interpolation lands on the right block-face/side but not the exact door; confirm that "approximate, find-the-door-yourself" feels right in playtest vs. wanting per-entrance data for key targets (deliveries).
+- **Subscription/slot model details** — base = 1 waypoint; pricing/tiers, whether slots are a one-time phone upgrade or a recurring sub, and what the free tier harvests. Ties to the economy + the satire; design pass deferred.
+- **Going-dark rules** — the ~10 m phone PAN gate gives "ditch the phone = lose map + go dark." Confirm what *else* dropping the phone affects (tracking, calls, STALKER profile access) so the tradeoff is legible.

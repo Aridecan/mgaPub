@@ -274,6 +274,42 @@ The UE import process can read these attributes into structured metadata stored 
 
 ---
 
+## Addresses, Businesses, and Waypoints (runtime data)
+
+Three runtime data needs the pipeline feeds, supporting [FB-gps-map § Address Waypoints & the HUD Link](../feature-briefs/FB-gps-map.md#address-waypoints--the-hud-link). None are baked into the SVG; they're built from the same source-of-truth and consumed at runtime.
+
+### Address geocoding (address ↔ world position)
+
+The map resolves a typed address to an **approximate** world point via **hundred-block interpolation** (standard real-world geocoding), entirely from the street grid + numbering rule — **no per-building data**:
+
+1. **Parse** `<number> <street name>` → street short-name (`1st_n`, `12w`, `main`, `meridian`).
+2. **Street → centreline** via `roads_organized.json` (the intersection lookup already used for road naming).
+3. **Hundreds digits → segment:** each segment between consecutive cross-streets is a 100-range, counted from the **Main/Meridian baseline** (Main→1st = 0–99, 1st→2nd = 100–199, …). Locate the segment.
+4. **Last two digits → position:** interpolate 0–99 along that segment.
+5. **Even/odd → side:** offset perpendicular to the centreline to the addressed side (even one side, odd the other).
+
+Output is an approximate world point (correct block-face and side) — intentionally not pinpoint (the player finds the actual door; see FB). Reverse lookup (world position → nearest address) uses the same rule inverted, for "what's my address" and for stamping addresses onto businesses/blocks. **TODO:** emit an `address_index` artifact, or compute live (the rule is cheap enough to run at runtime).
+
+### Business / POI dataset
+
+"Perfect public information" needs a registry of public businesses searchable by **localised** name:
+
+- A new **`businesses.json`** data layer, keyed by block/address: `{ key, loc_tag, category, address, block }`. Names are **localisation tags under `gps.poi.*`** (the existing tag system), so search matches the **player's-locale** name and harvests into `StringTable_GPS` like every other label.
+- `category` drives map markers and search filtering (tavern, vendor, clinic, corporate-store, …).
+- Public businesses are always searchable; `secret`/private POIs stay acquired-only (the existing `secret` tag + `layer-private-overlays`).
+- Source: hand-authored for named/story businesses; can be seeded procedurally from `block_annotations` (`owner`/`land_use`) for generic background businesses.
+
+### Waypoint → HUD handoff (runtime)
+
+Setting a waypoint is a **runtime** operation, not SVG content:
+
+1. Address (or tapped map point) → geocode → world position (above).
+2. UE creates the HUD waypoint: a **compass bearing + distance** (always on) and a **line-of-sight-gated AR diamond** at the world position.
+3. The waypoint and all map/AR elements are **gated on the phone PAN range (~10 m)** — beyond range the HUD waypoint and map drop (see FB phone-link rules). The "you are here" marker tracks the **phone**, not the body.
+4. Active-waypoint count is limited by the phone's plan (1 base; subscription adds slots) — a player/save-state value, **not** map data.
+
+---
+
 ## Output Variants
 
 | Variant | Renderer config | Output |
@@ -335,4 +371,7 @@ Typical iteration:
 - Performance: the SVG can render hundreds of polygons and text elements; need to confirm the chosen UE rendering path handles that smoothly at runtime
 - Outer-belt rendering — MGA1 GPS is downtown-focused but the outer belt should at least appear as low-detail context at city-zoom; figure out whether outer-belt geometry exists yet
 - Acquisition pacing for the "private overlays" layer — this is a gameplay-design question, but the technical scaffolding for "show layer X once flag Y is set" needs to exist
+- **Address geocoding index** — implement the hundred-block interpolation (address ↔ world position) per the new *Addresses, Businesses, and Waypoints* section; decide baked `address_index` artifact vs. live computation. Needs the per-street baseline direction (which way the hundreds count) pinned from the street-naming spec.
+- **`businesses.json` POI dataset** — author the schema + a first pass of named businesses with `gps.poi.*` localisation tags; wire into search + map markers; decide the procedural-seed rule for generic background businesses.
+- **Runtime waypoint → HUD handoff** — the compass-bearing + LOS-gated AR-diamond rendering, the ~10 m phone-PAN gate, and the plan-limited waypoint-slot count (save-state). Coordinate with the HUD/AR system (CB-hud-modification).
 - **Per-segment road naming for dynamic in-game labels (requested).** Goal: when the map is parsed in-game, street names should *follow the road and stay readable as the player pans/zooms* (labels repeat along the visible length of each road, like Google Maps), rather than the current fixed baked-in text. To support this, **tag every road `<path>` element in `layer-roads-l1/l2/l3` with its street name** (`data-name-short`, ideally `data-loc="{LOC:gps.street.*}"`, and `data-tier`) so the UE renderer can lay out and re-flow labels dynamically per visible segment at runtime. The static black `layer-streets` text we emit now is the **dev/annotation** form and is good enough for development; the per-`<path>` metadata is the runtime form. (The per-segment naming logic already exists in `gps_map_render.street_name()` — it just needs to be attached to the road path elements too, not only the standalone label `<text>`.)
