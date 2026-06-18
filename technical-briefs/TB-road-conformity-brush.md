@@ -83,20 +83,26 @@ The brush's UV math depends on a small set of constants derived from the landsca
 | `CaptureCenterX/Y` | `100, 100` cm | SceneCapture world Location (approximates landscape center 99.21, 99.21) |
 | `RenderAreaSize` | `8129 × 8129` | Heightmap vertex count per side (runtime from `InTransform`) |
 | `LandscapeScale.X/Y` | `198.45` cm | Per-vertex spacing (runtime from `InTransform.Scale`) |
-| `BrushSizeX_Fudge` | `1.00651` | Empirical X-axis calibration |
-| `BrushSizeY_Fudge` | `1.0042`  | Empirical Y-axis calibration |
-| `OffsetX` | `1200` cm | Constant XY shift to align ridge under road |
-| `OffsetY` | `2800` cm | Constant XY shift to align ridge under road |
+| `UVScaleX` | `1.0162` | Empirical X-axis UV multiplier (post-passthrough simplification, 2026-06-08) |
+| `UVScaleY` | `1.0158` | Empirical Y-axis UV multiplier (post-passthrough simplification, 2026-06-08) |
+| `UVCentreShiftX` | `0.00421` | Constant UV shift absorbing ~6800 cm X offset |
+| `UVCentreShiftY` | `0.00409` | Constant UV shift absorbing ~6605 cm Y offset |
 | `ZBias` | `−40` cm | Pushes conformed terrain just below road to prevent clipping |
 | `HighPassThreshold` | `0.75` | Reject R_norm samples below this as AA edge bleed |
 | `TexelSearchSize` | `1` (texel) | Masked dilation reach, knob in [0..4] |
 | `MaxLandscapeBelow` | `429` (16-bit packed) | Sanity limit — reject conformity that drops > 10 m below natural terrain |
 
-### Why the fudge factors
+### Why the calibration constants
 
-The brush's nominal math (`BrushSize = RenderAreaSize × Scale`, `OrthoWidth = LandscapeWidth`) is theoretically exact, but in practice produces ~0.5–0.65% scale drift between road geometry and conformity ridge. Root cause is likely a subtle SceneCapture-side difference between nominal OrthoWidth and effective rendered area at large world coordinates (sub-pixel precision in the projection matrix at ~±800k cm). Adjusted empirically to <0.05% residual after one iteration.
+The brush's blend material now uses **direct `TexCoord[0]` passthrough** to both `LandscapeHeight` and `RT_RoadHeights` samples (simplified 2026-06-08, replacing the earlier world-XY-to-UV computation chain). With passthrough the two samples agree by construction *if* both regions cover the same world rectangle.
 
-Constant `Offset` shifts are similarly empirical — they correct for sub-cell origin discrepancies that no constant we have access to predicts exactly.
+In practice they don't quite — the SceneCapture's effective sample region is uniformly ~1.6 % smaller than the landscape's brush footprint, biased by a constant ~6700 cm offset in both axes. Net result: roads sampled from `RT_RoadHeights` land on the landscape with a position error that grows linearly toward the corners.
+
+`UVScaleX/Y` correct the 1.6 % uniform stretch. `UVCentreShiftX/Y` absorb the constant ~6700 cm bias. After tuning, residual misalignment is sub-texel (<400 cm) across the full 16 km landscape and **below visible resolution at any in-game camera distance**.
+
+**Calibration method (2026-06-08 session):** four 1 m cubes placed at known UE world coordinates (the four downtown L3 corner-intersections, then the landscape SW/NE corners). Photoshop pixel-readout of the cubes in the exported 4096² render target gave four (world → texel) anchor pairs, enough to fit an affine pixel↔world transform and detect the systematic offset. UV multiplier and centring shift were then tuned by iterative binary search against the displacement observed at the landscape corners. Full method captured in `memory/brush-calibration-method.md`.
+
+**Open question — where the 1.6 % stretch and ~6700 cm offset come from.** Suspected sources: render target dimensions not exactly square (asymmetry was small, ~0.04 %, mostly noise), SC actor's effective ortho coverage at large world coordinates (FP precision in the projection matrix), or a sub-cell origin discrepancy in the brush's render-area transform. Not blocking — the calibration is stable and reproducible. Worth a root-cause investigation when porting the brush to a different landscape size.
 
 ---
 
@@ -120,8 +126,8 @@ Column "Flags" lists Blueprint variable-details checkboxes: **IE** = Instance Ed
 | `LastRefreshTime` | DateTime | — | IE | Set by `RefreshRoads` |
 | `LastCapturedActorCount` | int | `0` | IE | Set by `RefreshRoads` |
 | `LandscapeMinZ`, `LandscapeRange` | Scalar param refs | per Calibration | IE | Propagated to M_RoadHeightEncode |
-| `BrushSizeXFudge`, `BrushSizeYFudge` | Scalars | `1.00651`, `1.0042` | IE | Calibration multipliers |
-| `OffsetX`, `OffsetY` | Scalars (cm) | `1200`, `2800` | IE | Constant XY corrections |
+| `UVScaleX`, `UVScaleY` | Scalars | `1.0162`, `1.0158` | IE | UV-space multipliers (post-2026-06-08 passthrough simplification) |
+| `UVCentreShiftX`, `UVCentreShiftY` | Scalars | `0.00421`, `0.00409` | IE | UV-space centring shifts (absorb ~6800/6605 cm constant offset) |
 | `ZBias` | Scalar (cm) | `−40` | IE | Road clearance bias |
 
 ### Components
@@ -220,6 +226,8 @@ ClearRoadDeformation():
 
 In UE 5.7 the override is **`Render Layer`** (renamed from the older `Render` since edit layers are now mandatory). Takes a single struct input — `In Parameters` of type `Landscape Brush Parameters`. The implementation computes per-pixel WorldXY from the chunk's transform, packs MID parameters, and dispatches the blend material.
 
+> **Note (2026-06-08):** The pseudocode below pre-dates the UV-passthrough simplification — it shows the world-XY-to-UV computation chain that the blend material no longer needs. The current implementation passes `TexCoord[0]` directly to both `LandscapeHeight` and `RT_RoadHeights` samples, then applies `UVScaleX/Y` and `UVCentreShiftX/Y` as the only spatial correction. The MID still receives `LandscapeHeight` / `RoadHeight` texture parameters and the Z-decode constants, just with the four UV parameters replacing the six world-space ones. Pseudocode below to be reconciled with the new implementation in a follow-up pass.
+
 ```
 RenderLayer(InParameters) → TextureRenderTarget2D:
     Break InParameters → {RenderAreaWorldTransform, RenderAreaSize,
@@ -293,6 +301,8 @@ For the current landscape: road at world Z=0 produces R_norm = `(0 + 133570) / 1
 ---
 
 ## Material — `M_LandscapeBrush_RoadConformity`
+
+> **Note (2026-06-08):** Stages 1 and 2 below — the world-XY computation and the UV-to-RT_RoadHeights conversion — were collapsed into a single UV-passthrough-plus-scale step. The current material samples both `LandscapeHeight` and `RT_RoadHeights` at `TexCoord[0] × UVScale + UVCentreShift` (per-axis scale and shift). Stages 3–6 below are unchanged. Full pseudocode rewrite of stages 1–2 deferred — the calibrated constants in the table above describe what the simplified material actually does.
 
 The brush's working material. Six logical stages:
 
