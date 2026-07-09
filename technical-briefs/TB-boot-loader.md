@@ -37,7 +37,7 @@ UMG, and the game's pak-based string tables) is alive yet:
 | **Screen tech** | `EarlyStartupScreen` (PreLoadScreen system) — **Slate only, no UObjects** | Full **UMG** widgets |
 | **Interactivity** | Minimal (non-interactive splash/progress) | Full (buttons, input) |
 | **Localized text** | Only via the **preload localization container** (`FPreLoadSettingsContainerBase::GetLocalizedText()`), independent of game string tables | Yes — from the mounted `LocText-<lang>` pak's string tables |
-| **What happens here** | Read config, resolve language, **mount paks** | Run the pak **load-vector lifecycle** (Init→Config→Ready), age gate, warnings, main menu |
+| **What happens here** | Read config, resolve language, **mount paks** (`MountPaksEx`, computed order) | Drive the **GameFeatures state machine** (Registered→Loaded→Active), age gate, warnings, main menu |
 | **Implementation** | Custom module @ `ELoadingPhase::PostConfigInit` | Custom `UGameInstance` + boot map + boot `GameMode` |
 
 **Consequence for the screen count:** the pre-engine half is *one* persistent Slate screen
@@ -45,10 +45,12 @@ whose content updates as the state advances (logo → "loading" → progress). T
 authored, interactive screens all live in Regime 2 on the boot map.
 
 **Why the split is unavoidable:** pak *mounting* (making files readable) can happen very
-early, but a pak's **load vector** (its blueprint entry point that registers name +
-dependencies and runs Init/Config/Ready per [Boot Manager](../gdd/boot-manager.md)) is a
-UObject/Blueprint — it cannot execute until the engine is up. So mounting is Regime 1;
-the phased lifecycle is Regime 2.
+early, but **activating a content tier** — transitioning a GameFeature plugin through
+`Registered → Loaded → Active` (`UGameFeaturesSubsystem`), which loads its `GameFeatureData`
+and runs its `GameFeatureActions` — needs the UObject system and the engine fully up. So
+mounting is Regime 1; the GameFeature lifecycle is Regime 2. (See
+[Package Identity & Lifecycle](#package-identity--lifecycle-game-features) — the 2026-07-09
+pivot from hand-rolled load vectors to GameFeature plugins.)
 
 ---
 
@@ -129,7 +131,7 @@ Dependency-graph *derivation* is a **mod** concern (MBM), not the ABM — see th
 | **B4 · Route to boot map** | (engine loading screen) | `StartGameInstance()` override | `Browse()` to `/Game/Maps/BootMap` instead of the menu map |
 | **B5 · Age gate** | UMG: "This game is intended for a mature audience…" (localized) | Boot `GameMode::BeginPlay` | Interactive Yes/No. `LocText-<lang>` is mounted, so text is localized. Fail → quit. |
 | **B6 · Warnings / legal** | UMG: content warnings, legal splash (localized) | — | Advance on input/timer |
-| **B7 · Package lifecycle** | UMG: progress ("Initializing…") | Boot `GameMode` drives it | Run the ABM 4-phase lifecycle over mounted paks: **Load** (run each pak's load-vector BP → register name + deps) → **Init** → **Config** (dependency-ordered, self-coordinated via signals) → **Ready** |
+| **B7 · GameFeature activation** | UMG: progress ("Initializing…") | Boot `GameMode` drives `UGameFeaturesSubsystem` | For each enabled tier plugin in dependency order: `LoadAndActivateGameFeaturePlugin()` → the engine transitions it `Registered → Loaded → Active` (loads `GameFeatureData`, appends asset registry, opens shader lib, runs `GameFeatureActions`). Deps enforced by the plugin descriptors. |
 | **B8 · Main menu** | UMG: main menu | On all-Ready | Reveal the main-menu widget (see map decision below). ABM is complete. |
 
 The **MBM (Mod Boot Manager)** does *not* run here — it runs at session lifecycle (new
@@ -137,59 +139,64 @@ game / load), where mod GUID-dependency resolution and the missing-dependency di
 
 ---
 
-## Pak Runtime Manifest
+## Package Identity & Lifecycle (Game Features)
 
-Every pak — official *and* mod — ships with a **sidecar JSON manifest** (`<pak>.manifest.json`,
-a loose file beside the `.pak`). This is the pak's load-time identity + dependency
-declaration, read by the ABM (official) or MBM (mod). It **replaces the mandatory blueprint
-load-vector** of the original design (resolves Boot Manager open item O2).
+**2026-07-09 pivot — content tiers are GameFeature plugins, not hand-rolled content paks.**
+This reuses UE's own modular-content machinery instead of reimplementing it, and it
+**dissolves the previously-designed sidecar JSON manifest** (dropped): a GameFeature plugin
+already carries everything the manifest did.
 
-**Do not confuse this with the mod *catalog* schema** in [CB — Mod Manager](../creative-briefs/CB-mod-manager.md).
-That schema is **server-side** — it describes a mod for *discovery/download* (URLs,
-thumbnail, `compatible_versions`, description). The runtime manifest below travels *with*
-the installed pak and drives *loading*. They share identity vocabulary and must stay
-consistent, but the catalog carries download/browser fields the runtime manifest omits, and
-the runtime manifest carries load fields (`tier`, `language`, `region`, `load_vector`) the
-catalog omits.
+### What GameFeatures give us for free
 
-### Schema
+| Previously hand-rolled | GameFeatures native equivalent |
+|---|---|
+| Load → Init → Config → Ready lifecycle | `Installed → Registered → Loaded → Active` state machine (`UGameFeaturesSubsystem`) |
+| Sidecar JSON manifest (identity + dependencies) | the **`.uplugin`** — identity + `Plugins`/`PluginDependencies` list (itself pre-mount-readable JSON) |
+| Blueprint load-vector | **`GameFeatureActions`** (the plugin's own activation logic) |
+| Manual asset-registry append, shader-lib open | **automatic** per plugin, on state transition |
+| Extension save-GUID plumbing | the plugin identity doubles as the [Save System](../gdd/save-system.md) extension key |
 
-```json
-{
-  "schema_version": 1,
-  "kind": "official",              // "official" (ABM, name-id) | "mod" (MBM, guid-id)
-  "id": "Spicy",                   // predefined name (official) OR UUID v4 (mod)
-  "version": "1.0.0",              // semver — feeds save/build compatibility
-  "tier": "Spicy",                 // Base|Spicy|SuperSpicy|LocText|LocVoc|RegionOverride|Mod
-  "language": null,                // "ja" for LocText-ja / LocVoc-ja, else null
-  "region": null,                  // "japan" for regionOverride-japan, else null
-  "dependencies": ["Main"],        // DIRECT only, one level; names (official) or GUIDs (mod)
-  "incompatible": [],              // ids known to conflict (mirrors catalog incompatible_mods)
-  "compatible_versions": ["*"],    // game-build compat (mods); official ships-with-build
-  "load_vector": null              // OPTIONAL BP path; null = passive content-only pak
-}
-```
+Each content tier (`Spicy`, `SuperSpicy`, region-specific feature packs) is a GameFeature
+plugin with `"ExplicitlyLoaded": true` and `"BuiltInInitialFeatureState": "Installed"`.
 
-### Rules
+### ABM ⇄ GameFeatures: who mounts, who activates
 
-- **M1 — Sidecar, both kinds.** Uniform `<pak>.manifest.json` beside every pak. Rationale:
-  readable **before mount**, so the MBM can resolve mod dependency order and raise the
-  missing-dependency dialog without mounting anything; one code path for official + mod. The
-  mod download bundle zips `pak + manifest` together.
-- **M2 — Optional load-vector.** The JSON does registration (id + dependencies). A pak points
-  to a `load_vector` blueprint **only if it has runtime init work** (e.g. Spicy's
-  clothing-destruction system). Content-only paks — all localization, all region overrides,
-  most asset packs — set `load_vector: null` and layer in as passive content. Far less BP
-  plumbing than the original mandatory-load-vector design.
-- **M3 — One identity.** A mod's `id` (GUID) is simultaneously its dependency-graph node,
-  its mount identity, **and** its [Save System](../gdd/save-system.md) extension GUID for
-  namespaced persistence. A pak never carries two IDs.
-- **M4 — Parse path (reuse UE):** Regime 1 (pre-engine) parses with plain
-  `FJsonSerializer` → `FJsonObject` (no UObject reflection required). Regime 2 may use
-  `FJsonObjectConverter` → a `USTRUCT` (`FAridecanPakManifest`) once reflection is up.
-- **M5 — Official mount order is still known-topology (R4).** Official manifests are read to
-  *drive the B7 lifecycle and validate*, not to compute mount priority. Only the MBM derives
-  order from declared dependencies (mods).
+The ABM keeps **mount-order control** — GameFeature auto-mounting would otherwise mount in
+filesystem-scan order, not our computed order. So:
+
+1. Keep the tier plugins at **`Installed`** (not auto-activated) → engine does **not**
+   auto-mount them.
+2. **Regime 1 (B3):** the ABM mounts every enabled pak itself via
+   `FPakPlatformFile::MountPaksEx(Order = <computed>)` in known-topology order.
+3. **Regime 2 (B7):** the ABM calls `LoadAndActivateGameFeaturePlugin()` per tier in
+   dependency order; the subsystem sees the pak already mounted and runs the
+   Registered→Loaded→Active transitions (asset registry, shaders, actions).
+
+**`bUseIoStore = false`** (legacy `.pak`, the 5.8 default for our Win/Linux/Mac targets) — so
+the ABM retains `FPakPlatformFile` mount control. IoStore's `.utoc/.ucas` would move mounting
+under the engine and remove that control.
+
+### Same-path override vs. additive (the design consequence)
+
+GameFeature content lives at `/<TierName>/…`, **not** `/Game/…`, so it **cannot shadow** a
+base asset at the same path. Tiers are therefore **additive**: the base game exposes
+data-driven hooks (e.g. the clothing-destruction system stub, censored placeholders) and the
+tier plugin *adds* the mature variants + activates the system via `GameFeatureActions`. The
+rare case that needs true **same-path replacement** (a region swapping a specific base asset)
+uses **DLC release-version cooking** (`-BasedOnReleaseVersion`, overrides by mount priority) —
+see [TB — CI Cook](TB-ci-cook.md). This corrects [TB — Content Directory](TB-content-directory.md)'s
+old `_Spicy/ → MGA/` path-remap, which was never a real engine mechanism.
+
+### Localization & mods
+
+- **Localization** (`LocText-*`, `LocVoc-*`) stays as independent paks — culture-cooked
+  (`-cookcultures`) or lightweight content plugins; the ABM mounts them in Regime 1. Text and
+  voice remain independent.
+- **Mods** are also plugins (`.uplugin` = their manifest), delivered post-ship via `file://`
+  plugin URLs. The **MBM** scans mod dirs, parses each `.uplugin` for dependencies, computes a
+  topological order, `MountPaksEx()` in that order, then `LoadGameFeaturePlugin(file://…)`.
+  The mod *catalog* schema in [CB — Mod Manager](../creative-briefs/CB-mod-manager.md) is a
+  separate, server-side thing (download/browse) — unchanged.
 
 ---
 
@@ -208,7 +215,7 @@ or `-LogCmds="LogAridecanBoot Verbose"` on the command line. Message-level conve
 
 | Verbosity | Used for |
 |-----------|----------|
-| `Error` | Phase timeout, a missing **critical** pak (`Main` / resolved `LocText`), manifest parse failure → precedes exit |
+| `Error` | Phase timeout, a missing **critical** pak (`Main` / resolved `LocText`), `.uplugin` parse or GameFeature mount/activation failure → precedes exit |
 | `Warning` | Recoverable oddities — an excluded optional tier, a skipped unowned pak, a missing *optional* dependency auto-excluded per known topology |
 | `Display` / `Log` | Normal milestones — each state transition (B0→B8), phase entry/exit, mount summary counts |
 | `Verbose` | **Debug level: the resolved pak search order dump**, per-package registration (id + declared deps), dependency-resolution steps |
@@ -227,15 +234,14 @@ different failure profiles and deserve different budgets. Timeouts live in `Arid
 | Phase / state | Default | What it bounds |
 |---------------|---------|----------------|
 | Config read (B1) | 5 s | reading + parsing `Aridecan.ini` |
-| Mount (B3) | 30 s | mounting all owned/enabled paks |
-| Load (B7) | 15 s | running each pak's `load_vector` BP → registration |
-| Init (B7) | 10 s | waiting for all `Inited` replies |
-| Config (B7) | 10 s | waiting for all `Configed` replies |
-| Ready (B7) | 5 s | final `Ready` broadcast settle |
+| Mount (B3) | 30 s | mounting all owned/enabled paks (`MountPaksEx`) |
+| Register (B7) | 10 s | GameFeature → `Registered` (descriptor + asset-registry append) |
+| Load (B7) | 15 s | GameFeature → `Loaded` (`GameFeatureData` + content, shader lib) |
+| Activate (B7) | 10 s | GameFeature → `Active` (`GameFeatureActions` run) |
 
 **On timeout → Error + log + exit.** When a phase's budget expires, the ABM logs at `Error`
-**which packages are still pending** (e.g. the paks that never sent `Configed`), so the
-failure is actionable, then exits gracefully via `FPlatformMisc::RequestExitWithStatus(false, <code>)`
+**which GameFeature plugins are stuck** (and in which target state), so the failure is
+actionable, then exits gracefully via `FPlatformMisc::RequestExitWithStatus(false, <code>)`
 — *not* a `Fatal`/crash. If a resolved `LocText` pak is already mounted, the exit is preceded
 by a localized fatal-error dialog; pre-localization failures exit to log only.
 
@@ -279,8 +285,8 @@ Three artifacts:
    ```
 
 3. **`BP_BootMap` + `ABootGameMode`** — the lightweight front-end map. `BeginPlay` runs the
-   UMG state machine (B5–B8): age gate, warnings, the package Load/Init/Config/Ready
-   lifecycle, then the main menu.
+   UMG state machine (B5–B8): age gate, warnings, then drives `UGameFeaturesSubsystem` to
+   activate the enabled tier plugins in dependency order, then the main menu.
 
 ---
 
@@ -303,35 +309,41 @@ Three artifacts:
   `UCommonActivatableWidgetStack`) — push/pop submenus, back-button, gamepad focus for free
   (reuse-UE). Entering gameplay is one clean `OpenLevel` teardown of the front-end map.
   (Resolves O1.)
-- **R7 — Pak runtime manifest = sidecar JSON, both kinds.** See the Pak Runtime Manifest
-  section (rules M1–M5). Replaces the mandatory blueprint load-vector; the BP is now an
-  optional per-pak field. (Resolves O2.)
+- **R7 — Content tiers are GameFeature plugins (2026-07-09 pivot); sidecar manifest dropped.**
+  Identity + dependencies come from the `.uplugin`; lifecycle from the
+  `Registered→Loaded→Active` state machine; activation logic from `GameFeatureActions`. The
+  ABM mounts paks in computed order (`MountPaksEx`, plugins kept at `Installed` so the engine
+  doesn't auto-mount) then drives activation. `bUseIoStore=false` to retain mount control.
+  See Package Identity & Lifecycle. (Supersedes the old sidecar-manifest resolution of O2.)
 - **R8 — Per-phase timeouts, config-driven, fail-hard.** Each waiting phase has its own
-  `[Boot.Timeouts]` budget; expiry → `Error`-log the pending packages → graceful exit
+  `[Boot.Timeouts]` budget; expiry → `Error`-log the stuck plugins → graceful exit
   (not a crash). See Diagnostics & Failure Handling. (Resolves O4.)
 - **R9 — UE-native logging via `LogAridecanBoot`.** Verbosity-controlled; the pak search
   order dumps at `Verbose`. (Resolves O5.)
+- **R10 — Tiers additive, not same-path shadowing.** GameFeature content is at `/<Tier>/…`;
+  base exposes data hooks the tier fills. True same-path replacement (rare, e.g. region
+  swaps) uses DLC release-version cooking — see [TB — CI Cook](TB-ci-cook.md).
 
 ## Open Items
 
-- **O4 — Config-phase timeout (B7):** what happens if a pak never signals `Configed`
-  (infinite wait vs. timeout + error) — inherited from Boot Manager open items.
-- **O5 — Does the ABM search order get logged to file** for debugging? (Boot Manager open
-  item; cheap to add here.)
 - **O6 — CI/cook interaction:** whether the boot map + module cook cleanly and whether the
   `PostConfigInit` mount ordering behaves identically in a packaged build vs. editor —
-  feeds the planned **TB-ci-cook**.
-- **O7 — Load-vector interface:** the `load_vector` field is a BP path (M2), but the
-  interface/base-class that BP implements to receive the Load/Init/Config/Ready calls and
-  emit `Inited`/`Configed` signals is unspecified. Spec this when building B7 (only paks
-  with runtime init need it).
+  addressed in **[TB — CI Cook](TB-ci-cook.md)**.
+- **O8 — Suppress auto-mount reliably.** Confirm that `ExplicitlyLoaded` +
+  `BuiltInInitialFeatureState: Installed` reliably prevents the engine from auto-mounting a
+  tier plugin's pak before the ABM's `MountPaksEx` (so we never double-mount). Test on a
+  packaged build.
+- **O9 — GameFeature pak location at cook.** Confirm whether the cooker can route each tier
+  plugin's content to its own `Plugins/<Tier>/Paks/` pak (may need a custom cook policy /
+  `FCookPackageSplitter`) vs. it folding into the main pak. Feeds [TB — CI Cook](TB-ci-cook.md).
 
 ---
 
 ## Related
 
 - [Boot Manager](../gdd/boot-manager.md) — ABM/MBM design, pak names, phased lifecycle (this TB implements it)
-- [TB — Content Directory](TB-content-directory.md) — pak ↔ directory mapping, DLC same-path override
+- [TB — CI Cook](TB-ci-cook.md) — how the tier plugins / paks are actually cooked
+- [TB — Content Directory](TB-content-directory.md) — Content/ layout (tiers now = GameFeature plugins)
 - [Content Architecture & DLC](../gdd/content-and-dlc.md) — content tiers, load stack
 - [CB — Mod Manager](../creative-briefs/CB-mod-manager.md) — MBM / mod pak conventions
 - [Save System](../gdd/save-system.md) — per-playthrough content configuration

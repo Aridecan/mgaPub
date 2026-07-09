@@ -2,9 +2,11 @@
 
 ## Overview
 
-This technical brief defines the directory layout inside the Unreal Engine project's `Content/` folder. The structure organises all game content by type, supports the three-tier DLC system (Base / Spicy / Super Spicy), enables same-path pak override for DLC asset shadowing, separates localization content by language and tier, and accommodates region-specific overrides — all within a single UE project.
+This technical brief defines the directory layout inside the Unreal Engine project's `Content/` folder. The structure organises all game content by type, supports the three-tier DLC system (Base / Spicy / Super Spicy), separates localization content by language and tier, and accommodates region-specific overrides.
 
-Jenkins handles pak splitting at cook time. During development, all tiers coexist in the editor; DLC directories use underscore prefixes (`_Spicy/`, `_SuperSpicy/`) so they sort to the top of the Content Browser and are easy to filter during cooking.
+> **⚠️ Revised 2026-07-09 — DLC tiers are now GameFeature plugins.** The original design put tier content under `_Spicy/` / `_SuperSpicy/` inside the base `Content/` folder and relied on a **cook-time `_Spicy/ → MGA/` path remap** to same-path-shadow base assets. That remap is **not a real UE mechanism** — there is no cook-time path remapping. Content tiers are now **GameFeature plugins** (`Plugins/Spicy/Content/…` at mount `/Spicy/…`), which are **additive** (they add content + systems), not same-path overrides. The base game exposes data-driven hooks the tiers fill. True same-path replacement (rare — a region swapping a specific base asset) uses **DLC release-version cooking**. See [TB — Boot Loader § Package Identity & Lifecycle](TB-boot-loader.md#package-identity--lifecycle-game-features) and [TB — CI Cook](TB-ci-cook.md). The `_Spicy/`-based sections below are **superseded** and retained only for history; the still-valid parts are the base `MGA/` tree, naming conventions, and shipping exclusions.
+
+Jenkins handles pak splitting at cook time. During development, the base game lives under `Content/MGA/`; each tier lives in its own GameFeature plugin under `Plugins/<Tier>/Content/`.
 
 ---
 
@@ -170,21 +172,23 @@ Content/
 
 ---
 
-## DLC Same-Path Override
+## DLC via GameFeature Plugins (supersedes "Same-Path Override")
 
-DLC content uses **same-path pak override** to shadow base game assets. The mechanism:
+> The original "same-path override via `_Spicy/ → MGA/` remap" model is **withdrawn** — UE has no cook-time path remapping (confirmed in the 5.8 source, 2026-07-09).
 
-1. During development, DLC assets live under `_Spicy/` or `_SuperSpicy/` with paths that **mirror** the `MGA/` structure. For example, a Spicy-tier replacement for `MGA/Clothing/Casual/SM_TopA.uasset` would be placed at `_Spicy/Clothing/Casual/SM_TopA.uasset`.
+**Tiers are additive GameFeature plugins.** Each tier (`Spicy`, `SuperSpicy`, region feature packs) is a plugin at `Plugins/<Tier>/`, its content mounting at `/<Tier>/…` — a **different** path namespace from the base `/Game/…` (`MGA/`). Because the paths differ, tier content cannot *shadow* a base asset; it **adds** to it. The pattern:
 
-2. The Jenkins build pipeline **remaps** these paths when cooking: `_Spicy/Clothing/Casual/SM_TopA` becomes `MGA/Clothing/Casual/SM_TopA` inside the `Spicy` pak file.
+1. The **base game** exposes data-driven hooks — a censored placeholder asset referenced softly, a clothing-destruction system stub, etc.
+2. The **tier plugin** ships the mature variants as *new* assets under `/<Tier>/…` and, on activation, its `GameFeatureActions` wire them into the base hooks (data-registry entries, injected components, soft-reference redirects).
+3. Activation is controlled by the ABM (see [TB — Boot Loader](TB-boot-loader.md)) — the plugin stays `Installed` until the ABM activates it in dependency order.
 
-3. At runtime, UE's pak priority system searches higher-priority paks first. When the engine requests `MGA/Clothing/Casual/SM_TopA`, it finds the Spicy version (if installed) before the Base version. No conditional logic or content-tier checks are needed in game code.
-
-DLC directories may also contain **new content** that has no Base counterpart — these assets live at unique paths within `_Spicy/` or `_SuperSpicy/` and are similarly remapped into the `MGA/` namespace at cook time.
+**When true same-path replacement is genuinely needed** (e.g. a region legally must swap one specific base asset), use **DLC release-version cooking** (`-CreateReleaseVersion` on the base → `-BasedOnReleaseVersion` + `-DLCName` for the override), which cooks the replacement at the *same* `/Game/…` path into its own pak and wins by mount priority. This is the *only* real same-path override mechanism; reserve it for the few assets that need it. See [TB — CI Cook](TB-ci-cook.md).
 
 ---
 
 ## Pak ↔ Directory Mapping
+
+> **Superseded for the tier rows.** The `_Spicy/ → MGA/` and `_SuperSpicy/ → MGA/` remap entries below reflect the withdrawn model. Under the current design, `Spicy`/`SuperSpicy` cook from their **GameFeature plugin** folders (`Plugins/Spicy/Content/` → `/Spicy/…`, no remap). The `LocText-*`, `LocVoc-*`, and `regionOverride-*` rows remain broadly valid (localization = independent paks; region same-path swaps = DLC release-version cook). Authoritative cook detail lives in [TB — CI Cook](TB-ci-cook.md).
 
 | Pak name | Source directory | Path remapping |
 |----------|----------------|----------------|
