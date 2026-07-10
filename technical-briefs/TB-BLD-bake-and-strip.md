@@ -96,6 +96,12 @@ post-hoc baking. Evaluate in the sample phase.)*
 - **Sample-bake first.** Bake a handful of road pieces + one intersection + one building, then
   **inspect the output**: materials intact, collision present, visual match, draw-call / tri
   count sane, Nanite as intended. Do **not** bulk-convert the world before this passes.
+  - **Sample validation PASSED (2026-07-10):** baked 2 roads + intersection (36 `RoadGeo`) →
+    `/Game/RoadBLD_Generated/BakedMeshes/…_Baked`: 1 merged StaticMesh, ~87k tris / ~50×40 m,
+    **5 real material slots correctly sectioned**, **collision present (complex-as-simple** —
+    correct for roads), Nanite off, no orphan assets. Bake fidelity confirmed → bulk automation
+    green-lit. (Defaults used: `Merge All Into One Mesh` on, `Spawn Merged Actor` on,
+    `Replace Source Actors` OFF, save to `/Game/RoadBLD_Generated/BakedMeshes/`.)
 - **Reversible / non-destructive.** Baking the world is largely one-way. Do it on a **Perforce
   branch**, and **preserve the BLD authoring actors** (bake into a parallel sublevel or keep the
   authoring level) so roads can be re-tweaked and re-baked (e.g. after terrain re-conform).
@@ -134,8 +140,14 @@ concern in the same "bake procedural content before cook" spirit.)
 - **O2 — Material fidelity for Path B (fallback only)** — exact merge approach to match the vendor's proxy/Nanite
   output.
 - **O3 — CityBLD `SpawnStaticBuildingOnParcel`** as a cleaner static-building path vs post-hoc bake.
-- **O4 — Bake granularity** — per-actor vs merged-per-block/region (draw calls vs streaming/edit
-  granularity); interacts with World Partition + the block/grid structure.
+- **O4 — Bake granularity + draw-cost policy** — `RoadGeo` is per-cell (≈36 actors per 2 roads →
+  the whole city is thousands), so bulk-bake **per-block/region groups** ("Merge All Into One
+  Mesh" per group), not one city-wide mesh — for draw calls + WP streaming. Also decide the
+  **LOD/Nanite policy** for the bulk output (the sample had no LODs + Nanite off; a whole city
+  needs Nanite-on or generated LODs).
+- **O6 — Lane-line material remap** — baked roads use RoadBLD greybox sample materials
+  (`M_Greybox_SolidYellowLine/WhiteLine`) for lane markings; remap those slots to MGA
+  equivalents (ties into the re-material-to-MGA-style pipeline). Non-blocking.
 - **O5 — Authoring/shipping level split** — how to keep authoring actors while shipping baked
   meshes (parallel sublevels? separate maps? a bake output folder).
 
