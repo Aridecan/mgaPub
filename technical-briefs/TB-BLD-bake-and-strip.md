@@ -109,6 +109,39 @@ post-hoc baking. Evaluate in the sample phase.)*
 
 ---
 
+## CI-transform approach (bake + strip on the CI copy) — preferred
+
+**Design (Peter, 2026-07-10):** do the bake *and* the strip **transiently on the CI machine's
+synced workspace**, never committed. The authoring project keeps its plugins + live BLD actors
+(re-editable); CI re-bakes fresh from the current authoring state every build. This avoids
+committing baked content and **resolves O5** (no authoring-vs-shipping level split — CI does it
+on the fly). CI sequence:
+
+```
+1. Sync            plugins ON, live BLD actors
+2. BAKE commandlet force road/dynamesh rebuild -> bake RoadGeo/buildings -> REMOVE source BLD
+                   actors (Replace Source = ON / delete) -> save levels (transient)
+3. STRIP           remove BLD plugins from .uproject/config (transient, CI copy only)
+4. COOK            plugin-free, baked static meshes
+```
+
+**Confirmed (Peter):** removing the BLD plugins from config loads the project clean (no hard
+dependency error) — but "BLD PCG stuff is not visible" without them, i.e. **the content exists
+only via the plugins, so bake MUST precede strip** or roads ship empty.
+
+**Refinements for a clean cook:**
+- **Bake must also remove/replace the source BLD actors** (not just spawn merged meshes
+  alongside) — else after the strip the level still holds `DynamicRoad`/`RoadGeo` actors
+  referencing missing plugin classes → cook warnings / nulled actors. Bake-and-remove leaves
+  only StaticMesh actors, zero plugin refs.
+- **Bake commandlet likely needs a real GPU/RHI** (mesh-merge material-proxy baking uses the
+  renderer) — not `-nullrhi`. Katana has a GPU.
+- Still force the **road/dynamesh rebuild before baking** (async generation, per Critical Ordering).
+- **Open: headless EUB invocation** — how to run the bake Editor Utility Blueprint from a
+  commandlet/Python in CI (solvable; nail when building).
+
+---
+
 ## Strip — remove the plugins from the shipping build
 
 Once a level is fully baked (only `AStaticMeshActor`s, no `AWorldBLDGeo`/`ADynamicRoad`/…
@@ -159,8 +192,10 @@ concern in the same "bake procedural content before cook" spirit.)
 - **O6 — Lane-line material remap** — baked roads use RoadBLD greybox sample materials
   (`M_Greybox_SolidYellowLine/WhiteLine`) for lane markings; remap those slots to MGA
   equivalents (ties into the re-material-to-MGA-style pipeline). Non-blocking.
-- **O5 — Authoring/shipping level split** — how to keep authoring actors while shipping baked
-  meshes (parallel sublevels? separate maps? a bake output folder).
+- ~~**O5 — Authoring/shipping level split**~~ **Largely resolved** by the CI-transform approach
+  (bake + strip transiently on the CI copy; authoring project keeps live BLD actors, never
+  committed baked content). Remaining: confirm the transient bake saves + cook pick up the
+  modified levels without polluting the committed depot (CI syncs fresh each build).
 
 ---
 
