@@ -178,11 +178,34 @@ to extend, while O-A/O-B (tier pak routing, PCG persistence) are resolved on rea
 
 ---
 
+## Build Farm & Platform Matrix
+
+The pipeline is designed to fan out to **one build machine per target platform**, on a
+**10 GbE** network, with **Perforce + lore on SSD** (the 1821+ enclosure on *Odachi*) so
+sync/cook I/O isn't the bottleneck.
+
+| Target | Priority | Agent label | Machine | Notes |
+|--------|----------|-------------|---------|-------|
+| **Windows** | Primary | `mga-build-win` | **Katana** | The one being stood up now; `-platform=Win64` |
+| **Linux** | Secondary | `mga-build-linux` | TBD | Targets **latest Steam-machine hardware** (SteamOS/Deck-class); `-platform=Linux` |
+| **Mac** | Last | `mga-build-mac` | TBD | `-platform=Mac`; lowest priority |
+
+Each platform is the *same* `mga-weekly` stage design pointed at a different agent + `-platform`.
+Until the Linux/Mac agents exist, only the Windows job runs; add the others as **sibling jobs
+or a declarative `matrix`** (parallel per-platform on their own agents) — a deliberate later
+step, not part of the first increment.
+
+---
+
 ## Deferred
 
-- **IoStore / Zen storage** — not now (retains ABM mount control; legacy `.pak` is the 5.8
-  default for our platforms). Revisit only for a console target or if Zen Server is stood up
-  for build-farm caching (the boot-manager's PCG-persist-on-save question also feeds that).
+- **Zen storage server** — *planned future*, not now. When it stands up it gives the build
+  farm a shared derived-data / cook cache across the three agents (and pairs with switching to
+  **IoStore** `.utoc/.ucas`). Until then: legacy `.pak` + `bUseIoStore=false` (retains ABM
+  mount control; the 5.8 default for our platforms). Note: adopting IoStore later means the ABM
+  must move off `FPakPlatformFile` mounting — revisit [TB — Boot Loader](TB-boot-loader.md)'s
+  mount model at that point. The boot-manager's PCG-persist-on-save question also feeds the
+  Zen decision.
 
 ---
 
