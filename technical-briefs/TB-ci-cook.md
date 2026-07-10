@@ -206,6 +206,23 @@ step, not part of the first increment.
   must move off `FPakPlatformFile` mounting — revisit [TB — Boot Loader](TB-boot-loader.md)'s
   mount model at that point. The boot-manager's PCG-persist-on-save question also feeds the
   Zen decision.
+- **Distributed build acceleration (Incredibuild/XGE vs FASTBuild)** — *not yet; measure first.*
+  These tools farm out **compilation**, not the cook itself. On this project:
+  - **C++ compile is small** (content-heavy game, one module on an *installed* engine, prebuilt
+    binary plugins) → distributed C++ compilation, the core value prop of both tools, has near-zero
+    ROI here.
+  - **Shader compilation** is the real farmable cost inside a cook. **UE distributes shaders
+    natively via XGE (Incredibuild)** (`r.XGEShaderCompile`); **FASTBuild is C++-only** and its UE
+    shader distribution isn't turnkey → for *this* need, **Incredibuild/XGE > FASTBuild**.
+  - **Free levers first:** a **warm/shared DDC that survives between weekly builds** (shaders
+    compile once, reused every build) + all-cores local compile — often a bigger real win than
+    distribution, at zero cost. Then **Zen** (above) is the farm-wide cook/DDC cache.
+  - **Helpers must match the target toolchain.** Distribution needs spare *same-OS* cores. Builds
+    run at night (~Mon 03:00) when **Odachi + a powerful clone desktop are free** — candidate XGE
+    helpers **iff they're Windows-capable** (to accelerate Katana's Win64 shaders); if they're
+    Linux they instead help the future Linux target, not Windows.
+  - **Sequence:** run the first cooks, read the shader-compile time from the log, *then* decide —
+    and check the Incredibuild free-tier license fits a SubscribeStar-funded project.
 
 ---
 
