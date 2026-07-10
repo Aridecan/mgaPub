@@ -150,10 +150,12 @@ concern in the same "bake procedural content before cook" spirit.)
   "Show Advanced Merge" panel is empty — no MeshMerge pivot option exposed); it bakes verts
   relative to one point (local bounds asymmetric, e.g. Y −2138..+38387 = geometry mostly north
   of pivot) but spawns the actor at the selection center (measured: actor at (266521, 74515, 0),
-  a source RoadGeo at (266149, 57042, 0)) → offset. **Resolution: the automation owns the
-  post-bake step — record source combined bounds → bake → snap the merged actor to overlay
-  them** (deterministic, pivot-quirk-independent). Also test `Replace Source Actors`=ON (the
-  tool's intended in-place path) — may place correctly on its own. Not a pipeline blocker.
+  a source RoadGeo at (266149, 57042, 0)) → offset. **RESOLVED — the merge pivot = a source `RoadGeo`'s origin.** Confirmed empirically (2026-07-10):
+  setting the baked merged actor's Location = the source RoadGeo's Location aligns it **exactly**.
+  So the automation just: record the anchor RoadGeo's world location (likely the first in the
+  baked array — confirm which during implementation) → bake → set the merged actor's Location to
+  it. Deterministic, one line. (Bounds-snap fallback and `Replace Source Actors`=ON path remain
+  as alternatives but aren't needed.) Not a pipeline blocker.
 - **O6 — Lane-line material remap** — baked roads use RoadBLD greybox sample materials
   (`M_Greybox_SolidYellowLine/WhiteLine`) for lane markings; remap those slots to MGA
   equivalents (ties into the re-material-to-MGA-style pipeline). Non-blocking.
