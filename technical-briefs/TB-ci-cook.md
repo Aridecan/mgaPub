@@ -181,8 +181,9 @@ to extend, while O-A/O-B (tier pak routing, PCG persistence) are resolved on rea
 ## Build Farm & Platform Matrix
 
 The pipeline is designed to fan out to **one build machine per target platform**, on a
-**10 GbE** network, with **Perforce + lore on SSD** (the 1821+ enclosure on *Odachi*) so
-sync/cook I/O isn't the bottleneck.
+**10 GbE** network, with **Perforce + lore on SSD** (the 1821+ NAS) so sync/cook I/O isn't the
+bottleneck. The **Jenkins controller** is **Docker06** (Ubuntu 24.04, in the rack by the NAS +
+firewall) — orchestration only; the build agents are separate Windows/Linux/Mac machines.
 
 | Target | Priority | Agent label | Machine | Notes |
 |--------|----------|-------------|---------|-------|
@@ -218,9 +219,9 @@ step, not part of the first increment.
     compile once, reused every build) + all-cores local compile — often a bigger real win than
     distribution, at zero cost. Then **Zen** (above) is the farm-wide cook/DDC cache.
   - **Helpers must match the target toolchain.** Distribution needs spare *same-OS* cores. Builds
-    run at night (~Mon 03:00) when **Odachi + a powerful clone desktop are free** — candidate XGE
-    helpers **iff they're Windows-capable** (to accelerate Katana's Win64 shaders); if they're
-    Linux they instead help the future Linux target, not Windows.
+    run at night (~Mon 03:00) when **Odachi + the wife's desktop — both Windows, powerful, and
+    Odachi-clones — are free**, so they're **valid XGE helpers for Katana's Win64 shader compiles**
+    (no OS mismatch). A future Linux/Mac target would need its own same-OS helpers.
   - **Sequence:** run the first cooks, read the shader-compile time from the log, *then* decide —
     and check the Incredibuild free-tier license fits a SubscribeStar-funded project.
 
