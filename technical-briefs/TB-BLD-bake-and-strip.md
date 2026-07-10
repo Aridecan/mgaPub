@@ -43,17 +43,22 @@ The vendor's interactive **"Save as Mesh"** (select actors → menu action) is
 as BlueprintCallable / exec nodes** — a commandlet can't call them through normal reflection.
 So:
 
-### Path A — drive the vendor bake from an Editor Utility Blueprint *(best fidelity; test first)*
+### Path A — drive the vendor bake from an Editor Utility Blueprint *(CONFIRMED — chosen)*
 
-The one unknown: the bake function *may* be a `CallInEditor` UFUNCTION reachable only from an
-**Editor Utility Blueprint** graph (editor-only nodes are filtered out of runtime-actor
-graphs, so the reflection scan couldn't see it; the RoadBLD/CityBLD C++ headers aren't shipped
-to confirm). **Cheap deciding test:** create a throwaway Editor Utility Blueprint and search
-its node palette for `RoadBLDBakeToMesh` / `StaticBuildingController`. If present:
-- An EUB selects all target actors → calls the vendor bake with `URoadBLDBakeToMeshSettings`
-  (`bMergeAllIntoOneMesh`, `bReplaceSourceActors`, `savePackagePath`, `mergeSettings` incl.
-  Nanite). **Materials/merging are handled by the vendor** — this is why A is preferred.
-- The EUB is invokable headlessly (`run` an editor utility / commandlet), so it slots into CI.
+**Confirmed 2026-07-10 (EUB node-palette test, O1):** the vendor bake **is** exposed as
+editor-utility-callable nodes (they're editor-only, hence invisible to the runtime-actor
+reflection scan). Available nodes:
+- **`Bake RoadGeo To Mesh`** — input: **`TArray<ARoadGeo*>`**. The automation hook: gather all
+  `ARoadGeo` in a level and pass the array (no selection needed).
+- **`Bake Selected RoadGeo To Mesh`** — no inputs; operates on the editor selection (good for the
+  sample test).
+- **`Spawn Static Building on Parcel`** — CityBLD's static-building path.
+
+So the tool: an **Editor Utility Blueprint** (headless-invokable via `run`/commandlet for CI)
+that, after a synchronous rebuild, gathers the geo actors and calls these vendor bake nodes.
+**Materials / Nanite merging are handled by the vendor's bake** (`URoadBLDBakeToMeshSettings`:
+`bMergeAllIntoOneMesh`, `bReplaceSourceActors`, `savePackagePath`, `mergeSettings`) — the reason
+A beats B. Path B (custom GeometryScript) is retained below only as a fallback.
 
 ### Path B — custom GeometryScript bake *(guaranteed; fallback)*
 
@@ -123,10 +128,10 @@ concern in the same "bake procedural content before cook" spirit.)
 
 ## Open items
 
-- **O1 — EUB callability test (decides Path A vs B).** Create a throwaway Editor Utility
-  Blueprint; check whether `RoadBLDBakeToMeshLibrary` / `StaticBuildingController` bake nodes
-  appear. Highest-priority next step.
-- **O2 — Material fidelity for Path B** — exact merge approach to match the vendor's proxy/Nanite
+- ~~**O1 — EUB callability test**~~ **RESOLVED 2026-07-10 → Path A.** Vendor bake IS
+  editor-utility-callable: `Bake RoadGeo To Mesh` (array), `Bake Selected RoadGeo To Mesh`
+  (selection), `Spawn Static Building on Parcel`. Automate the vendor bake via an EUB.
+- **O2 — Material fidelity for Path B (fallback only)** — exact merge approach to match the vendor's proxy/Nanite
   output.
 - **O3 — CityBLD `SpawnStaticBuildingOnParcel`** as a cleaner static-building path vs post-hoc bake.
 - **O4 — Bake granularity** — per-actor vs merged-per-block/region (draw calls vs streaming/edit
