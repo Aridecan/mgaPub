@@ -152,14 +152,29 @@ this TB owns the *gate* (the CI enforcement), that TB owns the *brush-specific* 
 
 ## Jenkins Job Structure
 
-- **`mga-nightly`** — Stage 0–1 (bake + build + base cook) on every submit or nightly;
-  fastest feedback, catches compile + cook breaks. Iterative cook (`-iterate`) for speed.
-- **`mga-weekly-full`** — full Stage 0–7 clean cook; produces the weekly release artifacts
-  (full + demo channels); non-iterative for a clean shippable build.
-- **`mga-audit`** — Stage 6 gate as a standalone reusable step invoked by both.
-- **Agents:** Windows agent with the 5.8 toolchain + Perforce workspace; `-nop4` in UAT (the
-  workspace is synced by Jenkins P4 plugin, not by UAT). Artifacts (paks, logs, `-List`
-  outputs, pak-size CSV) archived per build.
+The cadence is **weekly, with manual on-demand runs** (matching the weekly release schedule) —
+not a nightly. One primary parameterised job covers both:
+
+- **`mga-weekly`** — the primary job. **Scheduled weekly** (cron trigger) **and manually
+  triggerable** (Jenkins "Build Now" / parameterised) whenever a build is needed off-cadence.
+  A `SCOPE` build parameter selects the depth:
+  - **`Full`** (default for the scheduled run) — clean Stage 0–7; produces the weekly release
+    artifacts (full + demo channels), non-iterative.
+  - **`Quick`** (for a fast manual "did I break it?" check) — Stage 0–1 only (bake + build +
+    base cook), iterative (`-iterate`), no tier/DLC/demo stages.
+- **`mga-audit`** — Stage 6 gate as a reusable step the weekly invokes; also runnable
+  standalone for a quick leak check.
+- **Agents:** a Windows agent with the built 5.8 toolchain + a Perforce workspace; `-nop4` in
+  UAT (the workspace is synced by the Jenkins P4 plugin, not by UAT). Artifacts (paks, logs,
+  `-List` outputs, pak-size CSV) archived per build.
+
+### First increment (what to stand up *now*)
+
+The full tier/DLC/demo stages can't run until the content is actually structured as GameFeature
+plugins with a demo subset + release-version setup. So the first job to stand up is
+**`mga-weekly` in `Quick` scope** — sync P4 → build `OGMMGA` → Stage 0 bake → base cook → audit
+gate. That gives continuous "the project builds and cooks" validation and the pipeline scaffold
+to extend, while O-A/O-B (tier pak routing, PCG persistence) are resolved on real hardware.
 
 ---
 
