@@ -176,7 +176,14 @@ policy on top.
 
 ---
 
-## Content (Per-Playthrough)
+## Content (Per-Playthrough) — tab/category label: **Sensitive Content**
+
+> **Naming (2026-07-15):** this category is labelled **"Sensitive Content"** in the UI (the
+> tabbed Settings shell — see [TB — Language Settings](TB-language-settings.md)). It covers the
+> personal / streaming / recording use cases; **Streamer Mode** is a toggle *within* it. Rejected
+> "Censorship" (implies the game restricts the player, not vice-versa) and "Streamer Support"
+> (too narrow).
+
 
 - Persists to the active playthrough's **`content_config`** (Save System), never global.
 - **Age acknowledgement** required on first access before any non-Base toggle; once

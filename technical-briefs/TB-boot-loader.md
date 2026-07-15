@@ -130,9 +130,16 @@ Dependency-graph *derivation* is a **mod** concern (MBM), not the ABM — see th
 |-------|-------------|-------------|--------|
 | **B4 · Route to boot map** | (engine loading screen) | `StartGameInstance()` override | `Browse()` to `/Game/Maps/BootMap` instead of the menu map |
 | **B5 · Age gate** | UMG: "This game is intended for a mature audience…" (localized) | Boot `GameMode::BeginPlay` | Interactive Yes/No. `LocText-<lang>` is mounted, so text is localized. Fail → quit. |
-| **B6 · Warnings / legal** | UMG: content warnings, legal splash (localized) | — | Advance on input/timer |
+| **B6 · Warnings / legal** | UMG: content warnings, legal splash, **+ streamer/recording advisory** (localized) | — | Advance on input/timer |
 | **B7 · GameFeature activation** | UMG: progress ("Initializing…") | Boot `GameMode` drives `UGameFeaturesSubsystem` | For each enabled tier plugin in dependency order: `LoadAndActivateGameFeaturePlugin()` → the engine transitions it `Registered → Loaded → Active` (loads `GameFeatureData`, appends asset registry, opens shader lib, runs `GameFeatureActions`). Deps enforced by the plugin descriptors. |
 | **B8 · Main menu** | UMG: main menu | On all-Ready | Reveal the main-menu widget (see map decision below). ABM is complete. |
+
+**B6 streamer/recording advisory (2026-07-15).** As part of the B6 warnings, show a brief
+localized notice — *"If you plan on streaming or recording this game, review the **Sensitive
+Content** tab in Settings to disable bannable content."* — pointing at the **Sensitive Content**
+settings tab (see [TB — Settings Menu](TB-settings-menu.md) / [TB — Language Settings](TB-language-settings.md)).
+Folds into B6 (no new boot state); advance on input/timer like the other warnings. **Open sub-item:**
+show every launch vs. first-launch-only with a "don't show again" — TBD.
 
 The **MBM (Mod Boot Manager)** does *not* run here — it runs at session lifecycle (new
 game / load), where mod GUID-dependency resolution and the missing-dependency dialog apply.
@@ -207,11 +214,11 @@ old `_Spicy/ → MGA/` path-remap, which was never a real engine mechanism.
 The ABM uses UE's own logging — a dedicated category, not a custom framework:
 
 ```cpp
-DECLARE_LOG_CATEGORY_EXTERN(LogAridecanBoot, Log, All);
+DECLARE_LOG_CATEGORY_EXTERN(LogAridGBoot, Log, All);
 ```
 
-Verbosity is controllable without a rebuild — `DefaultEngine.ini [Core.Log] LogAridecanBoot=Verbose`,
-or `-LogCmds="LogAridecanBoot Verbose"` on the command line. Message-level convention:
+Verbosity is controllable without a rebuild — `DefaultEngine.ini [Core.Log] LogAridGBoot=Verbose`,
+or `-LogCmds="LogAridGBoot Verbose"` on the command line. Message-level convention:
 
 | Verbosity | Used for |
 |-----------|----------|
@@ -258,11 +265,20 @@ Error-log the pending packages → graceful exit.
 | Text language, voice language, region | `Aridecan.ini` (custom) | ABM @ `PostConfigInit` (B1–B2) |
 | Enabled content tiers, installed languages | `Aridecan.ini` (custom) | ABM @ B3 (which paks to mount) |
 | Per-phase boot timeouts (`[Boot.Timeouts]`) | `Aridecan.ini` (custom) | ABM (Diagnostics § defaults) |
-| Log verbosity (`LogAridecanBoot`) | `DefaultEngine.ini [Core.Log]` (engine) | Engine log system |
+| Log verbosity (`LogAridGBoot`) | `DefaultEngine.ini [Core.Log]` (engine) | Engine log system |
 | Graphics quality / audio volumes | `GameUserSettings.ini` (extend `UGameUserSettings`) | Engine + settings menu |
 
 First launch (no `GameUserSettings.ini`): the engine falls back to defaults for
 resolution; the ABM writes a default `Aridecan.ini` after detecting OS locale (B1–B2).
+
+**Writable-data location (policy):** all runtime-written user data — `Aridecan.ini`, save games,
+logs — goes to the **OS per-user app-data dir** (`FPlatformProcess::UserSettingsDir()/<Project>/…` →
+`%LOCALAPPDATA%\OGMMGA\…` on Windows), **not** the game folder. That dir is guaranteed writable
+regardless of install location, so writes never hit "permission denied" (the failure mode of a
+`Program Files`/locked install). Shipping builds default logs to **Fatal/off**. `GameUserSettings.ini`
+stays engine-managed in the game folder for now — its default-vs-user **layering already works**
+(`Config/DefaultGameUserSettings.ini` = shipped defaults, user file = overrides); relocating the user
+file to the per-user dir is a deferred project-wide redirect.
 
 ---
 
@@ -270,21 +286,21 @@ resolution; the ABM writes a default `Aridecan.ini` after detecting OS locale (B
 
 Three artifacts:
 
-1. **`AridecanBootModule`** — a runtime module with `"LoadingPhase": "PostConfigInit"` in
+1. **`AridGBootModule`** — a runtime module with `"LoadingPhase": "PostConfigInit"` in
    the `.uplugin`/`.Build` descriptor. Registers the `EarlyStartupScreen`, reads
    `Aridecan.ini`, resolves language, and mounts paks (states B0–B3). Pure Slate + raw
    pak API; **no UObjects**.
 
-2. **`UAridecanGameInstance : UGameInstance`** — overrides `StartGameInstance()` to
+2. **`UAridGGameInstance : UGameInstance`** — overrides `StartGameInstance()` to
    `Browse()` to the boot map (B4). Set in `DefaultEngine.ini`:
 
    ```ini
    [/Script/Engine.GameMapsSettings]
-   GameInstanceClass=/Script/AridecanBoot.AridecanGameInstance
+   GameInstanceClass=/Script/OGMMGA.AridGGameInstance
    GameDefaultMap=/Game/Maps/BootMap
    ```
 
-3. **`BP_BootMap` + `ABootGameMode`** — the lightweight front-end map. `BeginPlay` runs the
+3. **`BP_BootMap` + `AAridGBootGameMode`** — the lightweight front-end map. `BeginPlay` runs the
    UMG state machine (B5–B8): age gate, warnings, then drives `UGameFeaturesSubsystem` to
    activate the enabled tier plugins in dependency order, then the main menu.
 
@@ -318,7 +334,7 @@ Three artifacts:
 - **R8 — Per-phase timeouts, config-driven, fail-hard.** Each waiting phase has its own
   `[Boot.Timeouts]` budget; expiry → `Error`-log the stuck plugins → graceful exit
   (not a crash). See Diagnostics & Failure Handling. (Resolves O4.)
-- **R9 — UE-native logging via `LogAridecanBoot`.** Verbosity-controlled; the pak search
+- **R9 — UE-native logging via `LogAridGBoot`.** Verbosity-controlled; the pak search
   order dumps at `Verbose`. (Resolves O5.)
 - **R10 — Tiers additive, not same-path shadowing.** GameFeature content is at `/<Tier>/…`;
   base exposes data hooks the tier fills. True same-path replacement (rare, e.g. region

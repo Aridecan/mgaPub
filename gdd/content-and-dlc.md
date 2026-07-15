@@ -10,11 +10,17 @@ MGA is an adult game dealing with adult subject matter. It is designed to be mod
 
 | Tier | Contents |
 |------|----------|
-| **Base Game** | Full story, full systems, Steam-ready. No content that would prevent distribution on mainstream platforms. |
-| **Spicy DLC** | Adds mature content including the clothing destruction system (combat-driven, tied to in-game economy) and nudity. |
+| **Base Game** (aka **Core**) | Full story, full systems, Steam-ready. No content that would prevent distribution on mainstream platforms. **Outfit standard: all outfits meet the Twitch VTuber minimum-cover standard — Base is safe to stream/record by design.** (This is exactly what **Streamer Mode** enforces.) |
+| **Spicy DLC** | Relaxes the coverage standard: **spicier outfit designs and full clothing removal**, plus the combat-driven clothing destruction system (tied to the in-game economy) and nudity. |
 | **Super Spicy DLC** | Adds explicit content beyond nudity, including suggestive and sexual scenes. Full intended experience. |
 
-The dividing line between tiers is still being refined. Details will be documented in the relevant feature briefs.
+**Outfit-coverage line (2026-07-15, art direction):** now fixed — **Base/Core = Twitch VTuber
+minimum-cover standard; Spicy = spicier outfits + full clothing removal.** This is *why*
+**Streamer Mode = the Base/Core preset**, and why the boot **B6 advisory** steers streamers/recorders
+to the **Sensitive Content** settings tab to disable bannable (Spicy/Super Spicy) content — see
+[TB — Settings Menu](../technical-briefs/TB-settings-menu.md) and
+[TB — Boot Loader](../technical-briefs/TB-boot-loader.md). The explicit **Spicy ↔ Super Spicy**
+boundary is still being refined; details in the clothing feature briefs.
 
 ---
 
