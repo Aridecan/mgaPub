@@ -55,6 +55,31 @@ A **tabbed Settings shell**:
   ([localization test strategy](TB-settings-menu.md)).
 - **`ScrollBox`** — vertical scrollbar auto-enables when rows overflow.
 
+### Where the source lives (2026-07-15 refinement)
+
+**The en-CA source string table ships *inside* each tier's own content pack** — Core's en-CA
+lives with the Core content pack, Spicy's en-CA with the Spicy content pack, Super Spicy's with
+its own. So en-CA is present exactly when that tier's row is shown (the row only appears when the
+tier is installed). This may differ from the original design that treated loc as separate from
+content; it is now the authoritative model.
+
+**The `LocText_<Tier>_<Lang>` packs are translations layered *on top* of that en-CA source.**
+That is why `GetLanguageTable` synthesises en-CA as the head of every module's Text column (it is
+the content-pack source, not a `LocText_` pack) and then appends the installed `LocText_` cultures.
+
+**Pack naming (updated 2026-07-15):** text packs renamed `LocText_<Tier>_EN` →
+**`LocText_<Tier>_en-US`** (a real culture code that `FCulture` resolves to "English (United
+States)"; a US-English *translation* distinct from the en-CA source). **Voice packs stay
+`LocVoice_<Tier>_EN`** — no meaningful en-US/en-CA audio difference, and a future
+`LocVoice_<Tier>_en-US` would slot in with no code change. Plugin names may contain hyphens
+(`-` is not in `INVALID_LONGPACKAGE_CHARACTERS`), so the culture-code token in the fan-loc
+template is safe. *(Cosmetic follow-up: each pack's `PAL_LocText_<Tier>_EN` label asset kept its
+old name through the move — rename in-editor when convenient.)*
+
+**Open question — voice source parity:** if each content pack also ships a default en-CA
+voiceover, the Voice column should get the same always-present en-CA head as Text. Currently Voice
+is `None` + installed `LocVoice_` cultures only (no forced default). Decide when VO lands.
+
 ---
 
 ## Apply Model — deferred / staged (KEY)
@@ -137,23 +162,48 @@ helpers (or are removed) — `GetLanguageTable` subsumes them.
 
 ---
 
-## ⚠ HOLE — Per-module TEXT language is not native UE
+## Per-module TEXT language is not native UE — RESOLVED: Option (a) for now (2026-07-15)
 
 UE text localization has **one global active culture**; every `FText`/`.locres` resolves
-against it. The table allows **Core=French while Spicy=English simultaneously**, which UE
-**cannot do natively** — it would need a custom **per-namespace text-resolution layer**
-(fighting the engine, against the reuse rule).
+against it. The table *displays* a Text culture per module, but UE cannot natively hold
+**Core=French while Spicy=English simultaneously** — that would need a custom per-namespace
+text-resolution layer (fighting the engine, against the reuse rule).
 
-**Voice is fine** — we mount the chosen `LocVoice` pack per module (our own system), so
-per-row voice is natural.
+**Decision (Peter, 2026-07-15): go with Option (a) — Text is effectively global — and reuse
+the engine.** Rationale: UE already falls back to the **en-CA source string** for any `FText`
+a module hasn't translated, so a global culture of French with an untranslated Spicy shows
+Spicy's en-CA source automatically — which *is* the "Core in French, Spicy in English"
+partial-translation experience, natively and for free. Option (b)'s only unique power (forcing
+a module to a *different already-available* language than the global one) is a niche not yet
+justified.
 
-**Decision required before wiring real Apply (UNRESOLVED):**
-- **(a) Text effectively global** — the column shows/sets one culture; per-module is
-  voice-only for now. Cheap, native.
-- **(b) Custom per-module text system** — powerful for partial fan translations; real
-  engineering (per-namespace resolution, merged `.locres` load).
+**Implementation of (a):**
+- Keep the per-module Text column in the UI **and persist every row's Text choice** to
+  `Aridecan.ini` (so the model/UI never change if we later adopt (b)).
+- **Apply drives one global culture from the Core row** via
+  `UKismetInternationalizationLibrary::SetCurrentLanguage` / `SetCurrentCulture`.
+- **Voice stays genuinely per-module** — we mount the chosen `LocVoice` pack per module (our
+  own system), so per-row voice is natural.
 
-The UI + pending model are identical either way, so this only gates the Apply implementation.
+### Option (b) — custom per-module text system (DOCUMENTED for later pickup, not built)
+
+Recorded so a future switch is a pickup, not a from-scratch rebuild. The UI + pending model +
+`Aridecan.ini` per-module persistence are **already (b)-ready** — only the Apply *commit* changes.
+To adopt (b):
+1. **Per-namespace/-module text source.** Give each content module its own text namespace (Core /
+   Spicy / SuperSpicy already map to modules). Resolve `FText` per namespace against that module's
+   chosen culture instead of the single global culture.
+2. **Merged `.locres` load.** At Apply, load each module's `.locres` for its chosen culture and
+   register them together (per-culture, per-namespace), rather than swapping one global culture.
+   Likely a custom `ILocalizedTextSource` (`FTextLocalizationManager::RegisterTextSource`) that
+   routes lookups by namespace → module → chosen culture, with en-CA source fallback.
+3. **Boot path (ABM B2)** reads the per-module keys and registers the same per-module sources at
+   startup instead of setting one culture.
+Cost: real engineering (custom text source, per-namespace routing, fallback ordering). Value:
+partial fan translations that *downgrade* an available language per module — niche today.
+
+**Expect rework:** Peter's standing note — many of these designs will be reworked as development
+progresses; (a) is the low-cost path that keeps (b) cheap to reach.
 
 ---
 
@@ -197,6 +247,15 @@ Language tab = `ScrollBox` of rows; pending model + Back(discard) / Apply(stub �
   custom/dialect names the engine's CLDR name doesn't cover; hybrid with `FCulture` fallback.
 - **Tabs** — which mechanism (`CommonTabListWidgetBase` vs simple button + switcher); who owns
   Apply across tabs (shell coordinates, each tab commits).
+- **Runtime visibility = mounted content, not just "enabled" (2026-07-16).** `GetLanguageTable`
+  enumerates via `IPluginManager::GetEnabledPluginsWithContent()`, which only surfaces loc plugins
+  whose **content is mounted in that runtime**. In PIE / Standalone-from-editor the loc plugins are
+  mounted as loose content, so en-US text + English voice appear. In a **packaged/cooked build they
+  will NOT appear until the loadable loc plugins are cooked into paks/chunks** (deferred `TB-ci-cook`
+  Stage 2–5 + chunkId numbering; currently `chunkId = -1`). Until then a packaged build correctly
+  shows only the always-present **en-CA** source on the Core row. This is the "installed/mounted →
+  choice" gating degrading gracefully, not a bug. Ties the language screen's packaged-build
+  completeness to the DLC cook work.
 - *(add as they surface)*
 
 ---
