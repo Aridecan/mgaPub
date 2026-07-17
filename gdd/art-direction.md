@@ -216,6 +216,7 @@ The anime/manga aesthetic is achieved at the material and shader layer, not the 
 ## Related
 
 - [TB-materials](../technical-briefs/TB-materials.md) — master material list, instance naming patterns, hierarchy rules
+- [TB — UI Style Guide](../technical-briefs/TB-ui-style-guide.md) — UI colour/type/spacing/component standard; **binds all UI colour to this palette** (no off-palette UI colour) and encodes it as CommonUI style assets
 
 ## Open Items
 
