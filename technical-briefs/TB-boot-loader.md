@@ -130,8 +130,9 @@ Dependency-graph *derivation* is a **mod** concern (MBM), not the ABM — see th
 |-------|-------------|-------------|--------|
 | **B4 · Route to boot map** | (engine loading screen) | `StartGameInstance()` override | `Browse()` to `/Game/Maps/BootMap` instead of the menu map |
 | **B5 · Age gate** | UMG: "This game is intended for a mature audience…" (localized) | Boot `GameMode::BeginPlay` | Interactive Yes/No. `LocText-<lang>` is mounted, so text is localized. Fail → quit. |
-| **B6 · Warnings / legal** | UMG: content warnings, legal splash, **+ streamer/recording advisory** (localized) | — | Advance on input/timer |
-| **B7 · GameFeature activation** | UMG: progress ("Initializing…") | Boot `GameMode` drives `UGameFeaturesSubsystem` | For each enabled tier plugin in dependency order: `LoadAndActivateGameFeaturePlugin()` → the engine transitions it `Registered → Loaded → Active` (loads `GameFeatureData`, appends asset registry, opens shader lib, runs `GameFeatureActions`). Deps enforced by the plugin descriptors. |
+| **B6 · Warnings / legal** | UMG: legal splash **+ streamer/recording advisory** (localized; *not* tier-dependent) | — | Advance on input/timer |
+| **B7 · GameFeature activation** | UMG: progress ("Initializing…") | Boot `GameMode` drives `UGameFeaturesSubsystem` | For each enabled tier plugin in dependency order: `LoadAndActivateGameFeaturePlugin()` → the engine transitions it `Registered → Loaded → Active` (loads `GameFeatureData`, appends asset registry, opens shader lib, runs `GameFeatureActions`). Deps enforced by the plugin descriptors. **Each tier's `GameFeatureAction` registers its content-advisory override** (R11). |
+| **B7.5 · Content warning** | UMG: **tier-composed** content advisory (base + Spicy + Super Spicy), localized | After B7 | Assembled via the **activation-registered override providers** (polymorphic `Super::` chain), so it reflects *actually-activated* tiers. Moved here **from B6** (R11). |
 | **B8 · Main menu** | UMG: main menu | On all-Ready | Reveal the main-menu widget (see map decision below). ABM is complete. |
 
 **B6 streamer/recording advisory (2026-07-15).** As part of the B6 warnings, show a brief
@@ -339,6 +340,15 @@ Three artifacts:
 - **R10 — Tiers additive, not same-path shadowing.** GameFeature content is at `/<Tier>/…`;
   base exposes data hooks the tier fills. True same-path replacement (rare, e.g. region
   swaps) uses DLC release-version cooking — see [TB — CI Cook](TB-ci-cook.md).
+- **R11 — Content warning moved to post-activation (B7.5), 2026-07-18.** The *tier-composed* content
+  warning was at B6 (pre-activation); it now runs **after B7** so it reflects actually-activated tiers.
+  It reads an **overridable content-advisory provider** that each tier's `UGameFeatureAction` registers on
+  activation (base → Spicy → Super Spicy polymorphic chain) — *not* string tables read from mounted paks.
+  This makes the warning screen the observable proof of DLC **load + override** (the general content-override
+  mechanism). The **age gate (B5) stays pre-activation** (gate before loading mature content); only the
+  content warning moved. Legal splash + streamer advisory stay at B6 (not tier-dependent). Driven by
+  [CoreX-M1](../milestones/M1-framework-and-ci.md); hooks = `UGameFeatureAction` +
+  `IGameFeatureStateChangeObserver`.
 
 ## Open Items
 
