@@ -209,7 +209,7 @@ progresses; (a) is the low-cost path that keeps (b) cheap to reach.
 
 ## Implementation Status
 
-### SHIPPED — the screen is built + verified (P4 changes 102 & 104, 2026-07-16/17)
+### SHIPPED — the screen is built + verified (P4 changes 102, 104 & 105, 2026-07-16/18)
 
 **C++ (`OGMMGA` game module):**
 - `UAridGLocPackLibrary::GetLanguageTable()` → `TArray<FAridGLanguageRow{ModuleId, ModuleName,
@@ -226,23 +226,30 @@ progresses; (a) is the low-cost path that keeps (b) cheap to reach.
 **Blueprints:**
 - **`WBP_LanguageRow`** (UserWidget): `SetupRow` fills a Module label + two `ComboBoxString`;
   `IndexOfCulture` selects the en-CA default; `OnRowChanged` dispatcher fired by both combos'
-  `OnSelectionChanged`; `GetRowSelection` returns the chosen codes. *(Dropdown item text hand-set
-  white — interim; real fix = the style guide.)*
+  `OnSelectionChanged`; `GetRowSelection` returns the chosen codes. **`RestoreSelection(SavedSelections[])`**
+  (P4 105) finds this row's entry by `ModuleId` (ForEach-with-Break) and sets `Cmb_Text`/`Cmb_Voice` via
+  `IndexOfCulture`. *(Dropdown item text hand-set white — interim; real fix = the style guide.)*
 - **`WBP_Settings`** (CommonActivatableWidget): **tabbed shell** (Language | Game Play | Video | Audio |
   Controls | Sensitive Content) = button bar + `WidgetSwitcher`; Language tab = `Scroll_Lang` filled in
-  Construct (`GetLanguageTable` → CreateWidget → `SetupRow` → AddChild → bind `OnRowChanged`). **Deferred
-  Apply:** any row change enables **Apply**; Apply gathers rows → `SaveLanguageSelections` → live
-  `SetCurrentLanguage(Core.Text, SaveToConfig=false)` → clears dirty. **Back** = `DeactivateWidget`.
+  Construct (**`LoadLanguageSelections`** once → `GetLanguageTable` → CreateWidget → `SetupRow` → AddChild →
+  **`RestoreSelection(row, saved)`** → bind `OnRowChanged`). **Restore runs before the bind** so re-selecting
+  the saved combo value on open fires the row dispatcher into no listener → **Apply stays disabled on open**
+  (same guard as `SetupRow`'s default-select). **Deferred Apply:** any *user* row change enables **Apply**;
+  Apply gathers rows → `SaveLanguageSelections` → live `SetCurrentLanguage(Core.Text, SaveToConfig=false)` →
+  clears dirty. **Back** = `DeactivateWidget`.
 
-**Verified (Standalone):** change Core Text + Apply → UI switches live *and* writes
-`[Boot.Language] TextLanguage` (from Core) + `[Settings.Language]` per-module keys, `[Boot.Content]`
-preserved.
+**Verified (PIE, P4 105):** apply Core Text → Back → reopen ⇒ combos show the persisted choice **and Apply is
+disabled**; deleting the ini ⇒ combos fall back to en-CA text / None voice. Earlier Apply verification
+(Standalone): change Core Text + Apply → UI switches live *and* writes `[Boot.Language] TextLanguage` (from
+Core) + `[Settings.Language]` per-module keys, `[Boot.Content]` preserved.
 
 ### Remaining Work (what's left)
 
-1. **On-open init** — call `LoadLanguageSelections` when the screen opens and set each row's combos to
-   the saved culture (fall back to en-CA text / None voice). Today the combos always open at their
-   defaults, ignoring the persisted file. The pending/deferred-Apply model is otherwise complete.
+1. ~~**On-open init**~~ — **DONE (P4 105, 2026-07-18).** `WBP_Settings.Construct` loads the saved
+   selections and each row restores its combos before binding. **Edge (documented, not special-cased):** a
+   saved culture whose pack was *uninstalled* since resolves via `IndexOfCulture` to index 0 = **None**
+   (not the en-CA default) — rare, and entangled with the still-open "None-semantics for Text" question;
+   fold the fallback policy into that decision rather than branching here now.
 2. **Voice apply (our system)** — mount the chosen `LocVoice` pack per module. Voice is currently
    **persisted but not acted on**; needs the runtime voice-pack mount + selection.
 3. **ABM applies the persisted language at boot** — the ABM *reads* `[Boot.Language]` but B2 does not
