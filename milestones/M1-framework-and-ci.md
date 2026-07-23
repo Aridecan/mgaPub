@@ -104,7 +104,7 @@ upscalers (DLSS/FSR/XeSS) · dual-device audio routing · real (non-placeholder)
 | **1** | Boot-flow screens + placeholders (incl. legal B5/B6) | Peter drives (UMG/Slate), I guide | M | not started — `EarlyStartupScreen`, B5/B6/B7 widgets, ABM sequencing |
 | **2** | Main-menu wiring (Settings + Exit; disable the rest; optional build stamp / SubscribeStar) | Peter drives, I guide | S | shell + Settings-push exist; needs button disable + stamp |
 | **3** | Video/Audio settings backend (`UOgmMgaGameUserSettings` + Scalability + submixes) | I write C++, Peter wires UMG | M | tabs are placeholder pages; no subclass yet |
-| **4** | Controls rebind (Enhanced Input user-settings; `IA_`/`IMC_` assets; rebind panel) | split | M | no `IA_`/`IMC_` assets; user-settings off |
+| **4** | Controls rebind (Enhanced Input user-settings; `IA_`/`IMC_` assets; rebind panel) — build spec: [TB — Controls Rebind](../technical-briefs/TB-controls-rebind.md) | split | M | spec written 2026-07-21; no `IA_`/`IMC_` assets; user-settings off |
 | **5** | DLC content — populate the 8 loadables with placeholder content | Peter drives, I guide | M | plugins exist, ~empty; ChunkIds `-1` |
 | **6** | CI cook all paks/DLCs (`mga-weekly Full`; tier + loc paks; leak gate) | I drive (build scripts) | L→M* | base single-pak cook green; multi-pak split to reproduce |
 
