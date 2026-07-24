@@ -1,0 +1,75 @@
+name: Project status automation
+
+# Keeps the "MGA — Dev Board" (https://github.com/users/Aridecan/projects/1) in sync
+# with issue state, with no Claude session required:
+#   - issue closed   -> Status = Done
+#   - issue reopened -> Status = In Progress
+#
+# Requires a repo secret PROJECTS_TOKEN = a PAT with `project` + `repo` scope
+# (the built-in GITHUB_TOKEN cannot write a user-owned Project v2).
+# The job is a no-op until that secret exists, so this file is safe to merge early.
+
+on:
+  issues:
+    types: [closed, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  update-status:
+    runs-on: ubuntu-latest
+    env:
+      HAS_TOKEN: ${{ secrets.PROJECTS_TOKEN != '' }}
+    steps:
+      - name: Move the card to the matching column
+        if: env.HAS_TOKEN == 'true'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.PROJECTS_TOKEN }}
+          script: |
+            // Board + field identifiers for "MGA — Dev Board" (project #1)
+            const PROJECT_ID = 'PVT_kwHOB5DiZc4BeX7L';
+            const STATUS_FIELD_ID = 'PVTSSF_lAHOB5DiZc4BeX7LzhYyptE';
+            const OPTION = {
+              done:       'fd067157',
+              inProgress: 'ca60db02',
+            };
+
+            const target = context.payload.action === 'closed' ? OPTION.done : OPTION.inProgress;
+            const issueNodeId = context.payload.issue.node_id;
+
+            // Find this issue's item on project #1 (skip cleanly if it isn't on the board)
+            const q = await github.graphql(`
+              query($id: ID!) {
+                node(id: $id) {
+                  ... on Issue {
+                    projectItems(first: 20) {
+                      nodes { id project { id } }
+                    }
+                  }
+                }
+              }`, { id: issueNodeId });
+
+            const item = q.node.projectItems.nodes.find(n => n.project.id === PROJECT_ID);
+            if (!item) {
+              core.info('Issue is not on the dev board; nothing to do.');
+              return;
+            }
+
+            await github.graphql(`
+              mutation($project: ID!, $item: ID!, $field: ID!, $option: String!) {
+                updateProjectV2ItemFieldValue(input: {
+                  projectId: $project,
+                  itemId: $item,
+                  fieldId: $field,
+                  value: { singleSelectOptionId: $option }
+                }) { projectV2Item { id } }
+              }`, {
+                project: PROJECT_ID,
+                item: item.id,
+                field: STATUS_FIELD_ID,
+                option: target,
+              });
+
+            core.info(`Set status to ${context.payload.action === 'closed' ? 'Done' : 'In Progress'} for #${context.payload.issue.number}.`);
