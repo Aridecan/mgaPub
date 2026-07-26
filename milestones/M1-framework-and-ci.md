@@ -160,8 +160,65 @@ module, not just content. The 5.3 demo was content-only — this part is not a r
 - Necessary: every DLC asset under its own plugin `Content/` (`/Spicy/…` etc.) — done.
 - Also necessary: **base never hard-references into a tier folder** — base exposes data-driven hooks;
   the tier fills them on activation (TB-boot-loader R10, additive-not-same-path). A stray hard
-  `/Game → /Tier` ref leaks DLC into the base pak / breaks base when DLC absent. The **audit gate**
-  cooks then greps each pak manifest to confirm no cross-boundary leak.
+  `/Game → /Tier` ref leaks DLC into the base pak / breaks base when DLC absent.
+- **Third, and the one that actually bit us: the COOKER itself can be the reference.** See below.
+
+#### The tier leak (found 2026-07-26 in the first packaged base-only build; fixed P4 137)
+
+A base-only install behaved as though both tiers were present: it auto-activated Spicy and
+SuperSpicy, registered their advisory providers at rank 1/2, then failed to resolve their string
+tables. Root cause chain, each link verified against artifacts rather than inferred:
+
+1. `BuiltInInitialFeatureState: Active` in each tier `.uplugin` does **double duty**. It makes the
+   **cook commandlet** register and activate the tier — the activation lines appear in the cook log,
+   before the pak step.
+2. Registering **loads** the tier's `GameFeatureData`, and the cooker sweeps packages loaded during
+   startup into the cook as **unsolicited** — so `Spicy.uasset` / `SuperSpicy.uasset` landed in the
+   base artifact. `EnabledByDefault:false` and `ExplicitlyLoaded:true` do not prevent this; they
+   govern *plugin* loading, not game-feature state.
+3. At runtime the same flag auto-activated both tiers, because every loadable's `.uplugin`
+   **descriptor** ships in the base pak. The tier string tables did **not** leak (they are referenced
+   only by a C++ path string, so nothing loaded them) — hence "active but no text".
+4. `PrimaryAssetTypesToScan` `CookRule: AlwaysCook → Unknown` (P4 136) was correct but **a no-op**:
+   `Unknown` means "cook if depended upon", and the cook-time load *is* that dependency.
+
+**This was also the Steam compliance breach** — adult tier data present in the artifact we would
+upload. See [Steam adult-content boundary].
+
+**The fix — one rule, one place:** a project GameFeatures policy,
+`UAridGGameFeaturePolicy` (`GameFeaturesManagerClassName` in `DefaultGame.ini`), overriding
+`InitGameFeatureManager` to filter `LoadBuiltInGameFeaturePlugins`:
+- **Base cook** (no `-DLCName`): no DLC-delivered plugin may load at all. Note the filter must
+  **reject** these, not merely cap them at `Registered` — `Registered` is precisely the state that
+  loads the GameFeatureData, and the engine force-raises any lower auto-state to `Registered` while
+  cooking. Note also that a "does the content exist?" test is useless here: during any cook the
+  source content is on disk. The cook's question is *"is this the DLC I was asked to build?"*
+- **DLC cook** (`-DLCName=X`): X plus its DLC-delivered dependencies, nothing else.
+- **Runtime / editor:** gate on whether the plugin's **content** is really installed — loose packages,
+  or the plugin's own `.pak` — and on the same being true of everything it depends on. Descriptor
+  presence is intent; content presence is truth. The same test removed the phantom `en-US` rows from
+  Settings > Language, which had the identical cause.
+
+Config 4 of the acceptance matrix (SuperSpicy without Spicy) falls out of the dependency arm as a
+clean skip rather than a mount failure — verified by hiding Spicy's content:
+`Skipping game feature 'SuperSpicy': 'Spicy' content is not installed.`
+
+#### The audit gate (`CI/audit.ps1`, Stage 6)
+
+The gate is now a **content assertion**, not a size report: no content from any DLC-delivered plugin
+may appear in a base container. The delivered-plugin list is **discovered** from
+`Plugins/{GameFeatures,Localization}/*`, so a new tier is covered without editing the script, and the
+gate **throws rather than passing vacuously** if that discovery comes back empty. Descriptors are
+explicitly allowed through — the match is on the plugin's `Content/` subtree — because the base build
+is *supposed* to know a tier could exist; it just must not carry its content.
+
+> **The gate audits `.utoc` as well as `.pak`, and that is load-bearing.** This project cooks
+> **IoStore**: the legacy `OGMMGA-Windows.pak` is ~11 MB of descriptors while the real 870 MB payload
+> lives in `OGMMGA-Windows.ucas`. The leaked tier assets were **in the `.ucas`** — a pak-only gate
+> would have passed the very build that shipped them. `UnrealPak -List` accepts a `.utoc` and lists
+> the container's real contents. (Separately: cooking IoStore **contradicts** TB-ci-cook's decision to
+> ship legacy `.pak` with `bUseIoStore=false` for ABM mount-order control — that decision needs
+> revisiting or the config needs fixing.)
 
 ---
 

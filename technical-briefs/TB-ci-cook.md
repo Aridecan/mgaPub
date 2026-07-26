@@ -41,6 +41,13 @@ for our Win/Linux/Mac targets, and — decisively — the **ABM needs `FPakPlatf
 mount-order control** (`MountPaksEx(Order=…)`), which IoStore moves under the engine. IoStore
 is revisited only if a console target ever appears. (See [TB — Boot Loader R7](TB-boot-loader.md#resolved-decisions).)
 
+> ⚠ **The pipeline is NOT doing this today (observed 2026-07-26, build 18).** `mga-weekly Full`
+> stages `OGMMGA-Windows.utoc` + `.ucas` (870 MB of payload) alongside an 11 MB
+> `OGMMGA-Windows.pak` that holds only descriptors and loose files. So the cook **is** producing
+> IoStore, contradicting this decision and the ABM mount-order rationale behind it. **Open:** either
+> set `bUseIoStore=false` for real, or re-open R7 and rework the ABM's mount model. Until it is
+> settled, anything that inspects "the pak" must inspect the `.utoc` too — the audit gate now does.
+
 ---
 
 ## Cook Mechanisms (UE 5.8, cited)
@@ -49,16 +56,29 @@ is revisited only if a console target ever appears. (See [TB — Boot Loader R7]
 |---|---|---|
 | Headless build+cook+pak+stage | `RunUAT BuildCookRun` | `-project= -build -cook -stage -pak -package -clientconfig=Shipping -platform=Win64 -nop4 -unattended` |
 | Run a pre-cook step | Commandlet | `UnrealEditor-Cmd.exe <proj> -run=<Commandlet> -unattended -nullrhi -abslog=<log>` |
-| Content tiers (Spicy/SuperSpicy) | **GameFeature plugin cook** | cooker cooks plugins with state ≥ `Registered` (`GetLoadedGameFeaturePluginFilenamesForCooking`) |
+| Content tiers (Spicy/SuperSpicy) | **GameFeature plugin cook** | `-DLCName=<plugin>` release-version cook (row below). See the correction under the table. |
 | True same-path override (region) | **DLC release-version cook** | `-CreateReleaseVersion=<v>` (base) → `-BasedOnReleaseVersion=<v> -DLCName=<plugin> -ErrorOnEngineContentUse` |
 | Localization paks | **Culture cook** | `-cookcultures=en+ja+…` → per-culture paks |
 | Optional/distribution split, demo subset | **AssetManager chunking** | `UPrimaryAssetLabel.Rules.ChunkId` → `pakchunk<N>-<platform>.pak` |
 | Pak mount priority | path-based order + explicit | `GetPakOrderFromPakFilePath` (4/3/2/1); `FMountPaksExArgs.Order` (ABM sets this) |
 
+**Correction (2026-07-26).** An earlier revision of this table said the cooker cooks GameFeature
+plugins whose state is ≥ `Registered`, citing `GetLoadedGameFeaturePluginFilenamesForCooking`. That
+function has **no callers in the 5.8 engine** — it is not the mechanism. What actually happens is
+subtler and was the cause of the base-pak tier leak: reaching `Registered` **loads** the plugin's
+`GameFeatureData`, and the cooker sweeps startup-loaded packages into the cook as *unsolicited*
+packages. So state ≥ `Registered` does pull tier data in, but via package loading, not via a
+GameFeatures-aware cook hook. The consequence — and the one-place fix, a project GameFeatures policy
+that filters `LoadBuiltInGameFeaturePlugins` — is written up in
+[M1 § WS6](../milestones/M1-framework-and-ci.md#the-tier-leak-found-2026-07-26-in-the-first-packaged-base-only-build-fixed-p4-137).
+
 **Notes that shape the pipeline:**
 - **GameFeature pak location.** By default a GameFeature plugin's content may fold into the
   main pak; routing each tier to its own `Plugins/<Tier>/Paks/…` pak likely needs a **custom
   cook policy / `FCookPackageSplitter`** — flagged **O-A** below.
+- **What is cooked is decided at engine startup, before the cook proper.** Anything the game loads
+  while the cook commandlet boots becomes cook input. That makes startup-time policy (which
+  GameFeatures load, which plugins mount) a *packaging* concern, not only a runtime one.
 - **Chunking ≠ override.** Chunks are for *optional/withheld* content, not shadowing. Use
   chunking for the **demo subset** and any withhold-per-channel split; use DLC-cook for
   same-path replacement.
@@ -113,7 +133,7 @@ relevant cooks with the subset filter. Stage 6 gates 7.
 
 ---
 
-## Editor-Only Asset Audit Gate (Stage 6)
+## Shipping-Artifact Audit Gate (Stage 6)
 
 Generalises the road-brush's packaging discipline into a **build-failing CI gate**. Editor-only
 tooling (the road-conformity brush + its `RT_RoadHeights` 268 MB render target + encoding
@@ -122,10 +142,31 @@ materials, plus any dev-only actors) must **never** enter a shipping pak.
 - **Mechanism:** editor-only actors carry `bIsEditorOnlyActor = true`; UE's reference walker
   then strips everything reachable *only* through them. `Content/Developers/` and
   `MGA/Maps/Test/` are excluded by cook config.
-- **The gate:** after cook, run `UnrealPak.exe -List` on each pak and **grep for a denylist**
-  (`RoadConformity`, `RoadHeights`, `RoadHeightEncode`, `Developers/`, `/Test/`). Any hit →
-  **fail the build**. Plus a **pak file-size regression check** (a 268 MB swing = the easy
-  signal an editor-only flag broke). This is cheap and runs every build.
+- **The gate:** after cook, run `UnrealPak.exe -List` on **every container — `.pak` *and* `.utoc`** —
+  and **grep for a denylist** (`RoadConformity`, `RoadHeights`, `RoadHeightEncode`, `Developers/`,
+  `/Test/`). Any hit → **fail the build**. Plus a pak-size regression row (a 268 MB swing = the easy
+  signal an editor-only flag broke). Cheap; runs every build.
+
+### The DLC-content assertion (added 2026-07-26 — the Steam compliance control)
+
+The same gate now also asserts that **no content from any DLC-delivered plugin appears in a base
+container**: nothing under `<Plugin>/Content/` for any plugin in
+`Plugins/{GameFeatures,Localization}/`. This is what enforces
+[the Steam boundary](../gdd/content-and-dlc.md) — adult tier content must not be *present* in the
+artifact we upload — and it is the control that would have caught the 2026-07-26 tier leak before it
+reached the releases share.
+
+Design points worth keeping:
+- **A content assertion, not a size check.** The leak was two `GameFeatureData` assets, under 1 KB
+  combined. No size threshold would ever have seen it.
+- **`.utoc` coverage is load-bearing.** The leaked assets were inside `OGMMGA-Windows.ucas`; the
+  legacy `.pak` held only descriptors. A pak-only gate passes the build that ships the leak. (Also
+  see the container-format warning above — the cook is emitting IoStore against the stated decision.)
+- **Descriptors are allowed; content is not.** Every loadable's `.uplugin` legitimately ships in the
+  base pak — that is how a base-only install knows a tier *could* exist. The runtime therefore gates
+  on content rather than on the descriptor, and so does this assertion.
+- **Discovered, not hardcoded**, from the plugin folders — a new tier is covered with no script edit —
+  and it **hard-fails if discovery returns nothing**, so it can never pass vacuously.
 
 Detail lives in [TB — Road Conformity Brush § Packaging](TB-road-conformity-brush.md#packaging--cook-behaviour);
 this TB owns the *gate* (the CI enforcement), that TB owns the *brush-specific* exclusions.
@@ -241,9 +282,16 @@ step, not part of the first increment.
 - **O-D — Perforce ⇄ Jenkins.** Confirm the P4 sync/label strategy for reproducible weekly
   builds (changelist pinning, the release-version store under `Releases/<build>/` committed or
   archived).
-- **O-E — Suppress GameFeature auto-mount at runtime** (paired with TB-boot-loader O8) — a
-  cook/packaging concern only insofar as plugin descriptors ship with the right
-  `BuiltInInitialFeatureState`.
+- ~~**O-E — Suppress GameFeature auto-mount at runtime**~~ — **RESOLVED 2026-07-26 (P4 137).** Not a
+  descriptor concern after all: `BuiltInInitialFeatureState` stays `Active` (nothing else activates
+  the tiers), and the decision moves into a project GameFeatures policy that filters
+  `LoadBuiltInGameFeaturePlugins` on whether the plugin's **content** is actually installed. Same
+  policy suppresses the cook-time activation that was leaking tier data into the base pak. Write-up:
+  [M1 § WS6](../milestones/M1-framework-and-ci.md#the-tier-leak-found-2026-07-26-in-the-first-packaged-base-only-build-fixed-p4-137).
+- **O-F — Container format contradiction.** The cook emits IoStore (`.utoc`/`.ucas`) though this TB
+  specifies legacy `.pak` with `bUseIoStore=false` for ABM mount-order control. Decide: fix the
+  config, or re-open [TB — Boot Loader R7](TB-boot-loader.md#resolved-decisions) and the ABM mount
+  model. See the container-format section above.
 
 ---
 
