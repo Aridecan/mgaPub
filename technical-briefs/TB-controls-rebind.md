@@ -215,6 +215,33 @@ layers. So the check must be **layer-scoped**, and that scope is our data.
 Thin `BlueprintFunctionLibrary`, one file (`AridGInput` plugin). BP calls it from the rebind-capture flow
 before committing `MapPlayerKey`.
 
+> **SECOND EXCLUSION AXIS — control context (added 2026-07-25, fixing a real bug).** The modifier layer
+> alone is not enough. As first written, the KB/mouse branch treated *every* other mapping on a key as a
+> conflict — so **the 1st-person Move/Look bindings blocked the 3rd-person ones** (both default to WASD +
+> mouse), and neither could be set while the other held the key. But per
+> [TB — Control State Machine](TB-control-state-machine.md) §Modes, `IMC_Move_FP`/`IMC_Look_FP` and
+> `IMC_Move_TP`/`IMC_Look_TP` are **never active at the same time** — the CSM slots in one pair or the
+> other — so they cannot collide.
+>
+> `ValidateRebind` therefore takes a second registry, **`ContextByMapping : TMap<FName, FName>`** (mapping
+> name → exclusive **context group** name), and a candidate is a real conflict only when **both** axes
+> permit it: same modifier layer (gamepad only) **and** `ContextsCanCoexist(TargetContext, CandidateContext)`.
+> Coexistence rule: `None` (= always active) overlaps everything; two *named* groups overlap only if
+> identical. Mappings absent from the registry default to `None`, so Modifiers/General/OnFoot keep
+> conflicting with everything — including with whichever person-mode set is live.
+>
+> The registry is **derived from the IMC assets**, same anti-drift reasoning as `BuildPadLayerRegistry`:
+> `BuildContextRegistry(TArray<FAridGControlContextGroup>)` where each group is `{ContextName, Contexts[]}`.
+> MGA's groups: `"FirstPerson"` = `IMC_Move_FP` + `IMC_Look_FP`; `"ThirdPerson"` = `IMC_Move_TP` +
+> `IMC_Look_TP`; `IMC_Vehicle` joins as `"Vehicle"` when it is real. A mapping named by two groups is an
+> IMC authoring error — it demotes to always-active (over-reports rather than under-reports) and logs a
+> warning. The generic `FName` group (rather than an FP/TP enum) keeps the `AridG` plugin game-agnostic.
+>
+> **Wiring note:** the new pin is `AutoCreateRefTerm`, so an existing `ValidateRebind` node just *gains*
+> a pin and keeps its wires — but an unwired pin means an empty map, which is exactly the old (broken)
+> behaviour. `WBP_ControlsTab.InitTab` must build the registry next to the pad-layer one and push it to
+> each row, and the row must feed it to `ValidateRebind`.
+
 ### 3. CommonInput auto-glyphs (reuse, don't build)
 
 Author one **`UCommonInputBaseControllerData`** per pad family (Xbox / DualSense / Switch Pro) mapping
@@ -262,9 +289,50 @@ in `WBP_Settings`' `TabContent` switcher at the existing **Controls placeholder 
   `Scroll_Bindings`, each seeding its Mod1/Mod2 checkbox defaults from the pad-layer flags.
 - **`InitTab`**: load the active profile, populate rows, preselect glyphs + KB key text, seed each row's
   Mod1/Mod2, read the scalar rows from `UOgmMgaGameUserSettings`.
+  - **CANONICAL ORDER (2026-07-24, Peter-ratified) — driven by a `CanonicalMappingOrder : Array<Name>`
+    member var** (52 mapping names, category-grouped, on `WBP_ControlsTab`). InitTab **iterates that list**
+    (not `GetPlayerMappingRows` directly) and `Map·Find`s each row by name; because the list is grouped,
+    first-seen section creation yields canonical **section** order (Modifiers · 1st Person · 3rd Person ·
+    General Actions · On-Foot) *and* stable **row** order for free. **Why:** a loaded Enhanced Input save
+    lists *customized* rows first in `GetPlayerMappingRows` → iterating the map directly drifts both section
+    and row order after any rebind. Order lives in one editable place (no `NN_` prefix on functional mapping
+    names → no save-key churn). List content = the `ControlName_*` keys in `ST_Settings` (every mappable row
+    has one). Move/Look **parent** rows (`Move_FP`/`Look_FP`, the stick binding) sit before their 4 directional
+    rows so they collapse cleanly into the future axis sub-groups.
+  - **FUTURE WORK (deferred, if needed) — functionalize + leftover-safety.** M1 ships the minimal loop-swap
+    (list loop only; a name absent from the profile is skipped; a profile row absent from the list currently
+    would **not** render). Harden later by extracting the row-build body into a function `AddMappingRow(Name)`
+    called from the list loop, then a second pass over `GetPlayerMappingRows` calling it for any `Key` where
+    `CanonicalMappingOrder.Contains(Key)` is false → a new/unlisted control can never silently vanish. Also the
+    candidate home if the order ever moves to a `UDataAsset`/C++ (game-side, not the reusable `AridG` plugin).
 - **`ApplyTab`**: rebinds are already committed live (deferred-apply is awkward for input capture);
   `ApplyTab` persists the scalar rows + the two layer bools + `SaveSettings`. **Reset to Defaults** =
-  profile `ResetToDefault()` + repopulate.
+  profile `ResetToDefault()` + repopulate — now the settings-wide `ResetTab` override, see
+  [TB — Settings Menu](TB-settings-menu.md) §"Reset to Defaults".
+- **CLEARING a binding — the X button (built 2026-07-25).** Each of the three binding cells carries a
+  small **`Btn_Clear*`** ("✕") beside the key button, inside a `KeyLine_*` HorizontalBox (key button
+  `Fill 1.0`, X `Automatic`); tooltip key `Controls_ClearBinding`. Clear = **`MapPlayerKey` with
+  `NewKey` left at `EKeys::Invalid`** at that cell's address (KB1 = `First`/`KBM`, KB2 =
+  `Second`/`KBM`, Pad = `First`/`Gamepad`), `bCreateMatchingSlotIfNeeded` **false**, then
+  `AsyncSaveSettings` → `RefreshDisplay` (which already renders an invalid key as *Not Bound*). No
+  "make invalid key" node is needed — an untouched `FKey` pin **is** `Invalid`; and the create flag must
+  stay false or clearing an empty cell would *create* an empty mapping.
+  - **`UnMapPlayerKey` is NOT a clear — it is a reset-to-default** (`EnhancedInputUserSettings.cpp:1271`);
+    it and `ResetAllPlayerKeysInRow` belong to the Reset button, not the X.
+  - **Why an invalid key sticks (UE 5.8 semantics, verified in engine source).**
+    `MapPlayerKey` on an existing mapping calls `FPlayerKeyMapping::SetCurrentKey(Invalid)`;
+    `GetCurrentKey()` returns `IsCustomized() ? CurrentKey : DefaultKey` where
+    `IsCustomized() == (CurrentKey != DefaultKey)`. So a cleared **primary** slot (real `DefaultKey`)
+    reads back Invalid and **serialises** — the save filter is `Mapping.IsDirty() || Mapping.IsCustomized()`.
+  - **Edge case worth knowing:** a **created secondary** slot has `DefaultKey == Invalid` too (the engine
+    stamps Invalid for slots that never existed in the IMC). Clearing one therefore leaves it neither
+    dirty nor customized, so it silently **drops out of the save** on the next write. Harmless — the row
+    ceases to exist and `RefreshDisplay` pre-seeds unbound cells anyway — but it means "cleared empty
+    secondary" and "never had a secondary" converge on disk.
+  - **Locked rows** (`Jump`, `Interact`) hide their M1/M2 checkboxes and **disable both the set and the
+    clear button**, so a locked binding cannot be edited or emptied from the screen. The locked-name set
+    lives in one place (a pure function on the row) rather than duplicated literals in
+    `CaptureChainOnCapture` and `RefreshDisplay`; the durable home is C++ beside `ValidateRebind`.
 - **Row-layout STANDARD** (label Fill .4 / control Fill .6 / trailing Auto-right; checkboxes
   HAlign_Left) per the settings house style — see [TB — Settings Menu] and the
   `settings-screen-architecture` note.

@@ -99,6 +99,52 @@ starts — no mid-scene voice handling needed. Text and voice languages are inde
 resolves language from `Aridecan.ini` at boot (B1–B3 of [TB — Boot Loader](TB-boot-loader.md))
 regardless, so the fallback is free.
 
+### Reset to Defaults — settings-wide contract (built 2026-07-25)
+
+Reset is **per-tab**, not global: each tab restores its own domain, so the player can reset
+Controls without losing their video settings. The mechanism lives in the shared tab base so
+every tab gets the button and the confirm prompt for free.
+
+**`WBP_SettingsTabBase`** (see [TB — Controls Rebind](TB-controls-rebind.md) for the tab
+contract) gains:
+
+- **`BottomBar` = `Back | Spacer | Reset | Apply`** (`ButtonReset`, label key
+  `Settings_Reset`).
+- A fourth overridable function **`ResetTab`**, alongside `InitTab` / `ApplyTab` /
+  `RevertTab`. The base implementation is empty; children override it.
+- Root is an **Overlay** (`Root_Overlay`) wrapping the old `RootBox`, with a collapsed
+  **`WBP_ResetConfirm`** child on top. `ButtonReset` shows it; its `OnConfirmed` dispatcher
+  hides it and calls `ResetTab`, `OnCancelled` just hides it. Because that wiring is in the
+  base, a child tab only ever authors `ResetTab`.
+
+**`WBP_ResetConfirm`** is a plain `UserWidget` (dimmer + centred panel + `Btn_Confirm` /
+`Btn_Cancel`, dispatchers `OnConfirmed` / `OnCancelled`), *not* a `CommonActivatableWidget`:
+it is shown by visibility toggle inside the tab rather than pushed onto the CommonUI stack,
+so activation would never fire and `BP_OnActivated` would be a trap. **Consequence: Esc does
+not cancel the prompt** — only the Cancel button. Promote it to a stack-pushed activatable if
+back-action handling is wanted.
+
+**Per-tab `ResetTab` semantics.** Every one ends with `InitTab`: reset writes *past* the
+widgets (unlike Apply, which reads *from* them), so the controls must be re-read from the
+model or the tab still shows the old values.
+
+| Tab | Reset body |
+|---|---|
+| **Controls** | active key profile `ResetToDefault()` → `AsyncSaveSettings` → `InitTab`. Walks *every* mapping including the locked rows — so this is the in-game recovery path for a binding the UI can no longer edit (previously required deleting the Enhanced Input `.sav`). |
+| **Video** | `SetToDefaults` → `ApplyVideoSettings` → **if it returns true** (resolution/window mode moved) `ConfirmVideoMode` + `SaveSettings`; false means it already saved internally → `InitTab`. Same confirm handling as `ApplyTab`. |
+| **Audio** | `ForEach EOgmMgaAudioChannel` → `SetAudioVolume(<channel>, 1.0)`; on `Completed` → `SaveSettings` → GameInstance `ApplyAudioMix` → `InitTab`. The enum loop (rather than eight hardcoded calls) means a ninth channel needs no graph edit. |
+| **Language** | not wired (deferred). |
+
+> **Gap — `SetToDefaults` does not cover our own config fields.** It is native
+> `UGameUserSettings`, so it knows nothing about `UIScale` or the eight audio floats we added
+> as `UPROPERTY(config)`. Video's Reset therefore leaves UI Scale untouched. Fix when
+> convenient: override `SetToDefaults()` in `UOgmMgaGameUserSettings` to call `Super::` then
+> reset our own fields (C++, editor-closed build).
+
+The **confirm/revert timed dialog** remains the M1 stub (immediate confirm) — a general
+dialog serving both Reset and the video revert countdown was considered and deliberately
+deferred; Reset ships with its own minimal prompt.
+
 ---
 
 ## Display & Scalability
