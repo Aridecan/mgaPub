@@ -1,7 +1,13 @@
 # CoreX-M1 — Front-End Framework + DLC Load/Override + CI Pak Pipeline
 
-> **Status: draft for review (2026-07-18).** Definition-of-done agreed with Peter this session;
-> workstream detail below. This is a living tracking doc — check items off as they land.
+> **Status: in progress — workstream table refreshed 2026-07-26** (P4 changes through 132). The
+> definition-of-done below is unchanged since 2026-07-18; only the status has moved. This is a living
+> tracking doc — check items off as they land.
+>
+> **Shape of the remaining work:** the front-end pillar is largely built (WS1/WS3 done, WS4 nearly), and
+> **the build pillar has not started**. WS6 is the critical path, not merely the biggest risk: it gates
+> WS5's mount/activate proof, WS1's real B3 pak mount, *and* the 4th acceptance config — which can only be
+> tested in a packaged build, because the editor auto-disables SuperSpicy when Spicy is off.
 
 ## Framing — "CoreX" (EA design flow)
 
@@ -99,14 +105,16 @@ upscalers (DLSS/FSR/XeSS) · dual-device audio routing · real (non-placeholder)
 
 ## Workstreams
 
+Status as of **2026-07-26** (P4 through change 132). Issue numbers are `Aridecan/mgaPub`.
+
 | # | Workstream | Owner | Effort | Status |
 |---|-----------|-------|--------|--------|
-| **1** | Boot-flow screens + placeholders (incl. legal B5/B6) | Peter drives (UMG/Slate), I guide | M | not started — `EarlyStartupScreen`, B5/B6/B7 widgets, ABM sequencing |
-| **2** | Main-menu wiring (Settings + Exit; disable the rest; optional build stamp / SubscribeStar) | Peter drives, I guide | S | shell + Settings-push exist; needs button disable + stamp |
-| **3** | Video/Audio settings backend (`UOgmMgaGameUserSettings` + Scalability + submixes) | I write C++, Peter wires UMG | M | tabs are placeholder pages; no subclass yet |
-| **4** | Controls rebind (Enhanced Input user-settings; `IA_`/`IMC_` assets; rebind panel) — build spec: [TB — Controls Rebind](../technical-briefs/TB-controls-rebind.md) | split | M | spec written 2026-07-21; no `IA_`/`IMC_` assets; user-settings off |
-| **5** | DLC content — populate the 8 loadables with placeholder content | Peter drives, I guide | M | plugins exist, ~empty; ChunkIds `-1` |
-| **6** | CI cook all paks/DLCs (`mga-weekly Full`; tier + loc paks; leak gate) | I drive (build scripts) | L→M* | base single-pak cook green; multi-pak split to reproduce |
+| **1** | Boot-flow screens + placeholders (incl. legal B5/B6) | Peter drives (UMG/Slate), I guide | M | **DONE** (P4 105–112) — B0 Slate splash → B5 age gate → B6 legal → B7 progress → B7.5 content advisory → B8 menu. Remaining polish: real art (deferred by design); B7 auto-advance on *real* activation; **B3 driven by a real pak mount — gated on WS6** |
+| **2** | Main-menu wiring (Settings + Exit; disable the rest; optional build stamp / SubscribeStar) | Peter drives, I guide | S | **PARTIAL** (P4 98–100) — seven buttons exist; Settings pushes, Exit quits. Outstanding: **disable New Game / Continue / Load Game / Mods** + build stamp (#14). The temp Continue→content-warning dump hook has been pulled |
+| **3** | Video/Audio settings backend (`UOgmMgaGameUserSettings` + Scalability + submixes) | I write C++, Peter wires UMG | M | **DONE** (P4 113/114), verified in Standalone — Video + UI-scale + 8-channel submix audio + the `WBP_SettingsTabBase` tab framework. Outstanding = **packaged-build verification** + polish (#16) |
+| **4** | Controls rebind (Enhanced Input user-settings; `IA_`/`IMC_` assets; rebind panel) — build spec: [TB — Controls Rebind](../technical-briefs/TB-controls-rebind.md) | split | M | **NEARLY DONE** (P4 116–132) — category-cut `IA_`/`IMC_` assets, collapsible categorized screen, click-to-capture rebind, layer- *and* context-scoped conflict detection, canonical order, per-cell clear, settings-wide Reset, full loc pass. Outstanding: gamepad glyphs in cells, Move/Look axis sub-groups, M1/M2 checkbox function, and **the scalar rows — config fields exist since CL 116 but have no UI** (#15) |
+| **5** | DLC content — populate the 8 loadables with placeholder content | Peter drives, I guide | M | **BARELY STARTED** — all 8 plugins exist, but Spicy/SuperSpicy hold only their `GameFeatureData` + `ST_ContentAdvisory`, and the **six loc packs contain zero assets**. The "cube appears only when its pak is present" mount/activate proof is unbuilt; ChunkIds still `-1` |
+| **6** | CI cook all paks/DLCs (`mga-weekly Full`; tier + loc paks; leak gate) | I drive (build scripts) | L→M* | **NOT STARTED — critical path.** Base single-pak cook green (first green 2026-07-12). Multi-pak split unreproduced on 5.8; DLC-on-DLC release-version chaining unresolved; **and the tiers now carry BINARIES** (the Spicy/SuperSpicy C++ provider modules), so the cook must build + stage per-platform modules — heavier than the content-only 5.3 demo |
 
 \* **WS6 de-risked (2026-07-18):** Peter shipped per-plugin pak emission in **UE 5.3** (demo: a cube that
 appears/disappears with its pak) — so this is *reproduce on 5.8*, not research. The enabling discipline —
