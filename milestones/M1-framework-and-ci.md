@@ -54,10 +54,21 @@ Two pillars: **(A) front-end framework**, **(B) build pipeline**. No gameplay, n
   - **Language** — already shipped (P4 102/104/105).
 
 ### Pillar B — Build pipeline
-- **Each of the 8 loadables populated** with placeholder content that demonstrably **mounts (B3)** and
-  **activates (B7)** — the "cube appears only when its pak is present" proof, per tier + per loc pack.
+
+> **SCOPE CHANGE 2026-07-26 (Peter): the LocVoice packs are cut from M1** — the voice side is being
+> re-looked at, so carrying three empty skeletons through the cook buys no proof. **8 loadables → 5**
+> (Spicy · SuperSpicy · LocText_Base_en-US · LocText_Spicy_en-US · LocText_SuperSpicy_en-US).
+> Deferred, not deleted (#19). This also simplifies WS6: the `LocVoice_* → tier` edges drop out of the
+> DLC-on-DLC dependency graph the cook spike has to solve.
+
+- **Each of the 5 in-scope loadables populated** with placeholder content that demonstrably
+  **mounts (B3)** and **activates (B7)** — the "cube appears only when its pak is present" proof, per
+  tier + per loc pack. For the LocText packs, that content is a **machine-translated pass over the
+  project's 8 string tables** (#18) — currently they hold zero assets, so there is nothing to cook.
+  French is the leading candidate: a plausible real ship language, and ~15–20% longer than English so
+  it surfaces UI overflow while the screens are still cheap to change.
 - **CI (`mga-weekly Full`) cooks the full pak set** — base game + every tier pak (Spicy / SuperSpicy)
-  + every loc pak (LocText / LocVoice) — with a **leak-audit gate** (no base↔DLC cross-references).
+  + every **LocText** pak — with a **leak-audit gate** (no base↔DLC cross-references).
 
 ### Acceptance test — content warning via activation-registered override (Peter, 2026-07-18)
 The **post-activation content warning (B7.5) queries an overridable provider**, and each tier's activation
@@ -113,7 +124,7 @@ Status as of **2026-07-26** (P4 through change 132). Issue numbers are `Aridecan
 | **2** | Main-menu wiring (Settings + Exit; disable the rest; optional build stamp / SubscribeStar) | Peter drives, I guide | S | **PARTIAL** (P4 98–100) — seven buttons exist; Settings pushes, Exit quits. Outstanding: **disable New Game / Continue / Load Game / Mods** + build stamp (#14). The temp Continue→content-warning dump hook has been pulled |
 | **3** | Video/Audio settings backend (`UOgmMgaGameUserSettings` + Scalability + submixes) | I write C++, Peter wires UMG | M | **DONE** (P4 113/114), verified in Standalone — Video + UI-scale + 8-channel submix audio + the `WBP_SettingsTabBase` tab framework. Outstanding = **packaged-build verification** + polish (#16) |
 | **4** | Controls rebind (Enhanced Input user-settings; `IA_`/`IMC_` assets; rebind panel) — build spec: [TB — Controls Rebind](../technical-briefs/TB-controls-rebind.md) | split | M | **NEARLY DONE** (P4 116–132) — category-cut `IA_`/`IMC_` assets, collapsible categorized screen, click-to-capture rebind, layer- *and* context-scoped conflict detection, canonical order, per-cell clear, settings-wide Reset, full loc pass. Outstanding: gamepad glyphs in cells, Move/Look axis sub-groups, M1/M2 checkbox function, and **the scalar rows — config fields exist since CL 116 but have no UI** (#15) |
-| **5** | DLC content — populate the 8 loadables with placeholder content | Peter drives, I guide | M | **BARELY STARTED** — all 8 plugins exist, but Spicy/SuperSpicy hold only their `GameFeatureData` + `ST_ContentAdvisory`, and the **six loc packs contain zero assets**. The "cube appears only when its pak is present" mount/activate proof is unbuilt; ChunkIds still `-1` |
+| **5** | DLC content — populate the in-scope loadables with placeholder content | Peter drives, I guide | M | **BARELY STARTED** — all 8 plugins exist, but Spicy/SuperSpicy hold only their `GameFeatureData` + `ST_ContentAdvisory`, and the **loc packs contain zero assets**. Mount/activate proof unbuilt; ChunkIds still `-1`. **Scope now 5 loadables — LocVoice cut (#19).** LocText content comes from the MT string-table pass (#18), which must land **before** the WS6 cook spike |
 | **6** | CI cook all paks/DLCs (`mga-weekly Full`; tier + loc paks; leak gate) | I drive (build scripts) | L→M* | **NOT STARTED — critical path.** Base single-pak cook green (first green 2026-07-12). Multi-pak split unreproduced on 5.8; DLC-on-DLC release-version chaining unresolved; **and the tiers now carry BINARIES** (the Spicy/SuperSpicy C++ provider modules), so the cook must build + stage per-platform modules — heavier than the content-only 5.3 demo |
 
 \* **WS6 de-risked (2026-07-18):** Peter shipped per-plugin pak emission in **UE 5.3** (demo: a cube that
@@ -131,13 +142,19 @@ RunUAT BuildCookRun ... -cook -stage -pak -dlcname=Spicy -DLCIncludeEngineConten
 `…/Content/Paks`, 7-zips (excl. `.pdb`), ships. **Prerequisite: the base cook must CREATE a release
 version** (`0.1.0-prod`) so each DLC diffs against it. Full recipe → [[dlc-pak-cook-recipe]] memory.
 **Already free in 5.8:** GameFeatures stable + project scaffolded (plugins, build.cs, `.uplugin`,
-AssetManager scan, 8 loadables) → skip the whole first half of the 5.3 video, go straight to the cook.
+AssetManager scan, the loadable plugins) → skip the whole first half of the 5.3 video, go straight to the cook.
 
 ### The real remaining unknown — DLC-on-DLC dependencies (the spike's actual job)
-The 5.3 video cooked ONE DLC. M1 has **8 with a dependency graph** (`SuperSpicy → Spicy`;
-`LocText_/LocVoice_<Tier> → <Tier>`). Open: how `-BasedOnReleaseVersion` handles a DLC that depends on
-another DLC — probably a **chained release version** (base → cook Spicy stamping a release *incl.* Spicy →
-cook SuperSpicy based on that) or a fixed cook order. First thing the spike nails down.
+The 5.3 video cooked ONE DLC. M1 has **5 in scope with a dependency graph** (`SuperSpicy → Spicy`;
+`LocText_<Tier> → <Tier>`) — the `LocVoice_* → <Tier>` edges are gone with the voice cut (#19), which
+takes the graph from 8 nodes to 5 but does **not** remove the hard part: `SuperSpicy → Spicy` is still a
+DLC depending on a DLC. Open: how `-BasedOnReleaseVersion` handles that — probably a **chained release
+version** (base → cook Spicy stamping a release *incl.* Spicy → cook SuperSpicy based on that) or a fixed
+cook order. First thing the spike nails down.
+
+**Second unknown, new since the 5.3 recipe: the tiers now carry BINARIES.** Spicy and SuperSpicy grew C++
+modules for the content-advisory providers, so the DLC cook must build and stage a per-platform tier
+module, not just content. The 5.3 demo was content-only — this part is not a replay.
 
 ### WS6 leak-audit discipline (the real correctness constraint)
 - Necessary: every DLC asset under its own plugin `Content/` (`/Spicy/…` etc.) — done.
