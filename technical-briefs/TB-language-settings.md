@@ -185,6 +185,12 @@ justified.
 - **Voice stays genuinely per-module** — we mount the chosen `LocVoice` pack per module (our
   own system), so per-row voice is natural.
 
+**CONFIRMED IN A PACKAGED BUILD (2026-07-27, `0.1.0-cxm1.36`).** With the culture set to French and
+only the Core target translated, the content-advisory screen renders the base warning in **French**
+and both tier warnings in **English** - because Spicy/SuperSpicy have no `fr` data and UE falls back
+to their en-CA source per string. That is the partial-translation experience this decision predicted,
+happening natively. **Option (b) stays unbuilt and is not needed for this case.**
+
 ### Option (b) — custom per-module text system (DOCUMENTED for later pickup, not built)
 
 Recorded so a future switch is a pickup, not a from-scratch rebuild. The UI + pending model +
