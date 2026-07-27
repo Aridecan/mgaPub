@@ -125,9 +125,18 @@ X in this line of work, and it is a **stretch goal** here, otherwise M3. You can
 - **Character Blueprint spawns in the documented order:** scale → morph → hair → *(clothing step,
   empty)* → Chaos Cloth init.
 - **No clothing.** The empty clothing step is deliberate — it is M3's insertion point.
-- **Decide deliberately whether M2's hair simulates.** If it uses Chaos Cloth, M2 is the project's
-  first cloth integration, on the asset with the least forgiving failure mode. Rigid hair is an
-  acceptable M2 answer.
+- **Hair is RIGID in M2** (decided 2026-07-27). Simulation — Chaos Cloth or bone-based — is M3. This
+  keeps the project's first character import boring, and keeps the first Chaos Cloth integration off
+  the asset with the least forgiving failure mode.
+- **But the hair still ships as a skeletal mesh with its strand/tail bone chain present, weighted,
+  and simply not simulated.** Both M3 options need a bone chain: bone-based hair obviously, and
+  Chaos Cloth needs the mesh skinned to something too. If M2's hair ships as a plain static mesh on
+  the socket, M3 means re-authoring, re-exporting and re-fitting **every hairstyle built by then**.
+  Unsimulated bones render identically to rigid — they just never move — so M3 becomes "turn on a
+  physics asset" instead of "redo the hair." The 2AM skull-cap method already produces strand
+  topology that chains cleanly, and the first hairstyle is being built now, so the cost is near zero.
+- `Socket_FrontHair` / `Socket_BackHair` must be **real sockets on the body skeleton**, not baked
+  transforms, so hair can be driven by head motion later.
 
 ### Pillar B — The city survives the cook
 
