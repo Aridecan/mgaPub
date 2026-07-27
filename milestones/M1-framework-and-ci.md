@@ -200,8 +200,56 @@ upload. See [Steam adult-content boundary].
   Settings > Language, which had the identical cause.
 
 Config 4 of the acceptance matrix (SuperSpicy without Spicy) falls out of the dependency arm as a
-clean skip rather than a mount failure — verified by hiding Spicy's content:
+clean skip rather than a mount failure:
 `Skipping game feature 'SuperSpicy': 'Spicy' content is not installed.`
+
+#### Two things the availability test cannot be, both learned by failing
+
+**It cannot look for the tier's packages as files.** We cook **IoStore**: cooked packages live in a
+`.ucas` addressed by chunk id through the package store and are *not* files — walking the plugin's
+`Content/` tree finds nothing even with the tier fully installed and mounted. Nor can it use
+`FPackageName::DoesPackageExist`: a GameFeature plugin is `ExplicitlyLoaded`, so its `/Spicy/` mount
+point does not exist yet when the built-in scan runs. What it tests instead are the two things that
+*are* plain files: loose packages under `Content/` when uncooked, and the tier's own **container**
+(`<Plugin><Project>-<Platform>.utoc/.pak`) in the game's `Content/Paks` when packaged.
+
+**The tier container has to be delivered into the game's `Content/Paks`.** The cook leaves it at
+`<Tier>/Content/Paks/<Platform>/` and **nothing mounts it there** — the startup pak scan only looks
+in the project's `Content/Paks`, and a built-in (file-protocol) GameFeature has no mount step of its
+own; it assumes its content is already mounted. Shipping the plugin folder as-is gave a tier that was
+detected, loaded, and then killed with *"Game Feature Data package not found … unrecoverable error"*.
+Relocating the container — the same step Peter's UE 5.3 recipe performed — is now what `publish.ps1`
+builds into the tier archive, and the tier archive contains **nothing but** that container set.
+
+#### Acceptance matrix — PASSING (2026-07-26, on CI artifacts)
+
+`CI/acceptance.ps1` builds all four installs from the staged base plus the DLC stages, runs each
+headless, and asserts from the log. Verified end-to-end against artifacts `mga-weekly` actually
+produced — base release **b22**, both tier DLCs cooked against it — not a local build:
+
+| Config | Tier containers installed | Outcome |
+|---|---|---|
+| 1 · base | none | both tiers skipped; base advisory at rank 0 only |
+| 2 · +Spicy | Spicy | Spicy loads, overrides at **rank 1**, reaches Active |
+| 3 · +Spicy +SuperSpicy | both | full chain: base 0 → Spicy 1 → **SuperSpicy 2**, both Active |
+| 4 · +SuperSpicy, no Spicy | SuperSpicy | **SuperSpicy skipped, citing Spicy** — no half-load |
+
+No `Failed to find string table entry` in any configuration. Config 4 is the one that cannot be
+produced in the editor at all (it auto-disables SuperSpicy when Spicy is off), which is why the
+matrix needs packaged installs.
+
+#### Still open in WS6
+
+- **DLC-on-DLC bleed.** A `-DLCName=SuperSpicy` cook also stages `Spicy/Content/Spicy.uasset`,
+  because SuperSpicy depends on Spicy and the base release does not contain Spicy. Not a compliance
+  problem (both are adult tiers, neither ships on Steam) but it is duplication, and it made
+  `publish.ps1` emit a second, content-less `ogmmga-spicy` archive that **overwrote the real one**.
+  Guarded for now by publishing only the tier a stage is *for*; the real fix is the chained release
+  version this was always expected to need — cook Spicy stamping a release that includes Spicy, then
+  base the SuperSpicy cook on *that*.
+- **Loc packs are not published at all** — `publish.ps1` only walks `Plugins/GameFeatures`. Moot
+  while the packs hold zero assets (#18/#19), but it must grow a `Plugins/Localization` arm.
+- **Container-format contradiction** — see TB-ci-cook O-F.
 
 #### The audit gate (`CI/audit.ps1`, Stage 6)
 
