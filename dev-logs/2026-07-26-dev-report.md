@@ -10,9 +10,11 @@ June ended with a city that builds itself. July stopped building the world and s
 
 The month got a name — **CoreX-M1** — borrowed from the EA design flow: *prove out the X*. Before you make content, you de-risk the core technologies a viable game needs, using placeholders instead of art. Not "make the first level." Make the machinery the first level will one day sit on, and prove it works.
 
-Two pillars. One you can see: the **front end** — the thing that happens between double-clicking the icon and standing in the world. One you can't: the **pipeline** that turns a source tree into something a player can install. July built both, and the honest way to tell the month is as two parallel stories.
+Two pillars. One you can see: the **front end** — the thing that happens between double-clicking the icon and standing in the world. One you can't: the **pipeline** that turns a source tree into something a player can install. July drove hard at both, and the honest way to tell the month is as two parallel stories.
 
 By the end of it, MGA boots from a desktop shortcut, shows a splash, asks your age, tells you what you're about to see, opens a main menu, lets you set your resolution and your volume levels and your key bindings and your language, remembers all of it, and quits cleanly. None of that is gameplay. All of it is the difference between a project and a product.
+
+**To be clear about where that leaves the milestone: CoreX-M1 is not finished.** Most of July was spent driving at it, and the two pillars below are the bulk of that work — but the milestone doesn't get declared done until the content packs hold actual placeholder content, the remaining control-screen pieces land, the main menu correctly greys out what isn't implemented yet, and the whole thing has been verified in a packaged build rather than in the editor. Those gaps are real and they're tracked. This is a progress report, not a finish line.
 
 ---
 
@@ -112,6 +114,20 @@ For a solo project the expensive mistake isn't buying an asset. It's spending a 
 
 ---
 
+## Following Along Between Reports
+
+These reports come out once a month, which is a long time to wait to find out whether anything moved. So the work is now tracked in the open, on a public board:
+
+**→ [MGA — Dev Board](https://github.com/users/Aridecan/projects/1)**
+
+It's a Kanban board — a column per state, cards moving left to right as work progresses. The columns are **Backlog → Todo → In Progress → In Review → Done**, and each card is a real task with the actual detail attached: what it is, why it's being done, what's blocking it, and what was decided. Clicking a card gets you the discussion, not just a title.
+
+Everything in this report exists on that board somewhere, and so does everything in the "What's Next" list below. If you want to know what's being worked on *today* rather than a month from now, that's the place — including the unglamorous half that never makes it into a monthly write-up.
+
+Two honest caveats. It's a **development** board, so it's dense with engine and pipeline work and won't always be readable if you're here for the story. And there's a second, private board for story and lore, for the obvious reason that a public list of plot tasks would spoil the game for everyone reading it.
+
+---
+
 ## By the Numbers
 
 - **2** pillars in the milestone: front-end framework, build pipeline
@@ -135,9 +151,10 @@ For a solo project the expensive mistake isn't buying an asset. It's spending a 
 ## What's Next
 
 - **Fill the loadables.** The content packs are proven as *plumbing* and empty as *content*. Next is a machine-translation pass over the string tables so the localization packs have something in them, and real placeholder content in the tiers.
-- **Finish the front end.** Gamepad glyphs in the rebind rows, the analog sensitivity and dead-zone controls, and the main-menu buttons that should be visibly disabled until there's a save system behind them.
+- **Finish the front end *for the main menu*.** Gamepad glyphs in the rebind rows, the analog sensitivity and dead-zone controls, and the main-menu buttons that should be visibly disabled until there's a save system behind them. Worth being precise about the scope of that word: everything above is the **out-of-game** front end. The **in-game** front end — HUD, pause and inventory menus, the whole interface you use while actually playing — hasn't been started, and isn't part of this milestone.
 - **Two known bugs, still open.** The pre-engine splash renders a corrupted character at the end of each line — root-caused this week to a version-control encoding setting that silently mangles non-ASCII text *only on the build machine*, so it never reproduced locally. And the UI scale slider does nothing: also root-caused (it was driving the wrong scaling hook — the game viewport recomputes its own scale every frame and overrode it), fixed in source, not yet verified in a packaged build.
-- **Then: gameplay.** The milestone was always a foundation, not a feature. Its exit condition is that the boring, load-bearing, invisible things are done — so that what comes after can be the game.
+- **Close out CoreX-M1.** The milestone is a foundation, not a feature, and it exits when the boring load-bearing things are actually finished and proven in a packaged build — not when they mostly work on the dev machine. The remaining items are on the board.
+- **Then: gameplay.** Which is the entire point of building a foundation.
 
 June's report ended with "the first city was built by hand; the second one is learning to build itself." July's ending is less romantic and possibly more important: **there is now a machine that turns this project into something a person can install and run.**
 
