@@ -45,9 +45,26 @@ are overridden.
 - **Base / Core** ships a **featureless body with the Twitch-safe areas covered** — the same
   stream-safe minimum-cover standard as every Core outfit. Night runs exist in the base game at that
   standard, with the stealth and exposure mechanics fully present.
-- **Spicy** ships the **full body, without the Twitch-safe coverage**, and *overrides the base body*.
-- The **mechanics never change** across tiers. Only what the override chain resolves the body and
-  outfit to.
+- **Spicy** ships the **full body, without the Twitch-safe coverage**, plus **clothing destruction**,
+  and *overrides the base body*. Reference level: **Baldur's Gate 3 / Conan Exiles** — nudity, not
+  explicit content.
+- **SuperSpicy** is **mainly animations layered on top of Spicy**. It does not replace the body
+  again; Spicy already carries it.
+- The **mechanics never change** across tiers. Only what the override chain resolves the body,
+  outfit, and animation set to.
+
+> **The two boundaries are not the same line.** The **Steam boundary** sits between **Core and
+> Spicy** — nothing above Core is present in the Steam container. The **explicit-content boundary**
+> sits between **Spicy and SuperSpicy** — Spicy is BG3-level nudity, SuperSpicy is where explicit
+> material lives. Keeping the Steam cut at the lower of the two is a deliberate product decision
+> (Core stays Twitch-safe and stream-legal by construction; see the outfit standard), not a legal
+> minimum.
+
+> **SuperSpicy overrides a different kind of thing, and that is a third mechanism.** M1 proved
+> override on **C++ behaviour** (a polymorphic provider). M2's stretch proves it on **assets** (a
+> skeletal mesh). SuperSpicy needs it on **animation** — linked anim layers, montage sets, or an
+> anim-BP override registered at activation. None of the three are the same code path. This is an
+> **M3 problem**; it is recorded here so it is not mistaken for free once the mesh swap works.
 
 This keeps the base mode a whole game rather than half a game, keeps gameplay logic on the safe side
 of the Steam compliance boundary, and reduces the tier-delivered payload to a pure asset swap — the
@@ -153,7 +170,9 @@ available to add:
 - **The audit gate stays green** — the Spicy body must not appear in any base container.
 - The **acceptance matrix grows a body-identity assertion**: config 1 shows the covered body,
   configs 2 and 3 show the full body, config 4 (SuperSpicy without Spicy) falls back to the covered
-  body with the usual skip message.
+  body with the usual skip message. **Configs 2 and 3 assert the same body** — SuperSpicy contributes
+  animation, not a second body — so config 3 remains distinguishable only by the existing
+  content-advisory rank assertion until M3 adds an animation-set assertion.
 
 ---
 
