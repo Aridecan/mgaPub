@@ -125,7 +125,7 @@ Status as of **2026-07-26** (P4 through change 132). Issue numbers are `Aridecan
 | **3** | Video/Audio settings backend (`UOgmMgaGameUserSettings` + Scalability + submixes) | I write C++, Peter wires UMG | M | **DONE** (P4 113/114), verified in Standalone — Video + UI-scale + 8-channel submix audio + the `WBP_SettingsTabBase` tab framework. Outstanding = **packaged-build verification** + polish (#16) |
 | **4** | Controls rebind (Enhanced Input user-settings; `IA_`/`IMC_` assets; rebind panel) — build spec: [TB — Controls Rebind](../technical-briefs/TB-controls-rebind.md) | split | M | **NEARLY DONE** (P4 116–132) — category-cut `IA_`/`IMC_` assets, collapsible categorized screen, click-to-capture rebind, layer- *and* context-scoped conflict detection, canonical order, per-cell clear, settings-wide Reset, full loc pass. Outstanding: gamepad glyphs in cells, Move/Look axis sub-groups, M1/M2 checkbox function, and **the scalar rows — config fields exist since CL 116 but have no UI** (#15) |
 | **5** | DLC content — populate the in-scope loadables with placeholder content | Peter drives, I guide | M | **BARELY STARTED** — all 8 plugins exist, but Spicy/SuperSpicy hold only their `GameFeatureData` + `ST_ContentAdvisory`, and the **loc packs contain zero assets**. Mount/activate proof unbuilt; ChunkIds still `-1`. **Scope now 5 loadables — LocVoice cut (#19).** LocText content comes from the MT string-table pass (#18), which must land **before** the WS6 cook spike |
-| **6** | CI cook all paks/DLCs (`mga-weekly Full`; tier + loc paks; leak gate) | I drive (build scripts) | L→M* | **NOT STARTED — critical path.** Base single-pak cook green (first green 2026-07-12). Multi-pak split unreproduced on 5.8; DLC-on-DLC release-version chaining unresolved; **and the tiers now carry BINARIES** (the Spicy/SuperSpicy C++ provider modules), so the cook must build + stage per-platform modules — heavier than the content-only 5.3 demo |
+| **6** | CI cook all paks/DLCs (`mga-weekly Full`; tier + loc paks; leak gate) | I drive (build scripts) | L→M* | **LARGELY DONE.** Base + per-tier + per-loc-pack cooks all green on 5.8, including the tier **BINARIES** (Spicy/SuperSpicy C++ provider modules) that made this heavier than the content-only 5.3 demo. Base tier leak fixed + gated (P4 137/138/140/141); 4-config acceptance matrix passes on real CI artifacts; French shipped as a 5.8 KB installable pack; **DLC-on-DLC dependency resolved via `-DlcPluginOnly`, not the planned release-version chain** (#26, P4 153), with tier isolation asserted by `audit.ps1 -DlcStageRoot`. Remaining: ChunkIds/cook-stages, and the IoStore-vs-`.pak` container question (TB-ci-cook O-F) |
 
 \* **WS6 de-risked (2026-07-18):** Peter shipped per-plugin pak emission in **UE 5.3** (demo: a cube that
 appears/disappears with its pak) — so this is *reproduce on 5.8*, not research. The enabling discipline —
@@ -144,13 +144,36 @@ version** (`0.1.0-prod`) so each DLC diffs against it. Full recipe → [[dlc-pak
 **Already free in 5.8:** GameFeatures stable + project scaffolded (plugins, build.cs, `.uplugin`,
 AssetManager scan, the loadable plugins) → skip the whole first half of the 5.3 video, go straight to the cook.
 
-### The real remaining unknown — DLC-on-DLC dependencies (the spike's actual job)
+### DLC-on-DLC dependencies — RESOLVED 2026-07-27 (#26), and not the way we planned
 The 5.3 video cooked ONE DLC. M1 has **5 in scope with a dependency graph** (`SuperSpicy → Spicy`;
 `LocText_<Tier> → <Tier>`) — the `LocVoice_* → <Tier>` edges are gone with the voice cut (#19), which
-takes the graph from 8 nodes to 5 but does **not** remove the hard part: `SuperSpicy → Spicy` is still a
-DLC depending on a DLC. Open: how `-BasedOnReleaseVersion` handles that — probably a **chained release
-version** (base → cook Spicy stamping a release *incl.* Spicy → cook SuperSpicy based on that) or a fixed
-cook order. First thing the spike nails down.
+takes the graph from 8 nodes to 5 but does **not** remove the hard part: `SuperSpicy → Spicy` is a DLC
+depending on a DLC.
+
+**The planned answer was a chained release version** (base → cook Spicy stamping a release *incl.*
+Spicy → cook SuperSpicy based on that). **We did not use it, because it does not work.** A DLC cook
+records base packages as *already-cooked* rather than as its own, so `-createreleaseversion` on a DLC
+cook yields a registry of that DLC's packages only — not the base∪Spicy union the chain needs. There
+is no supported way to merge two cooked asset registries, and the scheme would have made the tiers
+strictly order-dependent besides.
+
+**What we used instead: `-DlcPluginOnly`**, which changes the cook rule from *"cook what the base
+release lacks"* to *"cook only what lives in THIS plugin"*. `CookRequestCluster.cpp` rejects
+out-of-plugin packages with `ESuppressCookReason::NotInCurrentPlugin`, and
+`RecordDLCPackagesFromBaseGame` (`CookOnTheFlyServer.cpp`) returns early without reading the based-on
+registry at all. The dependency graph stops mattering to the cook entirely: no ordering, no extra
+release directories, and the bug becomes inexpressible rather than merely diffed away.
+
+**The trade-off is real and is now a content rule.** Anything a tier references outside its own plugin
+is assumed present in the base game; if it is not, the failure is a *missing asset at runtime, not a
+cook error*, and the leak audit cannot catch it (it asserts that content which should be absent is
+absent, not that content which should be present is present). So tier content must reference only its
+own plugin or the base. Shared-but-not-in-base content belongs in the base cook, or in a plugin the
+tier depends on — never smuggled in through a dependency walk.
+
+Gated by `CI/audit.ps1 -DlcStageRoot`, which asserts no tier container holds another delivered
+plugin's content — an assertion rather than a comment precisely *because* the fix is a cooker flag,
+and a flag can be dropped or renamed between engine versions while the cook still goes green.
 
 **Second unknown, new since the 5.3 recipe: the tiers now carry BINARIES.** Spicy and SuperSpicy grew C++
 modules for the content-advisory providers, so the DLC cook must build and stage a per-platform tier
@@ -240,13 +263,14 @@ matrix needs packaged installs.
 
 #### Still open in WS6
 
-- **DLC-on-DLC bleed.** A `-DLCName=SuperSpicy` cook also stages `Spicy/Content/Spicy.uasset`,
-  because SuperSpicy depends on Spicy and the base release does not contain Spicy. Not a compliance
-  problem (both are adult tiers, neither ships on Steam) but it is duplication, and it made
-  `publish.ps1` emit a second, content-less `ogmmga-spicy` archive that **overwrote the real one**.
-  Guarded for now by publishing only the tier a stage is *for*; the real fix is the chained release
-  version this was always expected to need — cook Spicy stamping a release that includes Spicy, then
-  base the SuperSpicy cook on *that*.
+- ~~**DLC-on-DLC bleed.**~~ **FIXED 2026-07-27 (#26, P4 153).** A `-DLCName=SuperSpicy` cook also
+  staged `Spicy/Content/Spicy.uasset`, because SuperSpicy depends on Spicy and the base release does
+  not contain Spicy. Not a compliance problem (both are adult tiers, neither ships on Steam) but it
+  is duplication, and it made `publish.ps1` emit a second, content-less `ogmmga-spicy` archive that
+  **overwrote the real one**. Fixed by cooking DLCs `-DlcPluginOnly` rather than by the chained
+  release version originally planned — see the resolved section above for why the chain does not
+  work. Now gated: `audit.ps1 -DlcStageRoot` asserts tier isolation, and the audit stage runs on
+  `SCOPE=Dlc` as well as `Full`. Publishing one tier per stage remains as defence in depth.
 - **Loc packs are not published at all** — `publish.ps1` only walks `Plugins/GameFeatures`. Moot
   while the packs hold zero assets (#18/#19), but it must grow a `Plugins/Localization` arm.
 - **Container-format contradiction** — see TB-ci-cook O-F.
