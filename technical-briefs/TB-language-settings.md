@@ -252,9 +252,22 @@ Core) + `[Settings.Language]` per-module keys, `[Boot.Content]` preserved.
    fold the fallback policy into that decision rather than branching here now.
 2. **Voice apply (our system)** — mount the chosen `LocVoice` pack per module. Voice is currently
    **persisted but not acted on**; needs the runtime voice-pack mount + selection.
-3. **ABM applies the persisted language at boot** — the ABM *reads* `[Boot.Language]` but B2 does not
-   yet call `SetCurrentLanguage`, so a persisted text choice isn't applied until the running screen
-   re-applies it. Wire B2 to apply the resolved culture at startup.
+3. ~~**ABM applies the persisted language at boot**~~ - **DONE 2026-07-27 (P4 145), but NOT in B2.**
+   `UAridGBootLanguageSubsystem` (a `UGameInstanceSubsystem` in the OGMMGA module) reads
+   `FAridGBootSettings` and applies the persisted text language.
+   **B2 cannot do this, and the original instruction here was wrong.** B1/B2 run at
+   `PostConfigInit`; the engine initialises its own text localization much later
+   (`PreObjectSystemReady`) and overwrites anything set before it - observed as B1 at frame 0 and
+   the engine's culture decision ~1.6s afterwards. A GameInstance subsystem is the earliest
+   correct point: after localization init and after loc packs mount, but before the boot map and
+   any widget, so screens come up already translated with no flash of English.
+   **Gotcha it must work around:** `InitGameTextLocalization` runs on every game/PIE start and,
+   when the language has NOT changed, reloads with `ELocalizationLoadFlags::Game` only - omitting
+   `Additional`, which is where plugin (loc-pack) data lives. A game starting *already* set to a
+   pack-delivered language therefore drops that pack and falls back to source text. The subsystem
+   calls `FTextLocalizationManager::RefreshResources()` (which does include `Additional`) even
+   when the language is already active. Symptom if this regresses: choose French, restart, and the
+   game is English while the editor stays French.
 4. **⚠ Voice None-vs-unset wrinkle** — `FAridGBootSettings::LoadOrCreate` re-defaults an *empty*
    `VoiceLanguage` to `TextLanguage` **every boot**, clobbering an explicit **None** voice next launch
    (global `[Boot.Language]` scalar only — the `[Settings.Language]` per-module section is untouched, so
@@ -270,6 +283,45 @@ Core) + `[Settings.Language]` per-module keys, `[Boot.Content]` preserved.
 8. **Other tabs** — Game Play / Video / Audio / Controls / Sensitive Content are placeholder pages.
    Video/Audio reuse `UGameUserSettings`; Sensitive Content = the Content category of
    [TB — Settings Menu](TB-settings-menu.md).
+
+---
+
+## Localization delivery - settled 2026-07-27 (P4 145)
+
+**A LocText pack carries native `.locres`, not replacement StringTable assets.** UE has a purpose-
+built path: the pack declares `LocalizationTargets` in its `.uplugin`, `FPluginManager` gathers
+`<Pack>/Content/Localization/<Target>/`, and `HandleLocalizationTargetsMounted()` fires on mount
+(with a matching unmount). The target NAME is only a folder label and need not match the declaring
+plugin - which is what lets `LocText_Spicy_fr` deliver the Spicy tier's translations without the
+Spicy tier carrying them. Replacement StringTables would be same-path shadowing, which
+TB-boot-loader R10 rules out.
+
+**The base game ships its SOURCE culture as a real localization target.**
+`[Internationalization] +LocalizationPaths=%GAMEDIR%Content/Localization/Core` in `DefaultGame.ini`.
+Not cosmetic: with no resource for en-CA, selecting French loaded the pack and replaced the display
+strings, and selecting en-CA afterwards loaded *nothing*, so there was nothing to overwrite them
+with - the UI stayed French while the active culture really was en-CA. A one-way door.
+
+**...and only that culture is staged.** `[/Script/UnrealEd.ProjectPackagingSettings]
++CulturesToStage=en-CA`. The Core target folder holds working data for every culture we translate,
+so without this the base build would swallow French instead of shipping it as a download. **Adding a
+language to `CulturesToGenerate` must NOT add it here.** Note the leak-audit gate would not catch a
+mistake: it asserts on DLC-delivered *plugin* content, and this is project content.
+
+**Language names are ENDONYMS.** `FCulture::GetNativeName()`, not `GetDisplayName()` - "English
+(Canada)" and "francais", each in its own language regardless of the active UI culture. Convention
+everywhere (Steam, Windows, browsers) and for a reason: a player stranded in a language they cannot
+read still has to find their way out. Side benefit - the labels no longer depend on the active
+culture, so they cannot go stale when it changes. "None" still localizes; it is a UI word.
+
+**A culture is only offered if the engine can actually resolve text for it.** The table intersects
+each tier's pack-derived cultures with
+`FTextLocalizationManager::GetLocalizedCultureNames(Game | Additional)`. A pack name is a claim;
+localization data is proof. The `LocText_*_en-US` packs are the live example - a PrimaryAssetLabel
+asset and zero translations, so they pass any file-based test while changing nothing on screen.
+`Engine` is excluded from the flags on purpose: the engine ships its own fr/de/ja for engine
+strings, which says nothing about whether MGA is translated. The source culture (en-CA) is always
+offered regardless, so there is always a way back to the language the game is authored in.
 
 ---
 
