@@ -39,8 +39,8 @@ and materials instead of an `FText`**. M1 proved later-DLC-overrides-earlier on 
 surface — a line of warning text. Delivery Girl proves it on the payload the whole game depends on,
 in a place where it earns its keep rather than existing as a tech demo.
 
-**Tier boundary (decided 2026-07-27):** the night loop **ships in Core**; only the attire and the body
-are overridden.
+**Tier boundary (decided 2026-07-27):** the night loop **ships in Core**; only the body, the attire,
+and the animation set are overridden.
 
 - **Base / Core** ships a **featureless body with the Twitch-safe areas covered** — the same
   stream-safe minimum-cover standard as every Core outfit. Night runs exist in the base game at that
@@ -52,6 +52,11 @@ are overridden.
   again; Spicy already carries it.
 - The **mechanics never change** across tiers. Only what the override chain resolves the body,
   outfit, and animation set to.
+
+This keeps the base mode a whole game rather than half a game, keeps gameplay logic on the safe side
+of the Steam compliance boundary, and reduces the tier-delivered payload to an asset swap — the
+cheapest thing to keep out of a container and the easiest thing for the leak-audit gate to police.
+See [Steam adult-content boundary](../gdd/content-and-dlc.md).
 
 > **The two boundaries are not the same line.** The **Steam boundary** sits between **Core and
 > Spicy** — nothing above Core is present in the Steam container. The **explicit-content boundary**
@@ -65,11 +70,6 @@ are overridden.
 > skeletal mesh). SuperSpicy needs it on **animation** — linked anim layers, montage sets, or an
 > anim-BP override registered at activation. None of the three are the same code path. This is an
 > **M3 problem**; it is recorded here so it is not mistaken for free once the mesh swap works.
-
-This keeps the base mode a whole game rather than half a game, keeps gameplay logic on the safe side
-of the Steam compliance boundary, and reduces the tier-delivered payload to a pure asset swap — the
-cheapest thing to keep out of a container and the easiest thing for the leak-audit gate to police.
-See [Steam adult-content boundary](../gdd/content-and-dlc.md).
 
 > **Compliance note, and the reason the base body must be featureless.** The character pipeline
 > gives every female character **one shared base body mesh**, so that mesh ships in the Steam
@@ -105,7 +105,7 @@ cook.
 4. **M1's controls and audio close the loop** — the `IA_`/`IMC_` assets from M1 WS4 drive a real
    pawn for the first time, and footsteps land in the M1 submix chain.
 
-**What M2 deliberately does not prove: the mesh override.** Base-body-vs-Spicy-body is the highest-value
+**What M2 does not commit to prove: the mesh override.** Base-body-vs-Spicy-body is the highest-value
 X in this line of work, and it is a **stretch goal** here, otherwise M3. You cannot prove a body
 *override* until you have a body, a spawn pipeline, and a packaged build that can display one.
 **M2 builds the thing M3 overrides.** That sequencing is intentional, not a gap.
@@ -123,7 +123,10 @@ X in this line of work, and it is a **stretch goal** here, otherwise M3. You can
   future styles drop in with zero per-style offset.
 - Renders through `M_Master_Character` / `M_Master_Hair`.
 - **Character Blueprint spawns in the documented order:** scale → morph → hair → *(clothing step,
-  empty)* → Chaos Cloth init.
+  empty)* → cloth init. With no clothing and rigid hair, the cloth-init step has nothing to
+  initialise in M2 — it exists so that the order is already correct when M3 puts something in it.
+  That order matters: scale and morph must be applied **before** physics init, because Chaos Cloth
+  requires stable vertex positions at init time.
 - **No clothing.** The empty clothing step is deliberate — it is M3's insertion point.
 - **Hair is RIGID in M2** (decided 2026-07-27). Simulation — Chaos Cloth or bone-based — is M3. This
   keeps the project's first character import boring, and keeps the first Chaos Cloth integration off
@@ -237,7 +240,9 @@ Then WS1 → WS2 → WS3 on the character side, WS5 behind WS4 on the world side
   `-nullrhi`, and each `DynamicRoadNetwork` is one superblock. M2 accepts a **one-time manual bake**
   with the output committed to P4: CI never re-bakes, so the missing automation is a future
   optimisation rather than a blocker.
-- **Chaos Cloth may arrive earlier than planned** via the hair. See Pillar A.
+- **Hair authored without a bone chain would be an expensive mistake.** Retired as a *simulation*
+  risk — hair is rigid in M2 — but the export decision is live and one-way: static-mesh hair means
+  re-authoring and re-exporting every hairstyle in M3. See Pillar A.
 - **Nessa's mesh is in Blender, not UE.** "Mostly ready" plus a hairstyle is the *art*; export,
   skeleton, and skinning are engineering that has not started.
 - **GMC is a runtime dependency forever.** Unlike CityBLD/RoadBLD it cannot be disabled at cook, so
