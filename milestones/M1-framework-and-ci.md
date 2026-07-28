@@ -61,12 +61,34 @@ Two pillars: **(A) front-end framework**, **(B) build pipeline**. No gameplay, n
 > Deferred, not deleted (#19). This also simplifies WS6: the `LocVoice_* → tier` edges drop out of the
 > DLC-on-DLC dependency graph the cook spike has to solve.
 
-- **Each of the 5 in-scope loadables populated** with placeholder content that demonstrably
+> **SCOPE CHANGE 2026-07-28 (Peter): the three `*_en-US` LocText packs are replaced by
+> `LocText_Base_fr`.** **5 loadables → 3** (Spicy · SuperSpicy · **LocText_Base_fr**). Two independent
+> reasons, either sufficient:
+>
+> 1. **They prove nothing.** en-US is effectively the source culture, so a "translation" pack for it
+>    is a no-op by construction — it would demonstrate the loc-pack *mechanism* only in the one case
+>    where the mechanism has nothing to do.
+> 2. **They cannot be built at all** (#28, found 2026-07-27). A hyphen in a DLC plugin name produces
+>    an invalid Zen project id — `FApp::GetZenStoreProjectIdForProject` does no sanitisation — so the
+>    cook dies with `Failed to delete oplog on the ZenServer`. This is not a property of these three
+>    packs but of every region-qualified culture: `fr` builds, `pt-BR` / `zh-Hans` / `en-GB` cannot.
+>    A definition of done cannot require artifacts that are currently impossible to produce.
+>
+> **`LocText_Base_fr` replaces them and is a stronger proof than all three combined**: a real
+> translation of a real target (the Core string tables), cooked as a **5.8 KB** installable pack,
+> verified by Peter in a packaged build across install → switch → restart → switch back → restart, and
+> confirming the partial-translation fallback (Option (a)) with French line 1 over English lines 2–3.
+>
+> **What is NOT dropped:** the packs stay in the depot (like LocVoice — defer, do not delete), and
+> #28 must still be solved before shipping any regional language. This narrows M1's *proof
+> obligation* to what can actually be demonstrated; it does not narrow the loc design.
+
+- **Each of the 3 in-scope loadables populated** with placeholder content that demonstrably
   **mounts (B3)** and **activates (B7)** — the "cube appears only when its pak is present" proof, per
-  tier + per loc pack. For the LocText packs, that content is a **machine-translated pass over the
-  project's 8 string tables** (#18) — currently they hold zero assets, so there is nothing to cook.
-  French is the leading candidate: a plausible real ship language, and ~15–20% longer than English so
-  it surfaces UI overflow while the screens are still cheap to change.
+  tier + per loc pack. For the loc pack, that content is a **machine-translated pass over the
+  project's string tables** (#18). French was chosen as the leading candidate — a plausible real ship
+  language, and ~15–20% longer than English so it surfaces UI overflow while the screens are still
+  cheap to change — and it is the one that shipped.
 - **CI (`mga-weekly Full`) cooks the full pak set** — base game + every tier pak (Spicy / SuperSpicy)
   + every **LocText** pak — with a **leak-audit gate** (no base↔DLC cross-references).
 
@@ -124,7 +146,7 @@ Status as of **2026-07-26** (P4 through change 132). Issue numbers are `Aridecan
 | **2** | Main-menu wiring (Settings + Exit; disable the rest; optional build stamp / SubscribeStar) | Peter drives, I guide | S | **PARTIAL** (P4 98–100) — seven buttons exist; Settings pushes, Exit quits. Outstanding: **disable New Game / Continue / Load Game / Mods** + build stamp (#14). The temp Continue→content-warning dump hook has been pulled |
 | **3** | Video/Audio settings backend (`UOgmMgaGameUserSettings` + Scalability + submixes) | I write C++, Peter wires UMG | M | **DONE** (P4 113/114) — Video + UI-scale + 8-channel submix audio + the `WBP_SettingsTabBase` tab framework. **VIDEO + UI SCALE VERIFIED IN PACKAGED BUILDS (Peter, 2026-07-27), including persistence:** his standing routine on each new build is drop the resolution, switch to windowed, lower the UI scale, restart — and all three survive. That covers the apply path *and* the `GameUserSettings.ini` save/load round-trip, which is the half most likely to fail silently (and did: the UI-scale slider drove nothing until P4 143). **AUDIO slider verification is DEFERRED TO M2 (Peter, 2026-07-27):** with no sound in an M1 build a submix slider that silently fails and one that works are indistinguishable, so the check only becomes meaningful alongside M2's ambient bed and footsteps — it lands in M2 Pillar C. Polish remains under #16 |
 | **4** | Controls rebind (Enhanced Input user-settings; `IA_`/`IMC_` assets; rebind panel) — build spec: [TB — Controls Rebind](../technical-briefs/TB-controls-rebind.md) | split | M | **NEARLY DONE** (P4 116–132, **156**) — category-cut `IA_`/`IMC_` assets, collapsible categorized screen, click-to-capture rebind, layer- *and* context-scoped conflict detection, canonical order, per-cell clear, settings-wide Reset, full loc pass. **2026-07-27 (P4 156), both wired + verified by Peter: gamepad glyphs in cells** (`UAridGInputGlyphLibrary` — per-KEY lookup, because `CommonActionWidget` resolves through the *live* input device and would blank the gamepad column the moment someone typed) **and M1/M2 checkboxes seeded from pad-layer membership** (`UAridGInputLayerLibrary` — reads the layer IMCs, so a chord stays defined by the asset that decides behaviour). Outstanding: Move/Look axis sub-groups and **the scalar rows — config fields exist since CL 116 but have no UI** (#15). **The M1/M2 checkbox TOGGLE behaviour is DEFERRED TO CoreX-M3 (Peter, 2026-07-27)** — seeding is done, but making a tick *move* a binding between layer contexts cannot be verified until something consumes the bindings, and no action bar exists before M3. Same reasoning the TB already applies to runtime consumption of bindings generally |
-| **5** | DLC content — populate the in-scope loadables with placeholder content | Peter drives, I guide | M | **BARELY STARTED** — all 8 plugins exist, but Spicy/SuperSpicy hold only their `GameFeatureData` + `ST_ContentAdvisory`, and the **loc packs contain zero assets**. Mount/activate proof unbuilt; ChunkIds still `-1`. **Scope now 5 loadables — LocVoice cut (#19).** LocText content comes from the MT string-table pass (#18), which must land **before** the WS6 cook spike |
+| **5** | DLC content — populate the in-scope loadables with placeholder content | Peter drives, I guide | M | **DONE (2026-07-28)** — **scope is 3 loadables**: LocVoice cut (#19, 2026-07-26) and the three `*_en-US` LocText packs replaced by `LocText_Base_fr` (2026-07-28 — they prove nothing *and* are uncookable per #28). All three demonstrably mount and activate in a **packaged build**: Spicy and SuperSpicy carry `GameFeatureData` + `ST_ContentAdvisory` and compose the advisory 1→2→3 lines, with the negative case (SuperSpicy without Spicy) correctly refused and reported; `LocText_Base_fr` is a 5.8 KB installable translation verified across install → switch → restart. B3 now names what is installed and *why* anything was skipped. Remaining: ChunkIds still `-1` (cook-stage work, not a proof gap) |
 | **6** | CI cook all paks/DLCs (`mga-weekly Full`; tier + loc paks; leak gate) | I drive (build scripts) | L→M* | **LARGELY DONE.** Base + per-tier + per-loc-pack cooks all green on 5.8, including the tier **BINARIES** (Spicy/SuperSpicy C++ provider modules) that made this heavier than the content-only 5.3 demo. Base tier leak fixed + gated (P4 137/138/140/141); 4-config acceptance matrix passes on real CI artifacts; French shipped as a 5.8 KB installable pack; **DLC-on-DLC dependency resolved via `-DlcPluginOnly`, not the planned release-version chain** (#26, P4 153), with tier isolation asserted by `audit.ps1 -DlcStageRoot`. Remaining: ChunkIds/cook-stages, and the IoStore-vs-`.pak` container question (TB-ci-cook O-F) |
 
 \* **WS6 de-risked (2026-07-18):** Peter shipped per-plugin pak emission in **UE 5.3** (demo: a cube that
