@@ -98,6 +98,7 @@ The GDD is the central design reference. Start with **[gdd.md](gdd/gdd.md)** for
 | Brief | UCs | Contents |
 |-------|-----|----------|
 | [Jobs](creative-briefs/CB-jobs.md) | 7 | Waitress, courier, mechanic, hacker, bounty hunter, unlock, reputation |
+| [Delivery Girl](creative-briefs/CB-delivery-girl.md) | 3 | Game mode premise, day/night channels, dead-drop key hunt, highlight widget |
 
 ### Progression
 
