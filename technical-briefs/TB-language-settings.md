@@ -329,6 +329,43 @@ asset and zero translations, so they pass any file-based test while changing not
 strings, which says nothing about whether MGA is translated. The source culture (en-CA) is always
 offered regardless, so there is always a way back to the language the game is authored in.
 
+### String-table NAMESPACES must be unique across ALL plugins (found 2026-07-28, P4 164)
+
+A localized string's identity is `(namespace, key)` - nothing else. Not the asset, not the plugin,
+not the pak it shipped in. Two string tables in two different plugins that share a namespace and a
+key are **the same string** as far as the localization manager is concerned, and only one of their
+translations can survive.
+
+That is exactly what happened the first time a tier was translated. Base, Spicy and SuperSpicy each
+had an asset called `ST_ContentAdvisory`, each with namespace `ST_ContentAdvisory` and a `Warning`
+key. In English everything looked perfect - the advisory screen composed 1 -> 2 -> 3 lines through
+every acceptance run and every packaged test, because a collision costs nothing while nothing is
+translated. The moment French existed for the tiers, the engine said:
+
+```
+LogTextLocalizationResource: Warning: Text translation conflict for
+                             namespace "ST_ContentAdvisory" and key "Warning".
+```
+
+and the screen showed the base line in French with both tier lines still in English.
+
+**Rule:** a string table's namespace must be unique **project-wide**, including across plugins. The
+base game's convention (namespace = asset name, e.g. `ST_AgeVerification`) is only safe while asset
+names are unique; a tier reusing a base asset name silently breaks it. Tier tables are therefore
+suffixed - `ST_ContentAdvisory_Spicy`, `ST_ContentAdvisory_SuperSpicy`.
+
+**Two traps worth knowing when fixing one of these:**
+- Renaming the asset leaves a **redirector**, and `FText::FromStringTable` takes a **path string** -
+  so the editor's *Fix Up Redirectors* cannot see the reference and will not update it. The C++ path
+  must be edited by hand.
+- Changing the namespace changes the PO `msgctxt`, which **orphans existing translations** - the
+  archive keys them to the old identity. Expect to re-apply them after any namespace change.
+
+**How to check:** the PO's `msgctxt` is the namespace. After a gather, `msgctxt "<Namespace>,<Key>"`
+should differ for every target. At runtime, grep the log for `Text translation conflict` - that
+warning is the whole diagnosis, and it is the only thing that catches a collision an English build
+cannot show you.
+
 ---
 
 ## Open Items / Holes (Peter growing)
