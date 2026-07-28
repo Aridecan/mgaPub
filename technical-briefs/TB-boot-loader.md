@@ -364,6 +364,34 @@ Three artifacts:
   [CoreX-M1](../milestones/M1-framework-and-ci.md); hooks = `UGameFeatureAction` +
   `IGameFeatureStateChangeObserver`.
 
+- **R12 — B7 owns tier activation; the engine no longer does (2026-07-28).** R11 moved the content
+  warning after activation, but nothing had moved *activation* itself. `BuiltInInitialFeatureState:
+  Active` left the timing with the engine: `LoadBuiltInGameFeaturePlugins` runs inside `UEngine::Init()`
+  (via `UAssetManager::StartInitialLoading` → `OnAssetManagerCreated` → `InitGameFeatureManager`) and,
+  with `bForceSyncLoading`, completes there. Measured in a packaged `0.1.0-cxm1.56` run: both tiers
+  reached `Active` at `48.063`, `Game Engine Initialized` at `48.069`, `Browse()` to the boot map at
+  `48.081`, and the age-gate widget at `48.103` — **activation finished 40 ms before the age gate
+  existed**. Two contracts were therefore false in the shipping build:
+  - **B5 "before any mature tier activates"** (also an M1 DoD line) — it was after.
+  - **B7 "tiers activate here"** — nothing activated there, so the screen had nothing to wait for and
+    could only hold on a placeholder. The signal never crossed the Regime-1/Regime-2 boundary because
+    activation lands in the *gap between* them: too late for the Slate screen (which blocks `PreInit`,
+    so waiting on it would deadlock) and too early for any UMG widget.
+
+  **Resolution:** `UAridGGameFeaturePolicy` now **defers** installed tiers in the game — same content
+  gate, but the filter returns `false` and records the plugin URL — and `UAridGActivateTiersAsync`
+  activates them at B7. Activation is a batch call over **all** deferred URLs, never just the
+  most-derived tier: activating SuperSpicy alone raises Spicy to `Registered` only, so Spicy's
+  `GameFeatureActions` never run and its provider never registers. In the **editor** tiers still
+  auto-activate, because no boot flow runs there; editor and packaged behaviour differ by design.
+  The **cook path is untouched** — it is the Steam compliance control.
+
+  **Consequence for CI:** `CI/acceptance.ps1` could previously assert everything with `-ExecCmds=quit`,
+  because activation happened during engine init. It now sits behind an interactive age gate, so the
+  matrix drives the identical activation headlessly via the `AridG.ActivateContentTiers quit` cheat
+  command. That covers the mechanism but **not** the Blueprint link (that `WBP_BootProgress` calls the
+  node), which is verified by playing the boot sequence.
+
 ## Open Items
 
 - **O6 — CI/cook interaction:** whether the boot map + module cook cleanly and whether the

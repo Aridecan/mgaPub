@@ -53,6 +53,21 @@ Two pillars: **(A) front-end framework**, **(B) build pipeline**. No gameplay, n
     in-game action-bar content-remap (that's a gameplay feature).
   - **Language** — already shipped (P4 102/104/105).
 
+> **SCOPE CHANGE 2026-07-28 (Peter): the AUDIO submix sliders' *verification* moves to M2 Pillar C.**
+> The backend is delivered and stays in M1 (P4 113/114 — the 8-channel submix set and its
+> `UOgmMgaGameUserSettings` plumbing, shipped alongside Video). What moves is the **proof**, for one
+> reason: **an M1 build has no sound**, so a submix slider that silently fails and one that works are
+> indistinguishable. Verifying it here would mean recording a "pass" that no observation supports —
+> the precise failure the UI-scale slider already demonstrated, where the control drove nothing at all
+> from P4 116 until it was found and fixed in P4 143, having "worked" in every prior review.
+>
+> The check becomes meaningful the moment M2 has an ambient bed and footsteps, and it lands there
+> against real audio rather than silence. Tracked by **#16**.
+>
+> **What is NOT deferred:** the sliders exist, persist, and round-trip through `GameUserSettings.ini`
+> like the Video settings do. This narrows M1's *proof obligation* to what can actually be observed;
+> it does not narrow the audio design or remove the backend from scope.
+
 ### Pillar B — Build pipeline
 
 > **SCOPE CHANGE 2026-07-26 (Peter): the LocVoice packs are cut from M1** — the voice side is being
@@ -142,7 +157,7 @@ Status as of **2026-07-26** (P4 through change 132). Issue numbers are `Aridecan
 
 | # | Workstream | Owner | Effort | Status |
 |---|-----------|-------|--------|--------|
-| **1** | Boot-flow screens + placeholders (incl. legal B5/B6) | Peter drives (UMG/Slate), I guide | M | **DONE** (P4 105–112) — B0 Slate splash → B5 age gate → B6 legal → B7 progress → B7.5 content advisory → B8 menu. Remaining polish: real art (deferred by design); B7 auto-advance on *real* activation; **B3 driven by a real pak mount — gated on WS6** |
+| **1** | Boot-flow screens + placeholders (incl. legal B5/B6) | Peter drives (UMG/Slate), I guide | M | **DONE** (P4 105–112) — B0 Slate splash → B5 age gate → B6 legal → B7 progress → B7.5 content advisory → B8 menu. **B7 reworked 2026-07-28 (P4 165, TB-boot-loader R12) — DONE and verified.** Tiers used to activate inside `UEngine::Init()`, 40 ms *before* the age-gate widget existed — so B5's "before any mature tier activates" was false and B7 had nothing to wait for (nothing activated there, so the screen could only hold on a placeholder `Btn_Continue`). The policy now defers installed tiers; `UAridGActivateTiersAsync` activates them at B7 and the screen advances on its completion delegate. **Verified by Peter on the published `0.1.0-cxm1.57` install (all 4 acceptance configs + 5 localization tests), which is what closes it: the advisory only composes the tier lines if the boot flow actually drove activation** — the headless CI path deliberately bypasses the UI and cannot prove that link. Remaining polish: real art (deferred by design). B3 is a report, not a mount (R7a) |
 | **2** | Main-menu wiring (Settings + Exit; disable the rest; optional build stamp / SubscribeStar) | Peter drives, I guide | S | **PARTIAL** (P4 98–100) — seven buttons exist; Settings pushes, Exit quits. Outstanding: **disable New Game / Continue / Load Game / Mods** + build stamp (#14). The temp Continue→content-warning dump hook has been pulled |
 | **3** | Video/Audio settings backend (`UOgmMgaGameUserSettings` + Scalability + submixes) | I write C++, Peter wires UMG | M | **DONE** (P4 113/114) — Video + UI-scale + 8-channel submix audio + the `WBP_SettingsTabBase` tab framework. **VIDEO + UI SCALE VERIFIED IN PACKAGED BUILDS (Peter, 2026-07-27), including persistence:** his standing routine on each new build is drop the resolution, switch to windowed, lower the UI scale, restart — and all three survive. That covers the apply path *and* the `GameUserSettings.ini` save/load round-trip, which is the half most likely to fail silently (and did: the UI-scale slider drove nothing until P4 143). **AUDIO slider verification is DEFERRED TO M2 (Peter, 2026-07-27):** with no sound in an M1 build a submix slider that silently fails and one that works are indistinguishable, so the check only becomes meaningful alongside M2's ambient bed and footsteps — it lands in M2 Pillar C. Polish remains under #16 |
 | **4** | Controls rebind (Enhanced Input user-settings; `IA_`/`IMC_` assets; rebind panel) — build spec: [TB — Controls Rebind](../technical-briefs/TB-controls-rebind.md) | split | M | **NEARLY DONE** (P4 116–132, **156**) — category-cut `IA_`/`IMC_` assets, collapsible categorized screen, click-to-capture rebind, layer- *and* context-scoped conflict detection, canonical order, per-cell clear, settings-wide Reset, full loc pass. **2026-07-27 (P4 156), both wired + verified by Peter: gamepad glyphs in cells** (`UAridGInputGlyphLibrary` — per-KEY lookup, because `CommonActionWidget` resolves through the *live* input device and would blank the gamepad column the moment someone typed) **and M1/M2 checkboxes seeded from pad-layer membership** (`UAridGInputLayerLibrary` — reads the layer IMCs, so a chord stays defined by the asset that decides behaviour). Outstanding: Move/Look axis sub-groups and **the scalar rows — config fields exist since CL 116 but have no UI** (#15). **The M1/M2 checkbox TOGGLE behaviour is DEFERRED TO CoreX-M3 (Peter, 2026-07-27)** — seeding is done, but making a tick *move* a binding between layer contexts cannot be verified until something consumes the bindings, and no action bar exists before M3. Same reasoning the TB already applies to runtime consumption of bindings generally |
