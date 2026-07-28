@@ -328,10 +328,24 @@ Three artifacts:
   (Resolves O1.)
 - **R7 — Content tiers are GameFeature plugins (2026-07-09 pivot); sidecar manifest dropped.**
   Identity + dependencies come from the `.uplugin`; lifecycle from the
-  `Registered→Loaded→Active` state machine; activation logic from `GameFeatureActions`. The
-  ABM mounts paks in computed order (`MountPaksEx`, plugins kept at `Installed` so the engine
-  doesn't auto-mount) then drives activation. `bUseIoStore=false` to retain mount control.
-  See Package Identity & Lifecycle. (Supersedes the old sidecar-manifest resolution of O2.)
+  `Registered→Loaded→Active` state machine; activation logic from `GameFeatureActions`.
+  (Supersedes the old sidecar-manifest resolution of O2.)
+  - **R7a — REWRITTEN 2026-07-27 (Peter): the ABM does NOT mount paks, and `bUseIoStore` stays on.**
+    R7 originally had the ABM mount every enabled pak itself via `MountPaksEx` in computed
+    known-topology order, holding plugins at `Installed` so the engine would not auto-mount, and
+    required `bUseIoStore=false` to keep that control. **WS6 achieved the same goal by a different
+    route and proved it.** Tier containers are placed in the game's `Content/Paks`, where the
+    **engine** mounts them; `UAridGGameFeaturePolicy` then decides which DLC-delivered features may
+    load, from whether their content is actually present, with missing dependencies excluded. The
+    4-config acceptance matrix passes on real CI artifacts — including the negative case (SuperSpicy
+    without Spicy is skipped, not half-loaded), which is precisely the control the manual mount order
+    existed to provide.
+    Keeping the original R7 would have meant reverting the cook to legacy `.pak`, discarding IoStore
+    (and the container that went 870 MB → 187 MB), rewriting the audit gate's `.utoc` handling and
+    the publish container relocation, then re-proving all four configs — to hand-roll a mechanism
+    that already works. **B3 is therefore not a mount stage.** It reports which delivered content is
+    installed (`AridG::PluginContent`, which moved into AridGBoot so Regime-1 code can reach it) and
+    logs what was skipped and why. Resolves **TB-ci-cook O-F** in favour of IoStore.
 - **R8 — Per-phase timeouts, config-driven, fail-hard.** Each waiting phase has its own
   `[Boot.Timeouts]` budget; expiry → `Error`-log the stuck plugins → graceful exit
   (not a crash). See Diagnostics & Failure Handling. (Resolves O4.)
