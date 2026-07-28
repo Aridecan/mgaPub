@@ -18,6 +18,24 @@ content-tier boundary and the compliance reasoning. Neither is repeated here.
 mode exists to exercise — not to carry dramatic weight. It should be read as scaffolding, and it is
 expected to stay light.
 
+### Scope and lifetime — the mode is not a deliverable with a date
+
+**Delivery Girl outlives CoreX.** CoreX exists to prove out the risky technology that could kill the
+development cycle; the mode is one of the vehicles it proves that technology *in*. The mode itself is
+not what CoreX is for, and it does not need to finish when CoreX does.
+
+The expected steady state is therefore that **Delivery Girl is unfinished for years, and that is
+correct.** Features arrive in it when a milestone needs to prove something, not when the mode would be
+better for having them. An incomplete mode is not schedule slippage here — it is the mode working as
+intended.
+
+Two consequences worth holding onto:
+
+- **Nothing in this brief is a commitment.** The use cases below describe the shape the mode is
+  growing toward. Any of them may sit unbuilt indefinitely without that being a problem
+- **Build order is driven by what needs de-risking, not by what the mode needs next.** A subsystem
+  enters Delivery Girl because a milestone wants it proven under real play. The mode is the harness
+
 **Related documents:**
 
 - [CoreX-M2 — Delivery Girl: First Run](../milestones/M2-delivery-girl-first-run.md) — the milestone, the tier boundary, the compliance rule
@@ -166,7 +184,9 @@ player actively spends.
 ## Relationship to CoreX-M2
 
 **Almost nothing in this brief is M2 content.** Missions, economy, day/night cycle, stealth and NPCs
-are all explicit M2 non-goals. UC1 through UC3 are M3 and later.
+are all explicit M2 non-goals. UC1 through UC3 land in later milestones — and per *Scope and lifetime*
+above, they land when a milestone needs the subsystem proven, which for some of them may be a long
+way out.
 
 What M2 takes from the premise is narrow:
 
