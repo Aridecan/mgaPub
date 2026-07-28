@@ -162,6 +162,12 @@ X in this line of work, and it is a **stretch goal** here, otherwise M3. You can
 - **Ambient audio bed** on the map.
 - **Surface-driven footsteps** via physical materials on the baked surfaces, routed through the M1
   submixes.
+- **M1's audio settings verified against real sound (inherited from M1 #16, deferred 2026-07-27).**
+  M1 shipped the six submix volume sliders and could never confirm they *do* anything: with no sound
+  in the build, a slider that silently fails and one that works look identical. M2 is the first
+  milestone with audio to check against, so the check lands here — move each slider (master / music /
+  SFX / voice / ambient / UI) against the ambient bed and footsteps and confirm the level responds,
+  **in a packaged build**, since that is the configuration the settings path has never been proven in.
 
 ### Pillar D — Getting in, and CI
 
