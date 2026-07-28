@@ -366,6 +366,56 @@ should differ for every target. At runtime, grep the log for `Text translation c
 warning is the whole diagnosis, and it is the only thing that catches a collision an English build
 cannot show you.
 
+### Who translates: the COMMUNITY, not us (Peter, 2026-07-28)
+
+**We ship en-CA only.** MGA does not ship translations - it ships the *pipeline and the format* that
+let the community produce them, plus enough documentation to follow it (#13). Same for voice: English
+from us, possibly some AI-generated samples in other languages, but never the finished article.
+
+This is a design constraint, not a resourcing note, and it reorders the priorities:
+
+- **Key stability is the headline requirement.** When we own the translations an orphaned string costs
+  an afternoon. When a volunteer has translated thousands of lines and a typo fix silently orphans
+  them, they do not come back - and they are under no obligation to. Nothing about our convenience
+  justifies spending their time twice.
+- **The PO file is the product.** The `.locres` is just what our pipeline compiles; what a translator
+  actually receives is a PO. Its quality - stable keys, and enough context to translate correctly -
+  IS the deliverable.
+- **Format stability across versions matters** more than it would for an in-house pipeline.
+- MT en->fr is a **test instrument**, not a product: something Peter can half-read to confirm the
+  machinery still works. It is not on a path to shipping.
+
+### Dialogue: UDialogueWave (decided 2026-07-28, provisional)
+
+Chosen over string tables or a data table. Provisional by explicit intent - "we'll go with
+DialogueWave for now and see how it goes, but the pipeline will get changed as needed."
+
+Why it fits the community-translation constraint better than anything we would build:
+
+- **Keys are GUID-derived, not text-derived** (`ContextMapping.GetLocalizationKey(LocalizationGUID)`),
+  so **editing the spoken text does not orphan the translation**. A string table cannot do this - its
+  key is whatever was typed, which is exactly how two translations were orphaned on 2026-07-28.
+- **Grammatical context is modelled, not commented.** `UDialogueVoice` carries `Gender`
+  (Neuter/Masculine/Feminine/Mixed) and `Plurality`, and a context is *speaker + targets*, so a line's
+  key varies by who addresses whom. That is the `tu`/`vous` and adjective-agreement problem solved
+  structurally. A PO line without it is a line a translator has to guess at.
+- **The metadata reaches the translator.** The gather writes `Speaker`, `Targets`, `Gender`,
+  `Plurality`, `TargetGender`, `TargetPlurality`, `VoiceActorDirection` and `AudioFile` into the PO.
+- **`VoiceActorDirection` is the common source for voice.** The same free-text acting direction that
+  would tell a human VA "weary, trailing off" is what feeds an emotion-controllable TTS (Peter is
+  leaning toward indexTTS2), and it ships to voice-pack makers in the same PO the translators get.
+  One field, three consumers: the game, the translator, the voice-pack maker.
+- **`SoundWave` is nullable** in a context mapping, so dialogue with context and no audio is
+  structurally fine - which is our case.
+
+**Known cost, accepted for now:** one `DialogueWave` asset per line. Ten thousand lines is ten
+thousand assets. If the authoring ergonomics do not hold at volume, the fallback is to author
+externally and GENERATE the assets - not to hand-roll the metadata model above.
+
+**Consequence for namespaces:** dialogue is out of scope for the naming scheme. The engine fixes the
+namespace to `Dialogue` / `DialogueNotes` and guarantees uniqueness through the GUIDs. The scheme only
+needs to cover UI and reference content.
+
 ---
 
 ## Open Items / Holes (Peter growing)
