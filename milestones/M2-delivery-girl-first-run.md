@@ -128,6 +128,18 @@ X in this line of work, and it is a **stretch goal** here, otherwise M3. You can
   > cannot catch it, since the gate proves no *DLC-plugin* content sits in a base container and this
   > would be *base* content. Base and Spicy must be **two meshes**. See
   > [Content Architecture & DLC](../gdd/content-and-dlc.md).
+
+  **The underlying architecture is already correct** (measured 2026-07-28). All three are *additive*
+  morphs from a Basis that does not carry the detail — small, tightly localised displacements
+  (24–241 vertices, 4–7 mm). So the featureless base mesh genuinely exists at value 0 and nothing
+  needs re-sculpting; only the morph targets travel with it.
+
+- **Zero those morphs before export, and confirm the exporter does not fold current shape-key values
+  into the basis.** All three currently sit at value ~1.0 in the Blender file. An export that applies
+  current values would bake the explicit geometry into the base mesh itself — strictly worse than
+  shipping the morphs, because there would be no morph left to switch off and nothing downstream
+  would flag it. `BreastSize` (currently 0.781) carries the same risk benignly: baking it would fix
+  the bust for every character and defeat the shared-base-plus-morph design.
 - **Uniform XYZ scale and the breast-size morph are present and applied at spawn**, even if only one
   value is ever used. The pipeline is the deliverable, not the variation.
 - **Hair on both sockets** (`Socket_FrontHair`, `Socket_BackHair`), origins snapped per the GDD so
