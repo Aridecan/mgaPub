@@ -60,7 +60,11 @@ All front hair pieces share the same Blender object origin (snapped to a `HairOr
 
 ### Hair Physics — Chaos Cloth
 
-Hair uses **Chaos Cloth** simulation rather than bone rigging:
+**Hair ships as a skeletal mesh with a strand/tail bone chain present, weighted, and not necessarily simulated** (decided 2026-07-28). Chaos Cloth is the intended simulation method and remains the default, but the bone chain is authored regardless.
+
+The reasoning is optionality, not necessity. Chaos Cloth requires a skeletal mesh, but only needs **a** bone — the solver drives the painted vertices, not the skeleton. The chain is therefore insurance: it costs almost nothing at authoring time because the 2AM skull-cap method already produces strand topology that chains cleanly, and it keeps bone-based hair available without re-authoring. Hair authored as a plain static mesh on a socket would mean re-authoring, re-exporting and re-fitting **every hairstyle built by then** if the simulation method ever changes. Unsimulated bones render identically to rigid — they simply never move.
+
+Simulation method per region:
 
 | Region | Physics |
 |--------|---------|
@@ -154,6 +158,7 @@ The segment is designed to tile seamlessly — top and bottom edge loops match p
 
 - Exact Chaos Cloth stiffness and spring parameters per hair style category (braid, ponytail, bob, long straight)
 - Whether front hair gets any Chaos Cloth at all, or is entirely rigid
+- Whether back hair ultimately simulates via Chaos Cloth or via the authored bone chain. Chaos Cloth is the default and the chain is insurance; the decision lands in CoreX-M3, when the first hair simulation is actually built
 - Hair style loader system design — DataTable structure for back hairstyle entries (mesh, Cloth asset, display name, unlock state, preview)
 - Character creation / salon UI for hair selection
 - Whether magical girl transformation switches back hairstyle (different back hair in transformed vs civilian form)

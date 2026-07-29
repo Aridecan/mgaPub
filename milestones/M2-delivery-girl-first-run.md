@@ -122,6 +122,14 @@ X in this line of work, and it is a **stretch goal** here, otherwise M3. You can
 - **Hair on both sockets** (`Socket_FrontHair`, `Socket_BackHair`), origins snapped per the GDD so
   future styles drop in with zero per-style offset.
 - Renders through `M_Master_Character` / `M_Master_Hair`.
+- **Eyes render through `M_Master_Eye`** (added 2026-07-28). The master material already exists in the
+  project and was missing from this list; a character with no eye setup looks broken in every
+  screenshot the milestone produces, and the cost is small.
+- **Nessa's front hair is one of the 10 general NPC front styles, not a signature style**
+  (decided 2026-07-28). The [Character Pipeline](../gdd/character-pipeline.md) reserves signature
+  fronts for the five magical girls plus Tierney; Nessa is a non-canon mode lead, so a shared style
+  fits. This also means M2's hairstyle does double duty as the first of the reusable crowd set rather
+  than being spent on one character.
 - **Character Blueprint spawns in the documented order:** scale → morph → hair → *(clothing step,
   empty)* → cloth init. With no clothing and rigid hair, the cloth-init step has nothing to
   initialise in M2 — it exists so that the order is already correct when M3 puts something in it.
@@ -145,6 +153,12 @@ X in this line of work, and it is a **stretch goal** here, otherwise M3. You can
 
 - **One megablock** (3×3 superblocks) of the NE Delivery Girl area baked to static meshes and
   submitted to P4. The area was earmarked for test game modes on 2026-06-11 for its low spoiler risk.
+- **The megablock lives inside `TerridynCity2Map` as its own runtime data layer**, not in a separate
+  map (decided 2026-07-28). This keeps one source of truth for city geometry and avoids drift between
+  a mode map and the real city. The project already uses data layers (`DL_LegacyLandscape`), so the
+  pattern is established. The cook cost is not what the actor count suggests: the ~49,700 World
+  Partition actors are BLD-generated and are dropped when the plugins are disabled at cook, so the
+  cook carries the baked static meshes, not the generator output.
 - **One superblock baked and verified first** — collision, physical materials, streaming-cell
   behaviour, and how it cooks — **before** the other eight are touched. This step exists to stop a
   nine-superblock mistake.
