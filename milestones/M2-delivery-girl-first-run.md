@@ -170,9 +170,21 @@ X in this line of work, and it is a **stretch goal** here, otherwise M3. You can
   pattern is established. The cook cost is not what the actor count suggests: the ~49,700 World
   Partition actors are BLD-generated and are dropped when the plugins are disabled at cook, so the
   cook carries the baked static meshes, not the generator output.
+- **The megablock is `db37A`–`db48L`** (decided 2026-07-28) — megablock-col 4 × megablock-row 1, the
+  **NE corner** of the downtown core. 144 blocks, 9 superblocks. Its only named landmark is an
+  InfoDyne satellite data centre at `db38C`. The follow-on megablock is `db25A`–`db36L` to the west,
+  which carries SMU, the Neon Strip and VirtuLife — so the empty district is baked first and the
+  content-dense one second, which is the right order for a bake test.
 - **One superblock baked and verified first** — collision, physical materials, streaming-cell
   behaviour, and how it cooks — **before** the other eight are touched. This step exists to stop a
-  nine-superblock mistake.
+  nine-superblock mistake. Recommended first target: block-columns **45–48 × rows A–D**, the NE
+  corner superblock, which is bounded by L3 on two sides and L2 on the other two and so exercises all
+  three road classes in one bake.
+- **PREREQUISITE, not yet confirmed: the road network must exist for those 9 superblocks.**
+  `terridyn-city-grid.md` records *"12 of 144 done as of 2026-05-21"*, and the project holds exactly
+  one baked road mesh so far (a single L2 segment). **If the target superblocks are not laid down,
+  WS4 begins with road authoring rather than baking** — a different and larger job. This must be
+  answered before the single-superblock verify can be scheduled.
 - A **packaged build with CityBLD/RoadBLD disabled contains the baked city**, and you can walk on it.
 - **Frame time on the megablock measured and written down.** A number, not a pass/fail. M2's job is
   to learn what the real city costs; a bad number is a finding, not a failure, and may legitimately
