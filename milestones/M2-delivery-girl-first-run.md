@@ -117,6 +117,17 @@ X in this line of work, and it is a **stretch goal** here, otherwise M3. You can
 ### Pillar A — Nessa exists
 
 - **Base body imported** — featureless, Twitch-safe areas covered, single skeleton.
+- **The base export must NOT carry the explicit morph targets** (found 2026-07-28). The Blender base
+  body `MainBody` currently has shape keys `BreastSize`, `Anus`, `Vagina`, `Nipples`. `BreastSize` is
+  wanted; the other three must be stripped from the base export and live only on the Spicy body.
+
+  > **This is the compliance rule biting for the first time on a real asset, and it has an
+  > architectural consequence.** The tier boundary **cannot** be implemented as morph values on a
+  > shared mesh. "Base ships the mesh with the morphs at zero, Spicy drives them to one" fails,
+  > because the morph deltas are present in the base container either way — and the leak-audit gate
+  > cannot catch it, since the gate proves no *DLC-plugin* content sits in a base container and this
+  > would be *base* content. Base and Spicy must be **two meshes**. See
+  > [Content Architecture & DLC](../gdd/content-and-dlc.md).
 - **Uniform XYZ scale and the breast-size morph are present and applied at spawn**, even if only one
   value is ever used. The pipeline is the deliverable, not the variation.
 - **Hair on both sockets** (`Socket_FrontHair`, `Socket_BackHair`), origins snapped per the GDD so
