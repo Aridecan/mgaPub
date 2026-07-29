@@ -129,17 +129,26 @@ X in this line of work, and it is a **stretch goal** here, otherwise M3. You can
   > would be *base* content. Base and Spicy must be **two meshes**. See
   > [Content Architecture & DLC](../gdd/content-and-dlc.md).
 
-  **The underlying architecture is already correct** (measured 2026-07-28). All three are *additive*
-  morphs from a Basis that does not carry the detail — small, tightly localised displacements
-  (24–241 vertices, 4–7 mm). So the featureless base mesh genuinely exists at value 0 and nothing
-  needs re-sculpting; only the morph targets travel with it.
+  **Zeroing the morphs is not sufficient — the base geometry itself is not featureless**
+  (Peter, 2026-07-28). The morphs are additive, but the Basis mesh already carries the anatomy, so
+  the fix is **geometry work**: replace the groin region with featureless geometry and clean up the
+  nipple area. Peter's assessment is that neither is difficult.
 
-- **Zero those morphs before export, and confirm the exporter does not fold current shape-key values
-  into the basis.** All three currently sit at value ~1.0 in the Blender file. An export that applies
-  current values would bake the explicit geometry into the base mesh itself — strictly worse than
-  shipping the morphs, because there would be no morph left to switch off and nothing downstream
-  would flag it. `BreastSize` (currently 0.781) carries the same risk benignly: baking it would fix
-  the bust for every character and defeat the shared-base-plus-morph design.
+- **Fork the mesh; do not edit it in place.** The current `MainBody` — geometry plus the three
+  morphs — is already the **Spicy** body. Duplicating before the edit yields both halves of the tier
+  split for the cost of the one edit, and turns the stretch goal from "author a Spicy body" into
+  "the Spicy body already exists." Editing in place destroys it and pushes that work into M3.
+
+- **The shape keys are the risk in that surgery.** Blender shape keys are stored per vertex index, so
+  removing and re-patching the groin region can corrupt or misalign key data across the whole mesh.
+  `MainBody` carries 56 keys, 52 of which are the Faceit ARKit set that is now in M2 scope. The
+  facial keys touch different vertices but share the same key stack, so **verify the ARKit set still
+  deforms correctly after the edit**; the fallback is re-running Faceit.
+
+- **Zero the morphs before export, and confirm the exporter does not fold current shape-key values
+  into the basis.** All three currently sit at value ~1.0 in the Blender file, and `BreastSize` at
+  0.781. An export that applies current values bakes that state into the mesh — for `BreastSize` it
+  would fix the bust for every character and defeat the shared-base-plus-morph design.
 - **Uniform XYZ scale and the breast-size morph are present and applied at spawn**, even if only one
   value is ever used. The pipeline is the deliverable, not the variation.
 - **Hair on both sockets** (`Socket_FrontHair`, `Socket_BackHair`), origins snapped per the GDD so
