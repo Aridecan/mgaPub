@@ -180,11 +180,12 @@ X in this line of work, and it is a **stretch goal** here, otherwise M3. You can
   nine-superblock mistake. Recommended first target: block-columns **45–48 × rows A–D**, the NE
   corner superblock, which is bounded by L3 on two sides and L2 on the other two and so exercises all
   three road classes in one bake.
-- **PREREQUISITE, not yet confirmed: the road network must exist for those 9 superblocks.**
-  `terridyn-city-grid.md` records *"12 of 144 done as of 2026-05-21"*, and the project holds exactly
-  one baked road mesh so far (a single L2 segment). **If the target superblocks are not laid down,
-  WS4 begins with road authoring rather than baking** — a different and larger job. This must be
-  answered before the single-superblock verify can be scheduled.
+- **Roads confirmed present (2026-07-28).** The entire downtown core is laid down — 24th St W /
+  24th Ave N through 24th St E / 24th Ave S, the full 48 × 48 block grid — and ready to bake. **WS4
+  is a bake job, not an authoring job.** Bridges over the water are not built, but every river/lock
+  block sits in columns 16–20 and both target megablocks are columns 25–48, so no water crosses them.
+  The project holds one baked road mesh today (a single L2 segment), so the workflow has been
+  exercised once at segment scale.
 - A **packaged build with CityBLD/RoadBLD disabled contains the baked city**, and you can walk on it.
 - **Frame time on the megablock measured and written down.** A number, not a pass/fail. M2's job is
   to learn what the real city costs; a bad number is a finding, not a failure, and may legitimately
