@@ -294,11 +294,23 @@ Then WS1 → WS2 → WS3 on the character side, WS5 behind WS4 on the world side
 
 ### Risks
 
-- **The bake may discard physical materials.** RoadBLD's dynamic actors may carry surface information
-  that bake-to-static-mesh drops, leaving every surface `Default` — which would silently gut WS5, with
-  every footstep playing the wrong sound. This is why WS5 sits *behind* WS4 rather than beside it, and
-  why the single-superblock verify checks physical materials explicitly. Fixing it in bake settings
-  before the megablock is cheap; re-authoring across nine superblocks is not.
+- ~~**The bake may discard physical materials.**~~ **RETIRED 2026-07-28 — checked, and the answer is
+  better than feared.** The first megablock is baked (16 static meshes under `/Game/MGA/RoadBld`,
+  dynamic roads retained for regeneration). **Collision survived correctly**
+  (`CTF_UseComplexAsSimple`, empty `AggGeom` — render geometry is the collision, which is right for
+  roads). **Physical materials are absent — but the bake did not drop them; they were never
+  authored.** The shared parent `M_Master_Ground` is a hand-authored asset predating the bake and
+  carries none either.
+  **Consequence: WS5 gets cheaper, not more expensive.** Neither a bake-settings fix nor
+  nine-superblock re-authoring is needed — physical materials attach at the **material** level, so
+  assigning them to the six material instances propagates to all 16 baked meshes and every future
+  bake. And the slots are already the right granularity: `MI_Sidewalk` / `MI_Curb` / `MI_Road` are
+  **separate**, so sidewalk-vs-road footsteps are distinguishable for free.
+- **NEW: Nanite is disabled on the baked road meshes.** One segment is 444,999 triangles, so the
+  megablock carries roughly **7.1 M triangles** of raw geometry. This is the largest frame-time lever
+  available and should be settled before the frame-time number is taken.
+- **NEW: only L2 and L3 roads are baked.** All 16 meshes are superblock/megablock boundary roads;
+  no L1 interior streets, so block interiors are not yet walkable.
 - **Bake output volume and frame cost are genuinely unknown.** This is the milestone's purpose rather
   than a risk to eliminate, but a bad enough number could shrink the baked area.
 - **The road bake is modal-only.** There is no headless API — the commandlet path crashes under
