@@ -306,11 +306,14 @@ Then WS1 → WS2 → WS3 on the character side, WS5 behind WS4 on the world side
   assigning them to the six material instances propagates to all 16 baked meshes and every future
   bake. And the slots are already the right granularity: `MI_Sidewalk` / `MI_Curb` / `MI_Road` are
   **separate**, so sidewalk-vs-road footsteps are distinguishable for free.
-- **NEW: Nanite is disabled on the baked road meshes.** One segment is 444,999 triangles, so the
-  megablock carries roughly **7.1 M triangles** of raw geometry. This is the largest frame-time lever
+- **NEW: Nanite is disabled on the baked road meshes.** One **superblock** is 444,999 triangles, so
+  the 16 carry roughly **7.1 M triangles** of raw geometry. This is the largest frame-time lever
   available and should be settled before the frame-time number is taken.
-- **NEW: only L2 and L3 roads are baked.** All 16 meshes are superblock/megablock boundary roads;
-  no L1 interior streets, so block interiors are not yet walkable.
+- **Bake coverage: 16 meshes = 9 full superblocks (the whole megablock) + 7 edge superblocks**, each
+  containing its **L1 interior streets**, so block interiors are walkable. Verified by bounds —
+  `12th_E__12th_N` is 559 × 471 m, matching the superblock dimension; the `L2`/`L3` suffix in an asset
+  name denotes the boundary road at that corner, not the mesh contents. Corner superblocks use an
+  `MI_Sidewalk_Corner` variant; the curb/road split is unchanged.
 - **Bake output volume and frame cost are genuinely unknown.** This is the milestone's purpose rather
   than a risk to eliminate, but a bad enough number could shrink the baked area.
 - **The road bake is modal-only.** There is no headless API — the commandlet path crashes under
