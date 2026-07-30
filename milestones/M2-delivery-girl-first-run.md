@@ -314,6 +314,23 @@ Then WS1 → WS2 → WS3 on the character side, WS5 behind WS4 on the world side
   `12th_E__12th_N` is 559 × 471 m, matching the superblock dimension; the `L2`/`L3` suffix in an asset
   name denotes the boundary road at that corner, not the mesh contents. Corner superblocks use an
   `MI_Sidewalk_Corner` variant; the curb/road split is unchanged.
+
+> **This bake is expected to be re-authored later** (Peter, 2026-07-28): *"this PCG is only the first
+> quick and dirty"* — the likely path is pulling each baked superblock into Blender to remesh or tidy
+> it. Not now, and not an M2 concern, but three constraints make that round-trip cheap if they are
+> held from the start:
+>
+> 1. **Assign physical materials at the MATERIAL level, never as per-mesh overrides.** Material
+>    assignments live on the material instances, so they survive a mesh being replaced. The only thing
+>    that breaks them is **material slot names changing on re-import** — keep `MI_Road`, `MI_Curb`,
+>    `MI_Sidewalk`, `MI_Sidewalk_Corner` stable through any re-author.
+> 2. **Keep the baked asset names stable.** They encode location and the level actors reference them
+>    by path. Replacing a mesh in place under the same name needs no level edits; renaming means
+>    re-linking every actor.
+> 3. **Separate the two motives for remeshing.** If it is triangle count, **Nanite likely makes it
+>    moot** and is currently disabled — settle that first, and take the C5 frame-time number with it
+>    on. If it is topology quality, UVs, or authoring control, Nanite does not help and remeshing is
+>    the real answer.
 - **Bake output volume and frame cost are genuinely unknown.** This is the milestone's purpose rather
   than a risk to eliminate, but a bad enough number could shrink the baked area.
 - **The road bake is modal-only.** There is no headless API — the commandlet path crashes under
