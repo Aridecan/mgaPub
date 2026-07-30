@@ -306,9 +306,23 @@ Then WS1 → WS2 → WS3 on the character side, WS5 behind WS4 on the world side
   assigning them to the six material instances propagates to all 16 baked meshes and every future
   bake. And the slots are already the right granularity: `MI_Sidewalk` / `MI_Curb` / `MI_Road` are
   **separate**, so sidewalk-vs-road footsteps are distinguishable for free.
-- **NEW: Nanite is disabled on the baked road meshes.** One **superblock** is 444,999 triangles, so
-  the 16 carry roughly **7.1 M triangles** of raw geometry. This is the largest frame-time lever
-  available and should be settled before the frame-time number is taken.
+- **Nanite enabled on all 16 baked meshes (2026-07-28) — and collision must be re-verified when the
+  character walks.** Every `CollisionTraceFlag` still reads `CTF_UseComplexAsSimple`, but the
+  classic-LOD triangle count collapsed from 444,999 to **1,025** on one superblock, and from ~7.1 M to
+  **11,515** across all 16. With Nanite on, classic LOD0 becomes the **fallback mesh** and
+  complex-as-simple collision reads the fallback — so **the flag survived but the geometry it points
+  at may not have**. Settings are `fallbackTarget: Auto`, `fallbackRelativeError: 1`, which on a 559 m
+  mesh permits metres of deviation.
+  **Deferred test (Peter's call):** when Nessa is walking, stand her on the **road** and the
+  **sidewalk** and watch her feet — correct standing height on each, and whether the **kerb** still
+  stops her. The kerb is the sensitive probe; a decimated fallback erases it first. The same walk also
+  validates surface-driven footsteps once physical materials are assigned.
+  **Remedies if it fails:** tune the fallback (lower `fallbackRelativeError`, or an explicit triangle
+  percentage instead of `Auto`), or set **`ComplexCollisionMesh`** — currently `None` — which is UE's
+  sanctioned way to give a Nanite mesh full-fidelity collision from a separate mesh.
+- **Physical materials must be assigned across 8 material slots, not 6:** `GreyboxMat`,
+  `MI_BrokenWhiteLine_Graybox`, `MI_Curb`, `MI_Road`, `MI_Sidewalk`, `MI_Sidewalk_Corner`,
+  `M_Greybox_SolidWhiteLine`, `M_Greybox_SolidYellowLine`.
 - **Bake coverage: 16 meshes = 9 full superblocks (the whole megablock) + 7 edge superblocks**, each
   containing its **L1 interior streets**, so block interiors are walkable. Verified by bounds —
   `12th_E__12th_N` is 559 × 471 m, matching the superblock dimension; the `L2`/`L3` suffix in an asset
