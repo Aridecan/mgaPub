@@ -70,6 +70,38 @@ Carries a matching CI item: the acceptance matrix needs an **animation-set asser
 
 ---
 
+## Motion Matching and traversal — Epic's Game Animation Sample
+
+**Added 2026-07-30. Explicitly not for M2.** Peter: look at Epic's demo where stride length adapts to
+running speed, and the parkour-style movement demo.
+
+**Already in the design, not new scope.** [CB — Traversal](../creative-briefs/CB-traversal.md)
+specifies Motion Matching in three places: gait selection and blending as speed changes (UC1),
+procedural hand/foot placement while climbing (UC2), and takeoff/airborne/landing selection on jumps
+(UC3). It is also what the brief's "movement is analog, controlled by stick deflection, not by
+toggling between walk and run" requires — Motion Matching picks poses matching current velocity
+rather than blending fixed loops, so stride adapts continuously.
+
+**Naming:** the system is **Motion Matching** (Epic's **Pose Search** plugin, with **Chooser**), not
+"motion morphing". The two demos are most likely one download — Epic's **Game Animation Sample
+Project** (free, UE 5.4+) carries both the motion-matched locomotion *and* the traversal set (vault,
+mantle, hurdle, climb).
+
+**The integration risk, and it splits unevenly against [GMC](M2-delivery-girl-first-run.md):**
+
+- **Locomotion should port cheaply.** Motion Matching is an *animation* layer — it selects poses to
+  match whatever the movement component already did. GMC moves the capsule, Motion Matching picks the
+  pose. Different layers; they compose.
+- **Traversal/parkour will not.** Epic's sample builds vaults and mantles on
+  `CharacterMovementComponent` plus **Motion Warping**, and that coupling is the substance of it: the
+  system has to *move* the character along a warped trajectory to meet a ledge, which is movement, not
+  animation. Lifting it onto GMC means rewiring that.
+
+**Do not assume the sample drops in whole.** Expect the gait half cheap and the parkour half a real
+port. Unlike GMC, the plugins involved are all Epic's, so none of the precompiled-binary and
+engine-version problems that GMC's marketplace packaging raised should apply — but pose databases add
+package size and the search adds runtime cost, both worth measuring when it happens.
+
 ## Carried forward from M2
 
 | Item | Note |
