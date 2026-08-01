@@ -116,12 +116,17 @@ needs them cut by **category**, so each state is "a list of categories to activa
 > `IMC_Move_FP` / `IMC_Look_FP` unchanged. The `_FP` suffix therefore covers **two** modes — kept
 > as-is rather than renamed to `_Direct`, so do not "fix" it later thinking it is a mistake.
 >
-> **`Alt` is free** — `Left Ctrl` is Walk and `Shift` is Sprint, and nothing else claims Alt.
-> **Caveat: `PhoneMenu` has an alternate binding on `Tab`** (see TB-controls-rebind), so holding Alt to
-> adjust the camera and tapping Tab for the phone is **Alt+Tab** — window-switch on Windows in
-> windowed/borderless, which the video settings offer. Either move `PhoneMenu`'s alternate off Tab or
-> accept it as an unlikely pairing. `MMB` was the earlier candidate and was dropped: middle-mouse drag
-> fights stiff wheel-clicks and accidental scroll.
+> **`Alt` is free and confirmed** — `Left Ctrl` is Walk, `Shift` is Sprint, nothing else claims Alt.
+> `MMB` was the earlier candidate and was dropped: middle-mouse drag fights stiff wheel-clicks and
+> accidental scroll.
+>
+> **The Alt+Tab question, settled.** `PhoneMenu`'s alternate binding is `Tab` — pressed alone, which is
+> fine. The only overlap is a player *holding* Alt to adjust the camera who then taps Tab without
+> releasing, which Windows reads as a task switch. **Accepted, on precedent:** WoW uses Alt for
+> free-look while binding Tab to target-nearest, and FFXIV is comparable — this is a long-standing
+> convention precisely because the overlap is rare in practice. Rebindable if it ever proves annoying.
+> (`Alt+Enter` is the same class — UE's default fullscreen toggle — but Enter is not a gameplay
+> binding, so it does not arise.)
 | **`IMC_Vehicle`** | TBD |
 
 > **`LB + Right Stick` composes cleanly with the existing pad layer.** `LB` is already a modifier
@@ -236,9 +241,9 @@ camera-adjust layer is optional for M2 — a fixed over-the-shoulder offset is w
   drone horizontally"* with no modifier, which now matches no mode: Direct uses the mouse to turn the
   character (MMB to adjust the drone), and Pointer needs RMB because the bare cursor is a world
   pointer. UC1 predates the three-mode split.
-- ~~**Camera-adjust default on KBM** — `MMB` vs `Alt`~~ **RESOLVED 2026-07-30: `Alt`.** Verified free
-  (`Left Ctrl` = Walk, `Shift` = Sprint, nothing on Alt). **Residual: the Alt+Tab collision** — move
-  `PhoneMenu`'s alternate off `Tab`, or accept it.
+- ~~**Camera-adjust default on KBM** — `MMB` vs `Alt`~~ **RESOLVED 2026-07-30: `Alt`**, verified free.
+  The Alt+Tab overlap is **accepted on precedent** (WoW/FFXIV both ship Alt free-look alongside a Tab
+  binding); `Tab` keeps `PhoneMenu`. See the IMC table note.
 - **Does the camera offset persist across mode switches?** Park the drone over her shoulder in Direct,
   switch to Pointer and back — same offset, or reset?
 - **Vehicle controls** — unspecced (CB-traversal mentions vehicles, no bindings). Define before Vehicle state is real.
