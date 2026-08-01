@@ -24,22 +24,54 @@ Three properties Peter wants from this:
 
 ## Modes (states)
 
-The key axis (from the consolidated control scheme): **1st- vs 3rd-person changes ONLY movement + look;
-everything else is mode-agnostic.** So most categories are shared and only Move/Look swap.
+> **REVISED 2026-07-30.** The earlier model had **two** on-foot modes (1st / 3rd person). There are
+> **three**, and the axis that matters is not first-versus-third person — it is **DIRECT vs POINTER**,
+> i.e. **whether the mouse cursor is captured or free**. First-versus-third person is a *camera*
+> variant inside Direct, and the two share their control set entirely.
+
+### The three on-foot modes
+
+| Mode | Cursor | Look input | Move | Camera anchored to |
+|---|---|---|---|---|
+| **First Person** | **captured** | rotates the character | WASD, character-relative | the character's eyes |
+| **Third Person Direct** | **captured** | rotates the character; **camera-adjust modifier** repositions the drone | WASD, character-relative | **the character** — park it over her shoulder and it stays there through every turn |
+| **Third Person Pointer** | **free** | **RMB + drag** orbits | **click a destination**; click to interact; click the action bar | **the world** — point it north and it holds north while she turns beneath it |
+
+**First Person and Third Person Direct share controls completely.** Look rotates the character in
+both, move is character-relative in both. The only differences are where the camera sits and whether
+the camera-adjust modifier is available. Third Person Direct is therefore **First-Person controls plus
+a momentary camera-adjust layer**, not a third control set.
+
+**Third Person Pointer is the genuinely different one.** It is a point-and-click paradigm — the whole
+game is playable with the mouse alone: click to move, click to interact when in range, click the
+action bar. `RMB` is its camera-adjust modifier, because the bare mouse is a world cursor and cannot
+also be a look axis.
+
+> **Cursor capture is the hard boundary**, and it is a hard boundary in the engine too: captured vs
+> free is `GameOnly` vs `GameAndUI`, cursor visibility, world hit-testing under the pointer, and
+> different CommonUI routing. Everything else — HUD profile, action bar, animation set — layers on top.
+
+### Active control categories
 
 | State | Active control categories |
 |---|---|
 | **OnFoot · FirstPerson** | Modifiers + General + OnFoot + **Move-FP + Look-FP** |
-| **OnFoot · ThirdPerson** | Modifiers + General + OnFoot + **Move-TP + Look-TP** (orbit) |
-| **Vehicle** (FP/TP TBD) | Modifiers + General + **Vehicle-Move/Look** (replaces OnFoot move/look) |
+| **OnFoot · ThirdPersonDirect** | *(as FirstPerson)* + **`IMC_CameraAdjust`** (momentary) |
+| **OnFoot · ThirdPersonPointer** | Modifiers + General + OnFoot + **Move-TP + Look-TP** (cursor/click + RMB orbit) |
+| **Vehicle** (TBD) | Modifiers + General + **Vehicle-Move/Look** (replaces OnFoot move/look) |
 | **Menu / Paused** | *(all gameplay categories removed)* — CommonUI input only |
 
 - **Shared** across all gameplay states: **General** (action-bar slots), **OnFoot** (jump/dodge/interact/
   posture/…), and the **Modifier** sub-layers.
-- **Swapped** by state: **Move / Look** (per the *full-split* decision — each mode owns its own bindings),
-  and eventually **Vehicle**.
-- **Transitions:** `CameraToggle` (F5 / LB+LT+Y) flips FirstPerson↔ThirdPerson; contextual mount/dismount →
-  Vehicle; opening a menu → Menu (see gating below).
+- **Swapped** by state: **Move / Look**, and eventually **Vehicle**.
+- **Transitions:** `CameraToggle` (F5 / LB+LT+Y) flips FirstPerson↔ThirdPersonDirect; contextual
+  mount/dismount → Vehicle; opening a menu → Menu (see gating below).
+  **Pointer is not on that toggle** — see Open items.
+
+**Naming note:** "Indirect" was considered and rejected — *indirect control* already means influencing
+autonomous agents (the Sims lineage), and Pointer mode is still fully direct commanding, just through
+a cursor. **Pointer** names the mechanism the state machine actually branches on. A friendlier
+player-facing label (e.g. "Command") on the settings screen is fine; the enum wants the mechanism.
 
 ## Abstract actions → category IMC model (the re-cut)
 
@@ -54,11 +86,22 @@ needs them cut by **category**, so each state is "a list of categories to activa
 | **`IMC_General_ModB`** | pad **LB+X/Y/B = slots 7-9** |
 | **`IMC_General_ModAB`** | pad **LB+LT+X = slot 10** (+ CameraToggle on Y) |
 | **`IMC_OnFoot`** | Jump, Dodge, Interact, Sprint, Walk, PostureUp/Down, Zoom, WeaponSwitch, Transform, Party (select/cycle), CameraToggle, PhoneMenu, CameraZoomIn/Out |
-| **`IMC_Move_FP`** | `MoveForward/Back/StrafeL/StrafeR` (view-relative) — KB WASD; pad Left Stick |
-| **`IMC_Look_FP`** | `LookUp/Left/Right/Down` (direct) — KB Mouse XY (+ optional IJKL alt); pad Right Stick |
-| **`IMC_Move_TP`** | same four directions, **screen-relative** — KB WASD; pad Left Stick |
-| **`IMC_Look_TP`** | orbit — KB **RMB+Mouse** (+ IJKL alt); pad Right Stick |
+| **`IMC_Move_FP`** | `MoveForward/Back/StrafeL/StrafeR` (character-relative) — KB WASD; pad Left Stick. **Used by BOTH First Person and Third Person Direct** |
+| **`IMC_Look_FP`** | `LookUp/Left/Right/Down` (direct) — KB Mouse XY (+ optional IJKL alt); pad Right Stick. **Used by BOTH First Person and Third Person Direct** |
+| **`IMC_CameraAdjust`** | **NEW (2026-07-30)** — momentary layer that *shadows Look* to reposition the drone instead of turning the character. KB **MMB + Mouse**; pad **LB + Right Stick**. Only active in **Third Person Direct** |
+| **`IMC_Move_TP`** | same four directions, **screen-relative** — **POINTER mode only**; click-to-move is the primary input, WASD the fallback |
+| **`IMC_Look_TP`** | orbit — KB **RMB + Mouse** (+ IJKL alt); pad Right Stick. **POINTER mode only** — RMB is required because the bare cursor is a world pointer |
 | **`IMC_Vehicle`** | TBD |
+
+> **`LB + Right Stick` composes cleanly with the existing pad layer.** `LB` is already a modifier
+> (`LB + X/Y/B` = action slots 7–9), so `LB + RS` adds a camera meaning to the same layer without
+> collision — different physical control, same modifier. LB reads consistently as "the secondary
+> layer" rather than a special case.
+>
+> **`MMB` is the weaker half of the KBM pair.** Holding middle-mouse while dragging is awkward on many
+> mice (stiff wheel-clicks, accidental scroll mid-drag) and is often already spoken for. `Alt` is the
+> established free-look modifier in this role (WoW, FFXIV) and is comfortable to hold while moving the
+> mouse. Rebindable either way — but the default sets the first impression.
 
 **Move/Look are Axis2D actions with per-direction *named* mappings** (so each direction is independently
 rebindable, per the QuickMoveLook sketch): e.g. `IA_Move_FP` (Axis2D) whose W/A/S/D mappings carry override
@@ -121,15 +164,53 @@ Today: `IMC_KBM` + `IMC_Pad_Base/LT/LB/LBLT` (device+layer cut), 34 `IA_`. Re-cu
 
 ## M1 boundary
 
-- **M1 (now):** the **category re-cut of the assets** + the **categorized/collapsible rebind screen** so the
+- **M1 (done):** the **category re-cut of the assets** + the **categorized/collapsible rebind screen** so the
   screen is architecturally correct and every abstract action is rebindable. Rebinds persist + validate.
 - **Post-M1 (needs the pawn/gameplay):** the **live CSM** (state transitions, the modifier sub-machine, menu
   gating, maintenance task) and the **mode-state consumers**. The rebind screen is the edit surface; the CSM
   is the consumer, built with the gameplay milestone.
 
+## M2 boundary (decided 2026-07-30)
+
+**CoreX-M2 is the gameplay milestone this TB deferred to** — the pawn arrives, so the live CSM does too,
+in a limited cut.
+
+**IN for M2 — DIRECT modes only:**
+- **First Person** and **Third Person Direct**, plus the `CameraToggle` between them. These are cheap
+  together because they **share a control set**; the delta is camera placement and the adjust layer.
+- **Menu gating.** Not optional — M2 Pillar D is main menu → Game Modes → Delivery Girl → possess,
+  which is a real state transition.
+- The **published mode signal**, even with only the camera consuming it initially.
+
+**OUT for M2:**
+- **Third Person Pointer — and the reason is navigation, not camera code.** Click-to-move needs
+  pathfinding, which needs a **navmesh**. M2 ships a hand-baked megablock of static meshes with no
+  navigation work in scope, and nav-mesh-vs-nav-graph is still open research. **Pointer mode arrives
+  with navigation**, in a later milestone.
+- **Vehicle** state.
+- The **modifier sub-machine** — nothing consumes action slots until an action bar exists, which is the
+  same reasoning that put mgaPub #27 in M3.
+
+**This also settles M2 Pillar C's camera.** "Third-person camera at its simplest useful setting" is
+concretely **Third Person Direct**: character-steered, camera at a fixed body-relative offset. The
+camera-adjust layer is optional for M2 — a fixed over-the-shoulder offset is walkable without it.
+
 ## Open items
+- **Does `CameraToggle` reach Pointer mode?** With three modes, does F5 / LB+LT+Y cycle all three, or
+  toggle **First ↔ Third Direct** with **Pointer** chosen separately as a play-style preference?
+  Leaning to the latter: the first pair is a moment-to-moment flick, whereas Pointer changes cursor
+  capture, and doing that mid-combat would be unpleasant. Decides whether the CSM is one enum of three
+  or a state plus a setting.
+- **`CB-camera` UC1 contradicts this TB and needs updating.** It says *"Mouse left/right orbits the
+  drone horizontally"* with no modifier, which now matches no mode: Direct uses the mouse to turn the
+  character (MMB to adjust the drone), and Pointer needs RMB because the bare cursor is a world
+  pointer. UC1 predates the three-mode split.
+- **Camera-adjust default on KBM** — `MMB` vs `Alt` (see the IMC table note).
+- **Does the camera offset persist across mode switches?** Park the drone over her shoulder in Direct,
+  switch to Pointer and back — same offset, or reset?
 - **Vehicle controls** — unspecced (CB-traversal mentions vehicles, no bindings). Define before Vehicle state is real.
-- **Full-split redundancy** — Move-FP/TP default to the same WASD; confirm players want independent per-mode rebinds vs a "same as 1st person" convenience.
+- **Full-split redundancy** — largely resolved: Direct modes now *share* one Move/Look pair, so the
+  redundancy is only Direct-vs-Pointer, which genuinely differ.
 - **Look directional keys vs mouse** — exact grey-out rule + whether IJKL alt ships in M1 or later.
 - **KB modifier layers** (Ctrl/Shift chords) — post-M1 (see TB-controls-rebind).
 
