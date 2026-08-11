@@ -145,3 +145,19 @@ When external real-world material is adapted into MGA — a calculation, a conce
 - **Influenced by** material — genre fit, tone reference, broad inspirations — is acknowledged informally (dev logs, interviews) but does not require formal citation.
 
 The principle exists because we are building on the work of others. Acknowledging that is the minimum honest act. It is also, incidentally, what makes the world feel like a place with a real intellectual history: Calibran academics citing 21st-century Earth physicists is more interesting than Calibran academics inventing the same calculation from scratch.
+
+---
+
+## 16. Never Sell the Payoff
+
+MGA is made by one person and it will take years. A project of that shape has a standing temptation: to keep an audience engaged by promising that something large is coming. That promise is a loan. Every month it is repeated, the debt grows, expectations compound past anything that could be built, and the finished game is eventually measured against an imagined one instead of against itself. The audience stops being people who are in on something and becomes creditors waiting to be paid.
+
+This project does not borrow against its own ending.
+
+**Every public thing MGA makes must pay out on its own.** Dev logs, dev videos, design documents, streams — each has to be worth someone's time even if the game is never finished. The design documentation is public and written to be read, not to be teased. The dev video series explains general practice that is useful to someone who never plays MGA. Nothing is issued as a promissory note against release.
+
+Three questions gate anything public: does it pay out *now*; is the audience in on something or waiting for something; would it still have been worth making if the game were cancelled tomorrow.
+
+In practice this means no pre-orders, no countdowns to announcements, and no roadmap carrying dates that cannot be held. It also means the honest statement — that this takes years, that parts of it will sit visibly unfinished for a long time — is made plainly rather than hedged, because hedging it is where the borrowing starts.
+
+The reasoning behind the principle, and the register it comes from, is documented in [Register and Engagement](register-and-engagement.md).

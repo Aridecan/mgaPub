@@ -67,7 +67,20 @@ Entries are filed under the category that best fits their primary use. Multi-cat
 
 ## Game Design
 
-*(no entries yet)*
+### Tod Maffin — video essay on the *Diamond Shreddies* campaign
+
+**Citation.** Tod Maffin (YouTube channel [@todmaffinvideo](https://www.youtube.com/@todmaffinvideo)). *Diamond Shreddies: Canada's Biggest Inside Joke*. YouTube, published 2026-08-11. <https://www.youtube.com/watch?v=FprBzLFQIPA> (accessed 2026-08-11). Underlying campaign: *Diamond Shreddies*, Post Foods Canada, agency Ogilvy Toronto, 2008 — in which a square cereal piece was rotated 45° and marketed deadpan as a new product.
+
+**What was adapted.** Maffin's closing argument that the campaign contains a national personality — that people who avoid small talk in an elevator and take a long time to say the important things will nonetheless spend years and enormous budgets constructing a joke the audience gets to be part of. Adapted from that framing:
+
+- The **register** MGA is written in — reticence expressed as disproportionate sincere work, with feeling displaced into construction rather than stated.
+- The **audience-as-co-conspirator** distinction, and its consequence that a payoff which arrives as an *invitation* is a different object from one that arrives as a *reveal*.
+- The **distributed-payoff rule** — that the campaign's pleasure was available in week one and every week after, not withheld to the end — which became the standing constraint on all public development communication.
+- The reading of **en-CA as MGA's source register** rather than a spelling variant.
+
+**Where it appears in-game.** Not as a discrete in-game object. This entry credits a framing adopted at the level of tone and authorial method: it shapes dialogue register, the pacing of long narrative setups, the default locale, and the way this project communicates during development. Its documented form is [Register and Engagement](gdd/register-and-engagement.md) and [Manifesto Principle 16 — Never Sell the Payoff](gdd/manifesto.md#16-never-sell-the-payoff), both public.
+
+**Design doc:** [gdd/register-and-engagement.md](gdd/register-and-engagement.md) (public). Story-side application is held in the private lore repository.
 
 ---
 
@@ -100,4 +113,4 @@ When adapting external material into MGA content:
 
 ---
 
-*Last updated: 2026-06-04.*
+*Last updated: 2026-08-11.*
