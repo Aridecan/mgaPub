@@ -23,6 +23,25 @@ Because scaling is uniform (X = Y = Z), all animations play identically on all c
 
 **Why this works:** Stylised anime proportions are nearly identical across characters — exaggerated silhouettes tolerate uniform scaling, and clothing renders as rigid stylised shells rather than clingy fabric. This approach matches the architecture used by Genshin Impact, Honkai Star Rail, and Blue Protocol.
 
+### Skeleton
+
+The body mesh rigs to a **MetaHuman-compatible skeleton**, not Manny/Quinn (decided 2026-08-22).
+MetaHuman's body skeleton is a measured superset of the UE5 mannequin's deforming skeleton —
+all 150 of Manny's real joints appear in it under identical names — so the choice costs nothing
+in animation compatibility and adds per-toe articulation plus compatibility with MetaHuman-targeted
+animation, Control Rig and Fab assets.
+
+Two consequences worth knowing before rigging: **MetaHuman carries no IK bones**
+(`ik_foot_root`, `ik_hand_gun`, `weapon_l/r` and friends must be added back), and the toe joints
+hang off `ball_l`/`ball_r` at identity, so standard locomotion drives them rigidly and deforms
+exactly as a single toe bone would.
+
+The reasoning parallels the hair strand-bone chain below: author the bones now, defer the decision
+about what drives them. The skeleton is shared by every body variant and every garment, so adding
+joints later means re-skinning everything authored in between.
+
+**Full bone checklist and rig-time setup steps: [TB — Character Skeleton](../technical-briefs/TB-character-skeleton.md).**
+
 ---
 
 ## Hair System
@@ -163,3 +182,4 @@ The segment is designed to tile seamlessly — top and bottom edge loops match p
 - Character creation / salon UI for hair selection
 - Whether magical girl transformation switches back hairstyle (different back hair in transformed vs civilian form)
 - LOD strategy for hair meshes at distance
+- Whether the skeleton adopts MetaHuman's 172 finger corrective joints (Tier C in [TB — Character Skeleton](../technical-briefs/TB-character-skeleton.md)) or stops at the toe joints. Deferred to rig time; the correctives are driven by a pose-driver solver rather than by animation, and can be added later without re-skinning
