@@ -46,11 +46,11 @@ Not because it's broken. Because five specific things about it are wrong, and ev
 
 | The defect | What it is |
 |---|---|
-| Back arch too pronounced | The lumbar curve is overstated; it reads in every idle pose |
-| Glutes sitting too high | Wrong mass placement relative to the sacrum |
-| Hands and feet | Copied from open-source Reallusion meshes — a third-party dependency in the most-used asset in the project |
-| Eyelids not straight | Loops that don't run clean, which fights every facial expression built on top |
-| Crotch geometry doesn't flow | Too much geometry, badly routed |
+| **Back arch too pronounced** | The lumbar curve is overstated; it reads in every idle pose |
+| **Glutes sitting too high** | Wrong mass placement relative to the sacrum |
+| **Hands and feet** | Copied from open-source Reallusion meshes — a third-party dependency in the most-used asset in the project |
+| **Eyelids not straight** | Loops that don't run clean, which fights every facial expression built on top |
+| **Crotch geometry doesn't flow** | Too much geometry, badly routed |
 
 There's a third reason on top of the artistic one, and it's the honest one: **relearning Blender.** A year away from a tool costs you, and there's a course — 3D Anime Character Creation, by the YouTuber 2AM — whose target style is genuinely the style MGA is aiming at, and whose hair-modelling method is *already* the documented hair pipeline in this project. Same author, same head shape, same assumptions. Following it properly rather than skimming it is a defensible use of a month.
 
@@ -86,8 +86,8 @@ You can, and it required actually counting rather than assuming. Bone-name sets 
 
 | Skeleton | Bones |
 |---|---|
-| Manny / Quinn (UE5 mannequin) | **159** |
-| MetaHuman body | **342** |
+| **Manny / Quinn (UE5 mannequin)** | 159 |
+| **MetaHuman body** | 342 |
 
 **All 150 of Manny's real deforming joints appear in MetaHuman under identical names** — including the whole corrective set. Epic aligned the mannequin to MetaHuman. So retargeting between them is name-identical on every driven chain, and adopting MetaHuman costs nothing in animation compatibility while adding twenty toe joints, a large finger corrective set, and access to MetaHuman-targeted animation and Control Rig assets.
 
@@ -105,9 +105,9 @@ Hands, feet, and the body blockout with arms and legs — the geometry, live in 
 
 | Piece | Vertices | Faces | Notes |
 |---|---|---|---|
-| Body block | 1,273 | 1,228 | **All quads**, mirrored |
-| Hand | 1,380 | 1,442 | Hand-authored from primitives |
-| Foot | 1,238 | 1,310 | Hand-authored from primitives |
+| **Body block** | 1,273 | 1,228 | **All quads**, mirrored |
+| **Hand** | 1,380 | 1,442 | Hand-authored from primitives |
+| **Foot** | 1,238 | 1,310 | Hand-authored from primitives |
 
 Target for a finished body is roughly 17k triangles, which is Genshin-class and correct for a game that needs crowds. It also settles something worth writing down before someone standardises it away: **characters are deliberately not Nanite.** Seventeen thousand triangles is below the point where Nanite earns anything, and environment assets in this project get Nanite as a default import step — so characters need to be the stated exception rather than an accident.
 
@@ -147,10 +147,10 @@ Terridyn and Calibran are now anchored to **real catalogued stars**. Not as in-f
 
 | | Terridyn | Calibran |
 |---|---|---|
-| Star | HD 143436 | 18 Scorpii |
-| Constellation, from Earth | Serpens | Scorpius |
-| Distance from Sol | 145.6 ly | 46.1 ly |
-| Type | G3V | G2Va |
+| **Star** | HD 143436 | 18 Scorpii |
+| **Constellation, from Earth** | Serpens | Scorpius |
+| **Distance from Sol** | 145.6 ly | 46.1 ly |
+| **Type** | G3V | G2Va |
 
 Both are documented solar twins with no catalogued planets, which leaves their systems entirely free to invent. The selection had to satisfy three things already fixed in the lore: Terridyn's star is Sol-like and slightly younger than Sol, Terridyn's year is 400 days, and Calibran is roughly six months away by Curve Drive.
 
