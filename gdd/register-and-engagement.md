@@ -142,7 +142,61 @@ a payoff.
 
 ---
 
-## 6. What This Does Not License
+## 6. Publishing and Monetisation During Development
+
+Section 5 is a rule about what the project *says*. This section is the same rule applied to what the
+project *charges for* and *where it posts*, because a payoff can be sold as easily as it can be
+promised.
+
+MGA posts development in three places: the public dev board, Patreon, and SubscribeStar.
+
+### Free tiers receive everything
+
+**There is no paywalled development content.** Dev reports go out in full to every tier on both
+platforms, and the public dev board requires no account at all.
+
+This is not generosity, it is consistency. Section 5's test asks whether a public thing pays out now
+or is an IOU. A dev report placed behind a paid tier answers that question badly in both directions:
+it is *still* an IOU, and now it has a price.
+
+### Billing pauses until there is something worth paying for
+
+While the project's entire public output is writing about a game, **billing stays paused** — patrons
+may subscribe, and are not charged.
+
+The reasoning is the promise-debt argument with money attached. Accepting payment for reports about
+an unfinished game is borrowing against the finished one, at the worst possible interest rate: it
+converts the most engaged part of the audience into creditors *and* gives them a receipt. Being on
+the inside of something built in public should cost nothing until the thing being built can be
+installed.
+
+Billing resumes when there is a build worth putting on a hard drive. **That is a description of a
+state, not a date** — a date would be exactly the kind of roadmap commitment Section 5 refuses.
+
+### Adult images: two editions, never two tiers
+
+MGA is an adult game, and once dev updates begin showing character work, some images will not be
+postable everywhere.
+
+When that starts, **each update ships as two editions covering the same development** — one with the
+adult images, one without.
+
+Three constraints on that, all of which exist to stop the split from becoming a paywall by
+accident:
+
+| | |
+|---|---|
+| **Same development in both** | The editions differ only in which images are attached. Neither is a summary of the other. |
+| **Not a tier** | Both editions are free. Edition is a function of *where it is being posted* and what the reader has opted into, never of what they pay. |
+| **Not a reveal** | The adult edition is not a withheld payoff, and it is never advertised as one. |
+
+This mirrors the game's own architecture — a base that is safe by construction, with adult content as
+a separately installed thing you opt into. Building the game that way and then running the dev
+updates differently would be incoherent.
+
+---
+
+## 7. What This Does Not License
 
 Each of these is a plausible misreading, so each is refused explicitly:
 
@@ -155,6 +209,8 @@ Each of these is a plausible misreading, so each is refused explicitly:
   register is deadpan sincerity, and a great deal of MGA's material is not funny at all.
 - **It is not a licence to under-deliver.** Refusing to sell the payoff is not the same as not
   building one.
+- **It is not a vow of poverty.** The paused billing in Section 6 is a statement about *when* payment
+  is earned, not a position that the work should be free. The pause ends when there is a product.
 
 ---
 
