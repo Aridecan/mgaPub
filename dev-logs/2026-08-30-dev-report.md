@@ -44,13 +44,11 @@ It's being replaced.
 
 Not because it's broken. Because five specific things about it are wrong, and every one of them gets multiplied by the fact that **this is the most-shipped asset in the game** — every female character in MGA is this mesh, scaled, with a shape key. A defect here is a defect several hundred times over.
 
-| The defect | What it is |
-|---|---|
-| **Back arch too pronounced** | The lumbar curve is overstated; it reads in every idle pose |
-| **Glutes sitting too high** | Wrong mass placement relative to the sacrum |
-| **Hands and feet** | Copied from open-source Reallusion meshes — a third-party dependency in the most-used asset in the project |
-| **Eyelids not straight** | Loops that don't run clean, which fights every facial expression built on top |
-| **Crotch geometry doesn't flow** | Too much geometry, badly routed |
+- **Back arch too pronounced** — The lumbar curve is overstated; it reads in every idle pose
+- **Glutes sitting too high** — Wrong mass placement relative to the sacrum
+- **Hands and feet** — Copied from open-source Reallusion meshes — a third-party dependency in the most-used asset in the project
+- **Eyelids not straight** — Loops that don't run clean, which fights every facial expression built on top
+- **Crotch geometry doesn't flow** — Too much geometry, badly routed
 
 There's a third reason on top of the artistic one, and it's the honest one: **relearning Blender.** A year away from a tool costs you, and there's a course — 3D Anime Character Creation, by the YouTuber 2AM — whose target style is genuinely the style MGA is aiming at, and whose hair-modelling method is *already* the documented hair pipeline in this project. Same author, same head shape, same assumptions. Following it properly rather than skimming it is a defensible use of a month.
 
@@ -84,10 +82,8 @@ Standard game skeletons give each foot a single toe bone. MGA wants per-toe arti
 
 You can, and it required actually counting rather than assuming. Bone-name sets pulled from the shipping engine assets:
 
-| Skeleton | Bones |
-|---|---|
-| **Manny / Quinn (UE5 mannequin)** | 159 |
-| **MetaHuman body** | 342 |
+- **Manny / Quinn (UE5 mannequin)** — 159
+- **MetaHuman body** — 342
 
 **All 150 of Manny's real deforming joints appear in MetaHuman under identical names** — including the whole corrective set. Epic aligned the mannequin to MetaHuman. So retargeting between them is name-identical on every driven chain, and adopting MetaHuman costs nothing in animation compatibility while adding twenty toe joints, a large finger corrective set, and access to MetaHuman-targeted animation and Control Rig assets.
 
@@ -103,11 +99,9 @@ The reasoning here is the same as the hair-bone reasoning from July, and it's be
 
 Hands, feet, and the body blockout with arms and legs — the geometry, live in the file as this is written:
 
-| Piece | Vertices | Faces | Notes |
-|---|---|---|---|
-| **Body block** | 1,273 | 1,228 | **All quads**, mirrored |
-| **Hand** | 1,380 | 1,442 | Hand-authored from primitives |
-| **Foot** | 1,238 | 1,310 | Hand-authored from primitives |
+- **Body block** — Vertices 1,273 · Faces 1,228 · **All quads**, mirrored
+- **Hand** — Vertices 1,380 · Faces 1,442 · hand-authored from primitives
+- **Foot** — Vertices 1,238 · Faces 1,310 · hand-authored from primitives
 
 Target for a finished body is roughly 17k triangles, which is Genshin-class and correct for a game that needs crowds. It also settles something worth writing down before someone standardises it away: **characters are deliberately not Nanite.** Seventeen thousand triangles is below the point where Nanite earns anything, and environment assets in this project get Nanite as a default import step — so characters need to be the stated exception rather than an accident.
 
@@ -125,11 +119,9 @@ Early in the month the control scheme got a revision that should have happened e
 
 The design had two on-foot modes: first person and third person. There are three, and the axis that actually matters isn't first-versus-third person at all. It's **whether the mouse cursor is captured or free.**
 
-| Mode | Cursor | Move | Camera anchored to |
-|---|---|---|---|
-| **First Person** | captured | WASD, character-relative | the character's eyes |
-| **Third Person Direct** | captured | WASD, character-relative | the character — park it over her shoulder and it stays there |
-| **Third Person Pointer** | free | click a destination, *or* WASD camera-relative | the world — point it north and it holds north while she turns beneath it |
+- **First Person** — Cursor captured · Move WASD, character-relative · Camera anchored to the character's eyes
+- **Third Person Direct** — Cursor captured · Move WASD, character-relative · Camera anchored to the character — park it over her shoulder and it stays there
+- **Third Person Pointer** — Cursor free · Move click a destination, *or* WASD camera-relative · Camera anchored to the world — point it north and it holds north while she turns beneath it
 
 First Person and Third Person Direct share their controls completely; the second is just the first plus a momentary camera-adjust layer. **Third Person Pointer is the genuinely different one** — a point-and-click paradigm where the entire game is playable with the mouse alone, but where WASD stays fully live, because mouse-only should be an option and never a requirement.
 
@@ -145,12 +137,10 @@ A worldbuilding session that produced something more durable than expected.
 
 Terridyn and Calibran are now anchored to **real catalogued stars**. Not as in-fiction naming — nobody in 2352 calls Terridyn's sun "HD 143436" — but as an authoring backbone, so that distances, transit times, orbital parameters and night skies stay consistent and *derivable* rather than being invented one scene at a time.
 
-| | Terridyn | Calibran |
-|---|---|---|
-| **Star** | HD 143436 | 18 Scorpii |
-| **Constellation, from Earth** | Serpens | Scorpius |
-| **Distance from Sol** | 145.6 ly | 46.1 ly |
-| **Type** | G3V | G2Va |
+- **Star** — Terridyn HD 143436 · Calibran 18 Scorpii
+- **Constellation, from Earth** — Terridyn Serpens · Calibran Scorpius
+- **Distance from Sol** — Terridyn 145.6 ly · Calibran 46.1 ly
+- **Type** — Terridyn G3V · Calibran G2Va
 
 Both are documented solar twins with no catalogued planets, which leaves their systems entirely free to invent. The selection had to satisfy three things already fixed in the lore: Terridyn's star is Sol-like and slightly younger than Sol, Terridyn's year is 400 days, and Calibran is roughly six months away by Curve Drive.
 
