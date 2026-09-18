@@ -40,7 +40,7 @@ All bindings are **fully rebindable** through the settings menu (see [Settings M
 | LB + X / Y / B         | Action slots 7 / 8 / 9                              |
 | LB+LT + X              | Action slot 10                                      |
 | LB+LT + Y              | Camera toggle (1st/3rd person)                      |
-| LB+LT + B              | Reserved                                            |
+| LB+LT + B              | Inventory screen                                    |
 | RB                     | Zoom (scope, binoculars)                            |
 | D-pad Up               | Posture up (belly crawl → crawl → crouch → stand)   |
 | D-pad Down             | Posture down (stand → crouch → crawl → belly crawl) |
@@ -65,7 +65,7 @@ The controller maps 10 action bar slots onto 3 face buttons (X/Y/B) using modifi
 | **LB**    | LB            | X / Y / B    | 7 / 8 / 9     |
 | **LB+LT** | LB + LT       | X            | 10            |
 | **LB+LT** | LB + LT       | Y            | Camera toggle |
-| **LB+LT** | LB + LT       | B            | Reserved      |
+| **LB+LT** | LB + LT       | B            | Inventory     |
 
 
 A (bottom face) is never modified — it is always Jump. RT is never modified — it is always contextual action. This keeps the two most time-critical inputs (jump and interact/grab) accessible without any modifier.
@@ -105,6 +105,7 @@ A (bottom face) is never modified — it is always Jump. RT is never modified �
 | Cycle characters                            | F1–F4              |
 | Camera toggle (1st/3rd)                     | F5                 |
 | Phone / Menu                                | Esc or Tab         |
+| Inventory screen                            | I                  |
 
 
 Keyboard users have direct access to all 10 action bar slots without modifier layers. The number row provides 1:1 mapping — what you see on the bar is what you press. This is the primary advantage of KB+M over controller for combat.
@@ -277,7 +278,7 @@ All keys and controller bindings are fully remappable through the settings menu.
 2. **LT layer:** Player holds LT, presses X → slot 4, Y → slot 5, B → slot 6. The left trigger is the first modifier. Player releases LT to return to base layer
 3. **LB layer:** Player holds LB, presses X → slot 7, Y → slot 8, B → slot 9. The left bumper is the second modifier
 4. **Double modifier (LB+LT):** Player holds both LB and LT, presses X → slot 10. This is the deepest slot — reserved for the least frequently used action
-5. LB+LT + Y toggles camera mode (1st/3rd person). LB+LT + B is reserved for future assignment
+5. LB+LT + Y toggles camera mode (1st/3rd person). LB+LT + B opens the inventory screen
 
 **Muscle memory development:**
 
@@ -497,7 +498,7 @@ All extended inputs are **supported but unmapped by default**. The game recognis
 - ~~Exact hold threshold for RT contextual action~~ — RESOLVED: default 0.25s, tunable 0.15s–0.50s in settings menu
 - Whether folder tap behaviour (slot 1 / last used) interacts with modifier layers on controller
 - L4/R4 default mapping — currently open; may assign defaults after playtesting identifies common player preferences
-- LB+LT + B reserved slot — potential future assignment (party commands, emote wheel, map)
+- ~~LB+LT + B reserved slot — potential future assignment (party commands, emote wheel, map)~~ — RESOLVED 2026-09-17: **Inventory screen** (KB: I). Inventory is a phone-independent physical interface with its own input — see [UI/UX — Physical Interface — Inventory](../gdd/ui-ux.md#physical-interface--inventory)
 - Whether the action bar visual layer indicator is sufficient or whether a persistent modifier state icon is needed on-screen
 - Analog sprint curve tuning — how does stick deflection map to speed between walk and run?
 - Whether posture transitions have i-frames or vulnerability windows during animation

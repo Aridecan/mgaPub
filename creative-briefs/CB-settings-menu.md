@@ -309,7 +309,7 @@ Controls the CAMERA drone orbit behavior around Meghan. Separate values are stor
 |---------|------|---------|-------|
 | Difficulty | Dropdown | Normal | Easy / Normal / Hard / Custom — see UC2 |
 | Autosave | Dropdown | 10 min | Off / 5 / 10 / 15 / 20 / 30 min |
-| Pause in In-Game Menu | Toggle | Off | When on, world time pauses while any in-game menu is open |
+| Pause in In-Game Menu | Toggle | Off | When on, world time pauses while any in-game menu is open — the phone, the inventory screen, or the out-of-character menu |
 | Tutorial Hints | Toggle | On | |
 | HUD Opacity | Slider | 100% | Scales all widget opacity |
 | Notifications | Toggle | On | Skill level-up log, mission updates, etc. |

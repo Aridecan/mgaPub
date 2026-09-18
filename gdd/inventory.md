@@ -161,7 +161,9 @@ This view trades control for speed. Players who do not want to think about conta
 
 ## Phone Independence
 
-The inventory UI is accessible without Meghan's phone. Meghan knows what is in her pockets without a digital interface — this is physical knowledge, not digital. The inventory screen joins save, load, settings, and exit as options available regardless of phone status.
+The inventory UI is accessible without Meghan's phone. Meghan knows what is in her pockets without a digital interface — this is physical knowledge, not digital.
+
+The inventory is **not** an out-of-character option like save, load or settings. It is in-fiction and real-time, like the phone. But it is gated by **physical reach**, not by having the phone. It is a third UI category, between the phone and the out-of-character menu. It has its own input, and it is also listed on both menu-button screens. Which containers are interactive changes with worn position, layering, pocket damage, free hands and restraint. Full rules: [UI/UX — Physical Interface — Inventory](ui-ux.md#physical-interface--inventory).
 
 This is relevant during pipeline capture sequences and other scenarios where the phone may be unavailable. Knowing what you are carrying in those moments is often exactly the information you need.
 

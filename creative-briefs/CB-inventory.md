@@ -6,6 +6,8 @@
 
 The player manages a physically modelled inventory where every item has real weight, dimensions, and a physical location — in a hand, in a pocket, in a bag, or in the world. There is no abstract inventory grid disconnected from the character's body. What the player carries is what Meghan is physically carrying, and the consequences of that are real.
 
+**The inventory screen is not a phone app.** It has its own input and works with or without Meghan's phone. It is gated by **reach**: what Meghan's hands can get to right now, given worn position, layering, pocket damage, free hands and restraint. The screen is dynamic. A container that cannot be reached still shows its contents but cannot be interacted with. See [UI/UX — Physical Interface — Inventory](../gdd/ui-ux.md#physical-interface--inventory).
+
 ---
 
 ## Use Cases

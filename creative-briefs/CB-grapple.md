@@ -190,7 +190,7 @@ The core tension: **5 lanes, limited actions, limited SP.** You cannot cover eve
    **Not limited to combat actions.** Any action with the appropriate state gates can go on the grapple bar — combat or non-combat. Non-combat actions useful during grapple include Intimidate (pressure morale while struggling), Taunt (disrupt the opponent's focus), Search (feel for hidden items or tools on the opponent's body), or social skills that make sense in close contact. The state gate is the only filter — if an action has a Grappled gate, it belongs on the Grappled bar regardless of its source skill tree.
 
 3. **The grapple action bar** — 5 slots (one per lane), each containing a folder:
-   - The player configures this via the phone interface, same as the regular action bar (CB-action-bar UC3)
+   - The player configures this through the out-of-character **Action Bar** option, same as the regular action bar (CB-action-bar UC3). It does not require the phone
    - Each lane slot opens into a folder with the full action bar (up to 10 slots deep, or nested folders)
    - Actions placed in a lane folder are the actions available for that lane during the grapple
    - **The same action can be placed in multiple lane folders** — but it can only be **active in one lane at a time**. Firing Arm Bar in lane 1 means it's on cooldown in all lanes until it resets.

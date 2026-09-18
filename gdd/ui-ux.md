@@ -6,7 +6,17 @@
 
 MGA's UI is diegetic. Everything the player sees during gameplay is something Meghan actually sees — her cybernetic eye implants displaying AR overlays driven by her smartphone. The information available to the player is the information available to Meghan, which means UI capability is a function of her hardware and her skills. A better phone and higher skill ranks produce a more capable HUD. A player who has invested in Perception and bought the right licenses sees more than one who hasn't.
 
-The only elements that break diegesis are the out-of-character menu options — save, load, settings, tutorials, exit — which exist because Meghan's phone cannot be the interface for operations outside the game world.
+In-game interface falls into three categories. Each one is gated by a different thing:
+
+| Category | What it is | Gated by | Contents |
+|----------|-----------|----------|----------|
+| **Phone (diegetic, digital)** | What Meghan's smartphone shows her | Having the phone | Widgets, Map, Skills, Notes, Missions, Contacts, Delivery app — see [The Smartphone as Menu Hub](#the-smartphone-as-menu-hub) |
+| **Physical (diegetic, bodily)** | What Meghan knows and can do with her own hands | Physical reach — what her hands can get to right now | Inventory — see [Physical Interface — Inventory](#physical-interface--inventory) |
+| **Out-of-character (non-diegetic)** | The player's controls, which Meghan never sees | Nothing; always available | Save, Load, Settings, Tutorials, Memories, Action Bar, Exit — see [Out-of-Character Menu](#out-of-character-menu) |
+
+The only elements that break diegesis are the out-of-character options, which exist because Meghan's phone cannot be the interface for operations outside the game world. The action bar is in this category: it is the player's way of telling Meghan what to do, not something Meghan sees (see [CB-hud-modification — The Action Bar](../creative-briefs/CB-hud-modification.md)). So configuring it is out-of-character too.
+
+**Inventory is the case between the two.** It is in-fiction and real-time like the phone, but it is not digital, so losing the phone does not take it away. What limits it is Meghan's body, not her hardware.
 
 ---
 
@@ -125,14 +135,13 @@ The degraded view is still a third-person perspective on Meghan. The player is n
 
 ## The Smartphone as Menu Hub
 
-Outside of widget configuration, the smartphone is the primary interface for all in-world menus. If Meghan has her phone, she has full access to:
+Outside of widget configuration, the smartphone is the interface for all **digital** in-world menus. It is not the interface for inventory (a physical interface, below) or for action bar configuration (out-of-character). If Meghan has her phone, she has full access to:
 
 | Phone section | Contents |
 |--------------|----------|
 | **Widgets** | Configure active eye implant and drone widget sets |
 | **Map** | City map, fast travel (if unlocked), points of interest — see [FB-gps-map](../feature-briefs/FB-gps-map.md) and [TB-gps-map-pipeline](../technical-briefs/TB-gps-map-pipeline.md) |
 | **Skills** | Full skill and attribute view; progression tracking |
-| **Inventory** | Equipment, items, and consumables — see [Inventory](inventory.md) |
 | **Notes** | Field notes, lore entries, quest notes, and app guides — see [CB-ingame-menus](../creative-briefs/CB-ingame-menus.md) |
 | **Missions** | Active and completed mission list; quest tracking |
 | **Contacts** | NPCs Meghan has relationships with; communication log |
@@ -142,7 +151,7 @@ The phone interface is navigated in-world — Meghan takes out her phone; time d
 
 ### Losing the Phone
 
-If Meghan is separated from her phone — stolen, lost during a mission, or taken during a pipeline capture — the in-world menus become unavailable. She cannot access her skill view, her map, her inventory, or her mission list until she recovers it. The eye implant widgets continue to function (they are loaded into the implants, not streamed from the phone in real time) but cannot be reconfigured and widget profiles cannot be switched.
+If Meghan is separated from her phone — stolen, lost during a mission, or taken during a pipeline capture — the phone's menus become unavailable. She cannot access her skill view, her map, her notes, or her mission list until she recovers it. **Her inventory is unaffected.** It is a physical interface, not a phone app (see [Physical Interface — Inventory](#physical-interface--inventory)). Her action bar configuration is also unaffected, because that is out-of-character. The eye implant widgets continue to function (they are loaded into the implants, not streamed from the phone in real time) but cannot be reconfigured and widget profiles cannot be switched.
 
 The same applies during magical girl transformation. When Meghan transforms into Ava, everything she is wearing is stored in a pocket dimension for the duration. Her phone, if it is on her person, goes with it. The widget profile loaded at the moment of transformation is fixed for the entire fight. This makes profile selection a deliberate pre-combat decision.
 
@@ -174,6 +183,37 @@ The burner phone is a purchasable item. It functions as a basic phone with no wi
 
 ---
 
+## Physical Interface — Inventory
+
+The inventory screen is **in-fiction and real-time**. It shows Meghan's own knowledge of what she is carrying and her physical act of reaching for it. It is **not a phone app.** Meghan knows what is in her pockets without a digital interface. Losing, confiscating or transforming away the phone does not affect it.
+
+### Access
+
+The inventory has its **own dedicated input** — default **I** (keyboard) / **LB+LT+B** (controller), rebindable in Controls like any other action (see [CB-controls](../creative-briefs/CB-controls.md)). It opens directly, without going through the phone. It is also listed as an entry on the menu-button screens (Phone Menu and Lost Phone Menu), so it can be reached from there as well, with or without the phone. See [CB-ingame-menus](../creative-briefs/CB-ingame-menus.md).
+
+### Time
+
+The world keeps running while the inventory screen is open. Rummaging through pockets takes real time, and every move costs time (see [CB-inventory](../creative-briefs/CB-inventory.md): "No combat state"). The opt-in **Pause in In-Game Menu** toggle covers the inventory screen, just as it covers the phone and the out-of-character menu.
+
+### Gated by reach, not by hardware
+
+What the inventory screen offers is **dynamic**. It shows what Meghan's hands can reach right now, not a fixed list. Each container on the screen is either reachable (items can be moved in and out) or visible but out of reach (contents shown, not interactive). Reach is the result of rules that are already specified elsewhere:
+
+| Factor | Effect on reach | Specified in |
+|--------|----------------|--------------|
+| **Worn position** | Pockets, belt pouches and courier bags can be reached while worn. A backpack on her back cannot; she has to take it off first | [CB-inventory UC2](../creative-briefs/CB-inventory.md) |
+| **Layering** | A closed outer garment blocks the pockets of inner layers in the same body region | [CB-clothing UC3](../creative-briefs/CB-clothing.md) |
+| **Container damage** | A pocket that falls below its viability threshold fails. Destroying the garment drops its contents | [CB-clothing](../creative-briefs/CB-clothing.md), [Inventory](inventory.md) |
+| **Free hands** | Each container needs a set number of free hands to use (a pants pocket needs 1, a fiddly backpack side pocket needs 2) | [CB-inventory UC2](../creative-briefs/CB-inventory.md) |
+| **Proximity** | World containers appear only while in reach | [CB-inventory UC4](../creative-briefs/CB-inventory.md) |
+| **Restraint** | Hands bound or restrained: the screen still opens and shows what she is carrying, but nothing can be moved, because every move needs a free hand | This section |
+
+Blindfolding does **not** gate the inventory. She knows her pockets by feel. Knockout does not gate it either, because the player is in the [Brainwave Sync](../creative-briefs/CB-knockout-recovery.md) minigame and not controlling Meghan's hands.
+
+This is why the inventory is still useful during capture sequences, when the phone is often gone. Knowing what you are carrying, and whether you can reach it, is often exactly the information you need.
+
+**The magical inventory is not part of this.** Uniform pieces are spell constructs managed through a phone app (see [Inventory — Magical Girl Uniform](inventory.md#magical-girl-uniform-and-the-pocket-dimension)), so they are gated by the phone like any other app.
+
 ---
 
 ## Localization Settings
@@ -193,7 +233,7 @@ Each dropdown only lists languages for which the corresponding package is instal
 
 ## Out-of-Character Menu
 
-Six options are always available regardless of phone status, accessed via a hardware input that does not require the phone:
+Seven options are always available regardless of phone status, accessed via a hardware input that does not require the phone:
 
 | Option | Function |
 |--------|----------|
@@ -202,7 +242,10 @@ Six options are always available regardless of phone status, accessed via a hard
 | **Game Settings** | Graphics, audio, controls, autosave slider, streamer settings |
 | **Tutorials** | Offline encyclopedia of game mechanics — entries unlock progressively as systems are introduced |
 | **Memories** | Rewatch previously-seen cutscenes with recorded actor state — see [Cutscenes](cutscenes.md) |
+| **Action Bar** | Configure action bar slots, folders, form-specific bars, grapple bars and profiles — see [CB-action-bar UC3](../creative-briefs/CB-action-bar.md) |
 | **Exit Game** | Return to desktop |
+
+**Why the action bar is here.** The action bar is the player's way of telling Meghan what to do. It is an aid for the player, not something Meghan sees in her AR. There is no in-fiction reason for her to configure it, so it belongs with the player's controls, not on her phone. A lost phone never locks the player out of their own bar layout.
 
 These are the only elements that break diegesis. They are intentionally minimal. The Tutorials entry provides a persistent reference for every system taught during the prologue and Chapter 1, available even when Meghan's phone is lost. See [CB-tutorials](../creative-briefs/CB-tutorials.md) for the full design.
 
@@ -230,8 +273,9 @@ No online leaderboard, anti-cheat, or run upload is provided. Most competitive j
 
 - Full widget list and skill/license gate table — feature brief TBD
 - Phone tier progression — exact number of tiers and slot counts
-- ~~Whether time pauses when the phone is open~~ — resolved: world time continues normally by default; opt-in **Pause in In-Game Menu** toggle in Gameplay Settings covers both phone and out-of-character menus
-- Inventory system design — not yet documented
+- ~~Whether time pauses when the phone is open~~ — resolved: world time continues normally by default; opt-in **Pause in In-Game Menu** toggle in Gameplay Settings covers the phone, the inventory screen, and the out-of-character menu
+- ~~Inventory system design — not yet documented~~ — resolved: [Inventory](inventory.md) + [CB-inventory](../creative-briefs/CB-inventory.md); UI category (physical, reach-gated, phone-independent) in [Physical Interface — Inventory](#physical-interface--inventory)
+- ~~Where action bar configuration lives~~ — resolved: out-of-character menu, not the phone
 - ~~Drone widget adaptation process~~ — resolved: own eye AR widget first, then time investment to port; time proportional to licence tier, reduced by Hacking skill; see CB-hud-modification
 - Whether lost phone scenarios are scripted (specific mission events) or can occur organically through pipeline capture
 - Environmental laser degradation confirmed — smoke, magical interference, and certain materials can degrade the laser channel; technical implementation TBD

@@ -93,7 +93,9 @@ Digital button actions are `bool`; movement/look are `Axis2D`; the two modifiers
 - **Modifiers (NOT in the rebindable slot set):** `IA_ModLT`, `IA_ModLB` — drive the layer swap.
 - **Dedicated (never-modified) actions:** `IA_Jump`, `IA_Dodge`, `IA_Interact`, `IA_Sprint`,
   `IA_Walk`, `IA_Zoom`, `IA_CameraZoomIn`, `IA_CameraZoomOut`, `IA_PostureUp`, `IA_PostureDown`,
-  `IA_WeaponSwitch`, `IA_Transform`, `IA_CameraToggle`, `IA_PhoneMenu`.
+  `IA_WeaponSwitch`, `IA_Transform`, `IA_CameraToggle`, `IA_PhoneMenu`, `IA_Inventory`.
+  *(`IA_Inventory` added 2026-09-17, after the 34-`IA_` build; the asset and its mappings are still to be
+  authored.)*
 - **Party:** `IA_SelectPartyMember1`…`4` (KB direct-select F1–F4) + `IA_CyclePartyPrev` /
   `IA_CyclePartyNext` (controller D-pad prev/next). Both drive the same party-switch system.
 
@@ -138,6 +140,7 @@ that swap component lands with the pawn. For M1 the IMCs exist so the **rebind U
 | `WeaponSwitch` | Q | | `Transform` | T |
 | `SelectPartyMember1`…`4` | F1…F4 | | `CameraToggle` | F5 |
 | `PhoneMenu` | Esc (alt Tab) | | `Move` / `Look` | WASD / Mouse (Look adds keys) |
+| `Inventory` | I | | | |
 
 KB party switch = four direct-select actions (F1–F4). `Move` is fully rebindable; `Look` keeps the
 mouse locked as its primary and only accepts **added** keys.
@@ -149,7 +152,7 @@ mouse locked as its primary and only accepts **added** keys.
 | **Base** `IMC_Pad_Base` | `ActionSlot1` | `ActionSlot2` | `ActionSlot3` | A=`Jump`·RT=`Interact`·R3=`Dodge`·L3=`Sprint`·RB=`Zoom`·D-pad↑↓=`PostureUp/Down`·D-pad←→=`WeaponSwitch`·Menu=`PhoneMenu` |
 | **LT** `IMC_Pad_LT` | `ActionSlot4` | `ActionSlot5` | `ActionSlot6` | D-pad←→=`Transform` |
 | **LB** `IMC_Pad_LB` | `ActionSlot7` | `ActionSlot8` | `ActionSlot9` | D-pad←→=`CyclePartyPrev/Next`·D-pad↑↓=`CameraZoomIn/Out` |
-| **LB+LT** `IMC_Pad_LBLT` | `ActionSlot10` | `CameraToggle` | *(reserved)* | — |
+| **LB+LT** `IMC_Pad_LBLT` | `ActionSlot10` | `CameraToggle` | `Inventory` | — |
 
 **A (Jump) and RT (Interact) are locked** — the rebind UI must present them read-only (CB-controls:
 the two time-critical inputs are never modified). Enforce in the UI + the conflict layer.

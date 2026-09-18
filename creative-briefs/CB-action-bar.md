@@ -6,7 +6,7 @@
 
 The action bar is a **10-slot hotbar** fixed to the bottom of the screen. It holds every executable ability in the game — combat strikes, spells, search, lock picking, hacking, door interactions, grabbing items — and fires them in real time with a single keypress. The bar is always live; the clock never pauses for action selection.
 
-The bar is fully configurable through Meghan's phone. Players assign actions to slots, organise them into nested folders, and save layouts as named profiles. The system rewards mastery of your own configuration — knowing where your actions are and reaching them under pressure is a genuine player skill.
+The bar is fully configurable through the out-of-character **Action Bar** option (not Meghan's phone — see UC3). Players assign actions to slots, organise them into nested folders, and save layouts as named profiles. The system rewards mastery of your own configuration — knowing where your actions are and reaching them under pressure is a genuine player skill.
 
 The bar also supports **multiple modes** that swap the displayed layout automatically based on game state. The regular bar shows the player's configured actions; a grapple bar replaces it during grapple contests with state-specific combat options. Each mode is independently configurable.
 
@@ -50,7 +50,7 @@ The 10 slots are displayed in **groups that mirror the face button and modifier 
 
 The middle button in each group (Y position) is **elevated ~25%** above the left (X) and right (B) buttons, matching the physical face button layout where Y sits higher than X and B. This gives the player an immediate visual map from screen to controller.
 
-The fourth group (LT+LB) displays two buttons: slot 10 in the X position and camera toggle in the Y position (elevated). The B position is not displayed — it is reserved and has no current function. The camera toggle button is shown but is not player-configurable; it always shows the camera toggle action.
+The fourth group (LT+LB) displays three buttons: slot 10 in the X position, camera toggle in the Y position (elevated), and inventory in the B position. The camera toggle and inventory buttons are shown but are not action-bar slots: the player cannot place an action there, and they always show their fixed function. Both can still be rebound in Controls.
 
 ### Active Group Highlighting
 
@@ -125,7 +125,7 @@ The highlight shift is instantaneous — the moment the modifier is depressed, t
 **Actor:** The player
 **Goal:** Assign actions to slots and create folder structures
 
-**Interface:** The action bar is configured through Meghan's in-world **smartphone**. This is the same phone used for HUD widget configuration, hacking, communication, and purifier management.
+**Interface:** The action bar is configured through the **out-of-character menu** (the **Action Bar** option), not through Meghan's smartphone. The action bar is the player's way of telling Meghan what to do. It is an aid for the player that Meghan never sees in her AR, so there is no in-fiction reason for her to configure it. It is always available, including when the phone is lost, confiscated, or in the pocket dimension. See [UI/UX — Out-of-Character Menu](../gdd/ui-ux.md#out-of-character-menu).
 
 **What the player can do:**
 
@@ -208,11 +208,11 @@ The regular mode bar maintains **two independent configurations** — one for ci
 
 **What profiles are:**
 
-A profile is a named snapshot of the current action bar layout — which actions are in which slots, folder structure, folder tap behaviour settings. Profiles follow the same pattern as [HUD widget profiles](CB-hud-modification.md) — same phone interface, same mental model.
+A profile is a named snapshot of the current action bar layout — which actions are in which slots, folder structure, folder tap behaviour settings. Profiles follow the same save/load/switch pattern as [HUD widget profiles](CB-hud-modification.md), but they live in the out-of-character Action Bar option, not on the phone.
 
 **What the player can do:**
 
-- **Save** the current bar layout as a named profile from the phone menu
+- **Save** the current bar layout as a named profile from the Action Bar option
 - **Load** a saved profile — applies the layout immediately
 - **Overwrite** an existing profile with the current layout
 - **Rename** or **delete** saved profiles
@@ -231,12 +231,11 @@ A profile is a named snapshot of the current action bar layout — which actions
 - **Situational loadouts** — a stealth-focused bar vs a direct combat bar vs an exploration bar, switchable on demand
 - **Form specialisation** — different transformed profiles for solo vs party play, or for different enemy types
 
-**Phone access constraints:**
+**No phone access constraints:**
 
-Two conditions prevent profile switching, consistent with widget profiles:
+Action bar profiles are **not** gated by the phone. This is unlike widget profiles. Widgets are what Meghan's implants show her, so they depend on her hardware. The action bar is the player's control scheme. A lost phone or a transformation does not stop the player reconfiguring or switching profiles.
 
-- **Lost phone** — if Meghan's phone is taken or lost, profiles are inaccessible. The currently loaded bar continues to function, but cannot be reconfigured or switched until the phone is recovered
-- **Magical girl transformation** — the phone goes into a pocket dimension by default. No phone access means no profile switching during transformation. Whatever profile was loaded before transforming is what Meghan has for the fight. Players who want phone access during transformation can use the toss or uniform pocket options (see [HUD Modification — Widget Profiles](CB-hud-modification.md))
+*(Revised 2026-09-17. Earlier versions locked profile switching when the phone was lost and during transformation, which made the pre-fight profile a commitment. Now only **widget** profiles carry that commitment; see [HUD Modification — Widget Profiles](CB-hud-modification.md).)*
 
 ---
 
@@ -248,11 +247,11 @@ Two conditions prevent profile switching, consistent with widget profiles:
 - Grapple mode visual transition — instant swap, slide animation, colour shift, or other treatment when the bar changes modes
 - Whether third-party intervention actions appear on the bar when observing an ally being grappled (e.g., "Break Grapple" action)
 - Whether the grapple bar shows opponent state (SP, escape progress) as a bar element or if that information belongs on the HUD as a widget
-- Profile switching cooldown — whether switching is instantaneous from the phone or has a brief delay
+- Profile switching cooldown — whether switching is instantaneous from the Action Bar option or has a brief delay
 - Maximum number of saved profiles per mode — unlimited, or a cap?
 - Whether the bar supports a fourth mode for restraint escape (the 6-stage escape flow from [Escape Artist](../../mgaPriv/mechanics/skills/escape-artist.md) might warrant its own bar state)
 - Whether profiles can be shared between playthroughs or are per-save
-- LB+LT + B reserved controller slot — potential future assignment
+- ~~LB+LT + B reserved controller slot — potential future assignment~~ — RESOLVED 2026-09-17: Inventory screen
 - ~~Gamepad active group highlight — exact visual treatment~~ — DEFERRED to feature brief
-- ~~Gamepad Group 4 (LT+LB) display~~ — RESOLVED: display X (slot 10) and Y (camera toggle, non-configurable); omit B (reserved, no function)
+- ~~Gamepad Group 4 (LT+LB) display~~ — RESOLVED: display X (slot 10), Y (camera toggle, non-configurable) and B (inventory, non-configurable — revised 2026-09-17, was omitted while reserved)
 - ~~Folder navigation on gamepad~~ — RESOLVED: entering a folder takes over the full bar (same behaviour as keyboard); group layout is temporarily replaced by folder contents

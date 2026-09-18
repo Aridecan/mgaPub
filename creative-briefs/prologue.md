@@ -175,11 +175,12 @@ Terry takes Meghan to buy a phone. The player acquires the basic phone (Terry-fi
 - **Widgets** — configure eye implant and drone widget sets
 - **Map** — city map, points of interest
 - **Skills** — attribute and skill view
-- **Inventory** — equipment and items (connects to the inventory system introduced in Beat 2)
 - **Missions** — active and completed mission list
 - **Contacts** — NPC relationship tracker
 
-The phone is the diegetic hub for all in-world menus. The game walks the player through each section during the shop tutorial. Time does not pause when the phone is open (except in the prologue's event-driven time model).
+Inventory is not taught here. It was introduced in Beat 2, before Meghan owns a phone, and it stays phone-independent (see [UI/UX — Physical Interface — Inventory](../gdd/ui-ux.md#physical-interface--inventory)). The phone shows an Inventory entry as a shortcut, and the tutorial may point it out.
+
+The phone is the diegetic hub for all digital in-world menus. The game walks the player through each section during the shop tutorial. Time does not pause when the phone is open (except in the prologue's event-driven time model).
 
 ---
 
@@ -193,7 +194,7 @@ The phone is the diegetic hub for all in-world menus. The game walks the player 
 After the phone tutorial, the game teaches two connected systems:
 
 - **Pocket designation** — the player marks a specific pocket on their clothing as the phone pocket (using the reservation system from the inventory). This is where the phone lives when not in hand
-- **Action bar** — the player adds a quick-retrieve action for the phone to the action bar, learning how action bar slots work and how to customise them
+- **Action bar** — the player adds a quick-retrieve action for the phone to the action bar, learning how action bar slots work and how to customise them. Configuration is done through the out-of-character **Action Bar** option, not the phone; this beat teaches where it lives
 
 This is the last guided tutorial moment. The prologue ends here. Chapter 1 opens with Meghan equipped — phone in pocket, action bar configured — and the world open. No more paused explanations, no more guided prompts.
 

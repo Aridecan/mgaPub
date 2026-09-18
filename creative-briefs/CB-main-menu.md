@@ -10,7 +10,9 @@ MGA has **three menu contexts** that the player encounters depending on game sta
 |------|------|---------|----------|
 | **Title Menu** | No active game session (pre-game, between sessions) | Out of fiction | Continue, New Game, Load, Mods, Settings, Exit |
 | **Phone Menu** | Active session, Meghan has her phone | In fiction | In-world apps + System button (leads to OOC options) |
-| **Lost Phone Menu** | Active session, Meghan's phone is missing | Out of fiction | Save, Load, Settings, Tutorials, Memories, Exit |
+| **Lost Phone Menu** | Active session, Meghan's phone is missing | Out of fiction | Save, Load, Settings, Tutorials, Memories, Action Bar, Exit (+ Inventory entry) |
+
+The **inventory screen** is not a menu context. It is a physical, in-fiction interface with its own input, it works with or without the phone, and both in-game menus list it — see [In-Game Menus UC6](CB-ingame-menus.md).
 
 The Phone Menu and Lost Phone Menu are documented in detail in [In-Game Menus](CB-ingame-menus.md). This brief covers the **Title Menu** — the first screen the player sees.
 

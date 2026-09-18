@@ -8,6 +8,8 @@ During an active game session, the menu button (Esc/Tab / Menu button) opens one
 
 These are two of the three menu contexts in MGA — the third is the [Title Menu](CB-main-menu.md), which appears when no game session is active.
 
+**The inventory screen is not one of these menus.** It is a physical interface: it shows what Meghan is carrying and what her hands can reach. It has its own input, is listed on both menu states, and **works with or without the phone**. See UC6 and [UI/UX — Physical Interface — Inventory](../gdd/ui-ux.md#physical-interface--inventory).
+
 Full diegetic and design detail is in [UI/UX](../gdd/ui-ux.md). This brief defines the two in-game menu states, their contents, and the structure of the phone menu sections.
 
 **Related documents:**
@@ -41,11 +43,12 @@ Full diegetic and design detail is in [UI/UX](../gdd/ui-ux.md). This brief defin
    | **Notes** | Meghan's collected notes, lore entries, observations, and app guides | See UC4 |
    | **Missions** | Active and completed job contracts; tracks bounties, deliveries, repairs, hacking jobs, and waitressing shifts only — story progression is not tracked here | See [CB-notes-and-discovery](CB-notes-and-discovery.md) |
    | **Skills** | Full skill and attribute view; progression tracking | See [CB-skills-menu](CB-skills-menu.md) |
-   | **Inventory** | Equipment, items, consumables | See [Inventory](../gdd/inventory.md) |
    | **Contacts** | NPCs Meghan has relationships with; communication log | — |
    | **Delivery App** | Courier job dispatch | Unlocked Chapter 1 |
 
-3. **A System button is always visible on the phone screen.** It opens the out-of-fiction options — the same six items available in the Lost Phone Menu (see UC3).
+   Inventory is **not** a phone section. The phone screen shows an **Inventory** entry that opens the physical inventory screen (UC6), the same screen the dedicated inventory input opens. It appears here for convenience only; the screen does not depend on the phone.
+
+3. **A System button is always visible on the phone screen.** It opens the out-of-fiction options — the same seven items available in the Lost Phone Menu (see UC3).
 
 **Phone access and time:** The world continues around Meghan while the phone is open. Accessing the phone in an unsafe environment is a player choice with real consequences. Players who prefer a safety net can enable **Pause in In-Game Menu** in Gameplay Settings (see [CB-settings-menu](CB-settings-menu.md)). Opt-in, off by default.
 
@@ -70,24 +73,27 @@ Full diegetic and design detail is in [UI/UX](../gdd/ui-ux.md). This brief defin
    | **Settings** | Open the settings menu |
    | **Tutorials** | Browse unlocked OOC tutorial entries — game mechanics reference |
    | **Memories** | Rewatch previously-seen cutscenes — see UC5 |
+   | **Action Bar** | Configure action bar slots, folders, form-specific and grapple bars, profiles — see [CB-action-bar UC3](CB-action-bar.md) |
    | **Exit to Desktop** | Close the game |
+
+   The Lost Phone Menu also shows an **Inventory** entry that opens the physical inventory screen (UC6). It is listed separately from the seven out-of-character options because inventory is in-fiction; it is not an OOC option.
 
 2. **The player selects the option they need.**
 
-**This menu is always reachable** regardless of phone status. It exists as a hardware-level input — Meghan's phone being absent does not prevent the player from saving, adjusting settings, or reviewing how a system works. The Tutorials entry provides access to the OOC mechanics encyclopedia — see [CB-tutorials](CB-tutorials.md).
+**This menu is always reachable** regardless of phone status. It exists as a hardware-level input — Meghan's phone being absent does not prevent the player from saving, adjusting settings, reconfiguring the action bar, or reviewing how a system works. The Tutorials entry provides access to the OOC mechanics encyclopedia — see [CB-tutorials](CB-tutorials.md).
 
 ---
 
 ### UC3 — Accessing OOC Options from the Phone Menu
 
 **Actor:** The player
-**Goal:** Reach Save, Load, Settings, Tutorials, Memories, or Exit without dismissing the phone
+**Goal:** Reach Save, Load, Settings, Tutorials, Memories, Action Bar, or Exit without dismissing the phone
 **Trigger:** Player taps the System button on the phone interface
 
 **Step by step:**
 
 1. **Player taps the System button** on the phone screen.
-2. **The same six out-of-fiction options** from the Lost Phone Menu appear: Save, Load, Settings, Tutorials, Memories, Exit to Desktop.
+2. **The same seven out-of-fiction options** from the Lost Phone Menu appear: Save, Load, Settings, Tutorials, Memories, Action Bar, Exit to Desktop.
 3. **Player handles their business and returns to the phone's in-fiction sections.**
 
 ---
@@ -137,13 +143,30 @@ See [Cutscenes](../gdd/cutscenes.md) for the technical architecture and [CB-cuts
 
 ---
 
+### UC6 — Opening the Inventory
+
+**Actor:** The player
+**Goal:** See what Meghan is carrying and move items between hands and reachable containers
+**Trigger:** Player presses the dedicated inventory input (default **I** / **LB+LT+B**), or selects Inventory from the Phone Menu or the Lost Phone Menu
+
+**Step by step:**
+
+1. **The inventory screen opens.** It is the same screen whichever way it was opened, and whether or not Meghan has her phone.
+2. **Each container is shown as reachable or out of reach.** Reachable containers accept drags. Out-of-reach containers show their contents but are not interactive: a backpack still on her back, a pocket under a zipped coat, a pocket that has failed from damage, or everything when her hands are bound.
+3. **The world keeps running.** Every move takes real time. The **Pause in In-Game Menu** toggle applies here as it does to the phone.
+
+**Why it is separate from the phone:** Meghan knows what is in her pockets without a digital interface. The phone is gated by having the phone; the inventory is gated by physical reach. See [UI/UX — Physical Interface — Inventory](../gdd/ui-ux.md#physical-interface--inventory) for the reach rules and [CB-inventory](CB-inventory.md) for the interactions.
+
+---
+
 ## Lost Phone Scenarios
 
 If Meghan's phone is taken or lost:
-- All in-fiction sections become unavailable until the phone is recovered
+- All phone sections (Widgets, Map, Notes, Missions, Skills, Contacts, Delivery App) become unavailable until the phone is recovered
 - Eye implant widgets continue to function (loaded into implants, not streamed from phone)
 - Widgets cannot be reconfigured without the phone
-- The out-of-character options (Save, Load, Settings, Tutorials, Memories, Exit) remain available via the Lost Phone Menu
+- **The inventory screen is unaffected.** It is a physical interface, gated by reach, not by the phone (UC6)
+- The out-of-character options (Save, Load, Settings, Tutorials, Memories, Action Bar, Exit) remain available via the Lost Phone Menu
 
 Lost phone scenarios may be scripted mission events or may occur organically through the pipeline capture system. See [UI/UX open items](../gdd/ui-ux.md).
 
