@@ -111,6 +111,65 @@ The additional key character with a signature front hairstyle is Tierney.
 
 NPC hair length range: chin-length to mid-back. No extreme hairstyles at launch (drills, mohawks, shaved sides deferred to future expansion).
 
+### Hair Under Headwear
+
+**Headwear hides only the hair it covers; the rest stays visible and is shaped to sit under it** (decided 2026-09-19). The legacy approach, hiding all hair whenever a hat is equipped, is not used.
+
+This section is an **authoring contract**, and it is fixed now because retrofitting it means re-exporting every hair piece and hat built by then. The same reasoning applies as for the strand bone chain.
+
+Three mechanisms combine:
+
+| Mechanism | What it solves | UE implementation |
+|-----------|----------------|-------------------|
+| **Region hiding** | Hair the headwear physically covers | Each hair region is its own material section; toggled with `USkeletalMeshComponent::ShowMaterialSection` (per LOD) |
+| **Class compression morph** | Visible hair flaring out as if nothing were on the head, e.g. strands below a beanie | One morph target per hair piece per headwear **class**, set with `SetMorphTarget` at equip time |
+| **Headwear collision** | Simulated back hair clipping up through a brim or helmet | The headwear's physics asset is added as a Chaos Cloth collision source on the hair (`AddClothCollisionSource`, to be verified on 5.8) |
+
+#### Headwear Classes
+
+A class is defined by **how the headwear meets the head** (its junction geometry), not by what it looks like. Every hat in a class shares one compression morph, so the authoring cost scales with the class count, not the hat count.
+
+| Class | Junction | Examples | Default hidden regions | Morph |
+|-------|----------|----------|------------------------|-------|
+| **None** | — | Bare head | — | — |
+| **Band** | A horizontal ring round the head at brow height | Baseball cap and anything else that meets the head at a horizontal band: beanie, fedora, bucket hat, beret, flat cap | Cap, Crown | `Hat_Band` |
+| **Arc** | A narrow line over the top of the head, ear to ear | Over-ear headphones, headsets, comms rigs, Alice band | — | `Hat_Arc` |
+| **Strap** | A thin band round the back of the head, below the Band line | Goggles, respirators and face masks, visors, AR glasses with a rear band | — | `Hat_Strap` |
+| **Shell** | A rigid dome over the whole skull | Bike and scooter helmets (open-face), motorcycle helmets (full-face), riot and tactical helmets | Cap, Crown (+ Fringe for full-face) | `Hat_Shell` |
+| **Hood** | Soft fabric draped over the skull and down the back | Hoodie hood up, cloak hood, rain poncho | Cap, Crown, Fall | `Hat_Hood` |
+
+**Arc and Strap are the cyberpunk additions.** Headphones, headsets, goggles, respirators and AR visors are everyday street wear in the setting, and they are the most common headgear that does **not** hide any hair. Only the compression morph applies to them: a line of hair pressed in where the band sits.
+
+**Hidden regions are set per hat, not per class.** The class column above gives the default. A hat can override it. For example, a full-face helmet adds Fringe, and a fabric headscarf or wrap is a Shell hat that hides everything. This keeps rare cases from becoming new classes.
+
+#### Hair Regions
+
+Every hair piece, front and back, is split into material sections at two cut lines on the shared skull:
+
+| Region | Piece | Covers |
+|--------|-------|--------|
+| **Cap** | Back | The scalp shell from 2AM steps 1–4 |
+| **Crown** | Front + back | Strand lengths above the Band line |
+| **Fall** | Back | Back-hair strand lengths below the Band line |
+| **Fringe** | Front | Bangs and framing strands below the Band line |
+
+The **Band line** is a single ring defined once on the base head, from the brow line, over the ears, to the occipital. It lives in the Blender hair template beside `HairOrigin_Front` and `HairOrigin_Back`, and every piece is cut against it. For the same reason as the shared origins, no per-style adjustment is needed.
+
+A strand crossing the Band line is split at the nearest edge loop into two sections. It stays one continuous mesh and one bone chain.
+
+#### Class Envelopes — The Contract on Both Sides
+
+Each class (except None) has a **class envelope**: a generic proxy surface for the inside of that class's headwear, authored once on the base head.
+
+- **Hair side:** each piece's `Hat_<Class>` morph is authored by shrink-wrapping its visible regions onto the envelope, then saving the result as a shape key. This is largely mechanical, so it can be scripted like the braid construction.
+- **Headwear side:** every hat's interior must sit **on or outside** its class envelope. A hat that cuts inside the envelope will clip, so it has to be refitted or moved to a different class.
+
+The envelope is what lets any hat in a class work with any hair piece without the two being tested against each other.
+
+#### Hair Ornaments — Out of Scope
+
+Magical girl hair ornaments are **not** part of the generic system. They belong to that character's signature hairstyle, either modelled into it or attached to character-specific sockets on the signature hair piece. They are one-off pieces fitted by hand and need no class, envelope or morph.
+
 ---
 
 ## Clothing Pipeline
@@ -132,9 +191,12 @@ The character spawn sequence ensures consistent physics:
 2. Apply breast size shape key to body mesh
 3. Attach hair (front + back) to head sockets — inherits body scale
 4. Attach clothing — inherits body scale; apply matching breast morph
-5. Initialise Chaos Cloth on all simulated meshes
+5. Attach headwear (if any): set the hair's `Hat_<Class>` morph, hide the hat's covered regions, and register the hat's physics asset as a cloth collision source
+6. Initialise Chaos Cloth on all simulated meshes
 
 Scale and morph are applied **before** physics initialisation. This order is critical — Chaos Cloth requires stable vertex positions at init time.
+
+**Equipping or removing headwear at runtime breaks that guarantee.** An example is taking a cap off indoors: the compression morph moves the simulated back hair's vertices mid-simulation. A headwear change therefore has to reset the hair's cloth simulation (for example `ForceClothNextUpdateTeleportAndReset`), ideally hidden behind an animation or a cut.
 
 ---
 
@@ -182,4 +244,8 @@ The segment is designed to tile seamlessly — top and bottom edge loops match p
 - Character creation / salon UI for hair selection
 - Whether magical girl transformation switches back hairstyle (different back hair in transformed vs civilian form)
 - LOD strategy for hair meshes at distance
+- **Mutable evaluation for headwear.** UE's built-in Customizable Object system has Clip Mesh With Mesh, Clip Morph and tag-removal nodes aimed at hair under headwear. Per the reuse-UE-systems rule, check this before building the region and morph system above. The likely conflict is that Mutable merges parts into one generated mesh, while back hair is a socketed skeletal mesh with its own Cloth asset
+- **Layered headwear**: a Band cap worn under a Hood is a signature cyberpunk look. The system currently allows one class at a time; decide whether Hood + Band is a supported combination (union of hidden regions, Hood morph wins) or a single dedicated hat
+- **Hood vs. a simulated hoodie**: Chaos Cloth has no cloth-to-cloth collision, so simulated back hair cannot collide with a simulated hood. This is why Hood hides Fall by default; long hair pulled forward out of the hood would need its own hairstyle variant
+- Whether scalp-mounted cyberware (neural ports, implant plates) is a headwear class, a hair region, or a no-go for characters with hair
 - Whether the skeleton adopts MetaHuman's 172 finger corrective joints (Tier C in [TB — Character Skeleton](../technical-briefs/TB-character-skeleton.md)) or stops at the toe joints. Deferred to rig time; the correctives are driven by a pose-driver solver rather than by animation, and can be added later without re-skinning
