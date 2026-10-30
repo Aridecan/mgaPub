@@ -10,8 +10,8 @@ MGA is an adult game dealing with adult subject matter. It is designed to be mod
 
 | Tier | Contents |
 |------|----------|
-| **Base Game** (aka **Core**) | Full story, full systems, Steam-ready. No content that would prevent distribution on mainstream platforms. **Outfit standard: all outfits meet the Twitch VTuber minimum-cover standard — Base is safe to stream/record by design.** (This is exactly what **Streamer Mode** enforces.) |
-| **Spicy DLC** | Relaxes the coverage standard: **spicier outfit designs and full clothing removal**, plus the combat-driven clothing destruction system (tied to the in-game economy) and nudity. |
+| **Base Game** (aka **Core**) | Full story, full systems, Steam-ready. No content that would prevent distribution on mainstream platforms. **Outfit standard: all outfits meet the Twitch VTuber minimum-cover standard — Base is safe to stream/record by design.** (This is exactly what **Streamer Mode** enforces.) Clothing damage and destruction run in Core, but **underwear cannot be damaged and is itself streamer-safe** — see the damage floor below. |
+| **Spicy DLC** | Relaxes the coverage standard: **spicier outfit designs and full clothing removal**, lifts the underwear damage floor, and adds nudity. |
 | **Super Spicy DLC** | Adds explicit content beyond nudity, including suggestive and sexual scenes. Full intended experience. |
 
 **Outfit-coverage line (2026-07-15, art direction):** now fixed — **Base/Core = Twitch VTuber
@@ -21,6 +21,14 @@ to the **Sensitive Content** settings tab to disable bannable (Spicy/Super Spicy
 [TB — Settings Menu](../technical-briefs/TB-settings-menu.md) and
 [TB — Boot Loader](../technical-briefs/TB-boot-loader.md). The explicit **Spicy ↔ Super Spicy**
 boundary is still being refined; details in the clothing feature briefs.
+
+**Core damage floor (2026-10-30):** clothing damage is a mechanic, so it runs in **every** tier —
+the rule that mechanics never change across tiers, only what the override chain resolves the
+body/outfit/animation set to. What keeps Core streamer-safe is the floor: **in Core, the underwear
+layer cannot be damaged, and every Core underwear garment must itself meet the Twitch VTuber
+minimum-cover standard.** Outer, mid and base layers can be damaged, dropped and destroyed in Core
+exactly as in Spicy; when they are gone, what remains is still stream-safe. Spicy lifts the floor
+(underwear becomes damageable and removable). See [CB-clothing](../creative-briefs/CB-clothing.md) → UC7.
 
 ---
 

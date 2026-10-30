@@ -610,6 +610,8 @@ At 0 durability — coat destroyed
 
 **Overflow on the destroying hit:** Any durability damage that exceeded the garment's remaining durability is added to the passthrough for the next layer on the same hit (see UC5).
 
+**Content tiers — the Core damage floor (2026-10-30):** Damage, degradation and destruction run in every tier; the mechanics do not change with installed DLC. **In Core, underwear cannot be damaged**: the cascade treats the underwear layer as the floor, so its durability never drops, it never becomes unwearable or destroyed, and it cannot be removed by damage. Any passthrough that reaches it goes to the body as normal (see UC5). **Every Core underwear garment must itself meet the Twitch VTuber minimum-cover standard**, so a character stripped down to the floor is still stream-safe. Spicy lifts the floor and underwear takes damage like any other layer. See [Content & DLC](../gdd/content-and-dlc.md) → Content Tiers.
+
 ---
 
 ### UC8 — Unworn Clothing in the World
