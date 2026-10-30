@@ -59,7 +59,7 @@ The passes above define the **look**. As of **UE 5.8**, the **implementation** m
 - **Outline unchanged.** The inverse-hull outline stays a separate **geometry** pass — not part of the BSDF back-end.
 - **Scope.** Cel masters only (Character, Hair, Eye, Cloth, Architecture, Foliage, Decal-when-toggled). The **non-cel** masters — **Ground, Water, Glass** — keep their existing Substrate BSDFs and do **not** use the Toon BSDF.
 
-**To confirm in-editor at 5.8 adoption:** whether the Toon Profile subsumes all of diffuse-band / specular / rim (likely) or only the diffuse band; the exact mapping of SARE (SSS/AO/Roughness) and MOHW (Metallic/Outline-weight/Highlight/Wetness) onto Toon BSDF inputs vs. Toon Profile settings; Toon Profile asset naming (proposal `TP_<Family>` — `TP_Character`, `TP_Cloth`, …).
+**To confirm in-editor at 5.8 adoption:** whether the Toon Profile subsumes all of diffuse-band / specular / rim (likely) or only the diffuse band; the exact mapping of SARE (SSS/AO/Roughness) and MOHW (Metallic/Outline-weight/Highlight/Wetness) onto Toon BSDF inputs vs. Toon Profile settings; Toon Profile asset naming (proposal `TP_<Family>` — `TP_Character`, `TP_Cloth`, …); whether the Toon BSDF exposes a **Normal** input (normal maps are an open item — likely skipped on organic meshes, kept for cloth / hard-surface); and whether the Toon BSDF's lit/shadow decision can be **overridden or fed** by a face shadow map (SDF-style threshold map for face shadow shapes such as the Rembrandt triangle) — if the Toon Profile computes the band internally with no way in, faces may need their own material path.
 
 ---
 

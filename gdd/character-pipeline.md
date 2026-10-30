@@ -23,6 +23,147 @@ Because scaling is uniform (X = Y = Z), all animations play identically on all c
 
 **Why this works:** Stylised anime proportions are nearly identical across characters — exaggerated silhouettes tolerate uniform scaling, and clothing renders as rigid stylised shells rather than clingy fabric. This approach matches the architecture used by Genshin Impact, Honkai Star Rail, and Blue Protocol.
 
+---
+
+### Proportions
+
+The base body is built to a **head-count ratio of 7.29**, measured off the flattened mesh
+2026-10-02. **Canonical height is Meghan at 170 cm**; every other character is this mesh under
+uniform scale.
+
+Head count = total standing height / head height, where the head *includes* the skull and the
+total *includes* the head. It is the primary proportion control for a stylised anime figure.
+
+| | Value |
+|---|---|
+| Crown (`Face` max Z) | +3.7001 |
+| Chin | -1.9884 |
+| Sole | -37.7836 |
+| Head height | 5.68851 |
+| Stature | 41.4837 |
+| **Head count** | **7.293** |
+| Crotch fraction | 0.518 |
+
+Because every female character shares one base mesh differentiated only by uniform scale, **the
+head count and every foot ratio below are cast-wide constants, not per-character values.**
+
+| Character | Height | Scale |
+|-----------|--------|-------|
+| Tierney | 147 cm | x3.54356 |
+| Daisy | 168 cm | x4.04978 |
+| **Meghan** | **170 cm** | **x4.09800** |
+| Celeste | 177 cm | x4.26674 |
+| Ava | 178 cm | x4.29084 |
+| Jennifer | ~192 cm | x4.62832 |
+
+**Regenerate these factors from the final mesh.** They are computed as `height / stature`, and
+stature shifts slightly with every sole-level edit (41.4837 on 2026-10-02, 41.4456 after the
+lateral-arch pass). Current values are good to ~0.1%, which is under 2 mm on a 170 cm character,
+but the table should be recomputed once the mesh is joined, cleaned and final.
+
+#### Measurement Protocol
+
+Reproduce exactly or the number is meaningless:
+
+1. **Orthographic viewports only.** Perspective foreshortening invalidates the measurement.
+2. **Measurement lines must be axis-aligned vertical.** An angled line reports the hypotenuse and
+   always reads long — this inflated an early reading to 7.27 before the lines were corrected.
+3. **Head** = crown of skull to chin point (the lowest silhouette point of the jaw), front ortho.
+4. **Total** = sole to crown, side ortho.
+5. **Hair and clothing meshes hidden.** Anime hair silhouettes add 10-20% and inflate the count.
+6. **The head is a separate object** until joined. `Face` carries the crown; `Body` stops at the
+   neck. A total taken from `Body` alone excludes the head entirely. This also means scaling
+   `Body` alone *does* change the head count while they remain separate objects.
+7. **Check the foot pose before trusting any total.** The body was originally authored with the
+   foot in a 25-degree high-heel pose, where the mesh's lowest vertex is the ball, not the heel —
+   worth 0.30 of head count. **Front ortho cannot reveal plantar flexion.** The foot has since been
+   flattened (2026-10-02) so the datum is now unambiguous, but take totals in side ortho regardless.
+
+#### Target Band
+
+**7.0-7.5 is the target range for adult female characters.** Reference points: measured real adult
+female 7.0-7.5, fashion-illustration ideal 8.0-8.5, shoujo/josei 7.5-8.0, seinen/action 7.0-7.5,
+moe 5.5-6.5. Below 6.5 a figure reads as a teenager regardless of stated age — a hard constraint
+given MGA's cast is explicitly 18+.
+
+7.29 sits mid-band: unambiguously adult, stylised but not fashion-plate. The crotch fraction of
+0.518 is likewise inside the stylised-anime range of 0.50-0.53 (measured real adult female is
+0.47-0.48), so the legs are long by design without being out of register.
+
+#### Foot Sizing
+
+Measured 2026-10-02 and **accepted as-is.** The foot's internal proportions sit inside the real
+adult-female bands; it is uniformly ~8% small against stature, which is normal stylisation.
+
+| | Units | cm @170 | / stature | Real adult female |
+|---|---|---|---|---|
+| Foot length | 5.7944 | 23.75 | 0.1397 | 0.152 |
+| Ball breadth | 2.1260 | 8.71 | 0.0512 | 0.056 |
+| Heel breadth | 1.3478 | 5.52 | 0.0325 | 0.038 |
+
+| Scale-free check | Measured | Target | |
+|---|---|---|---|
+| breadth / length | 0.3669 | 0.36-0.38 | ok |
+| heel breadth / length | 0.2326 | 0.23-0.25 | ok |
+| foot length / head height | 1.0186 | ~1.0 artist rule, 1.13 real | slightly short |
+
+At 170 cm this is a 23.75 cm foot, roughly a US women's 7 where that height averages nearer a 9.
+Stylised anime runs 0.13-0.15 of stature, so the foot sits at the small end of normal rather than
+outside it. **A foot that measures ~1.0 head long reliably looks too long in the viewport** — the
+artist rule is counter-intuitive, and the eye is the unreliable instrument here, not the mesh.
+
+To re-measure: foot length is the **horizontal** heel-to-toe projection in side ortho, not the
+distance along the sloping top surface. Ball breadth is the widest X across the metatarsal heads,
+roughly 25-45% back from the toe. Malleolus height is to the ankle *bone*, which sits well below
+the narrowest cross-section of the leg.
+
+#### Where the Stylisation Lives
+
+At realistic scale a 7.29 figure carries a ~23 cm head — essentially real-world adult size. The
+anime read comes from **leg length, ribcage narrowing and facial features**, not from an enlarged
+cranium. Chasing a lower head count by shrinking the skull produces a pinhead, not a stylised
+character; take it out of the legs instead.
+
+Proportions were guided by the Reallusion base female mesh (realistic, ~7.5 heads), with legs run
+longer than that reference after a 25% reduction from the source tutorial's proportions.
+
+#### Remaining Pipeline Order
+
+The foot is flattened, so the bind pose will be flat by construction. What remains, in order:
+
+1. **Apply object scale on `Body` (1.0377) and `Face` (1.0) before joining.** Joining adopts the
+   active object's transform; unapplied scale on a skinned mesh produces bad weights and wrong
+   bone lengths on FBX import.
+2. **Apply the Mirror modifier before skinning.** Mirrored geometry inherits vertex groups without
+   L/R flipping unless the modifier's vertex-group option is set and bones follow the `_l`/`_r`
+   convention — the classic failure is a mirrored left leg weighted to right-leg bones.
+3. **Join head and body, then rig and skin.** Three traps at the join:
+   - `Ctrl+J` keeps only the **active** object's modifier stack. Both `Body` and `Face` carry a
+     Mirror, so the non-active one is discarded and half that mesh disappears — hence applying
+     both Mirrors in step 2, before the join rather than merely before skinning.
+   - **The neck interpenetrates rather than butt-joining.** `Face`'s neck rim sits at z -2.5108,
+     1.12 below `Body`'s neck top at -1.3891, so the body's neck runs up inside the head. Delete
+     the overlapping band on one side, then bridge. Loop counts look mismatched (~11 half-verts on
+     the face rim against ~6 on the body neck) — verify in the editor, since the mirror seam
+     contaminates an automated boundary count, and match them before bridging. Poles and triangles
+     at the neck are high-deformation geometry that is permanently on camera.
+   - **Two skin materials meet at that seam.** `Body` carries `Skin`, `Face` carries `[p]Skin`
+     plus seven more. Joined, that is 10 material slots and 10 draw calls per character, with the
+     material boundary at the neck. Consolidate the two skin materials unless the split is
+     deliberate, and drop `Reference Transparent Eye Shadow`, which reads as reference-only.
+   - Whether `Eyes`, `Teeth` and `Tongue` join at all is a separate decision. MetaHuman keeps them
+     as separate meshes; eyes in particular are often held out so their shader does not inflate the
+     body mesh's slot count.
+4. **Author the breast shape key last.** Blender cannot apply a modifier to a mesh carrying shape
+   keys, so step 2 becomes impossible once the morph exists.
+5. **Move the mesh so the sole sits at Z = 0 before export.** UE skeletal meshes conventionally
+   take their origin on the floor between the feet; the mesh currently has its sole at -37.7836.
+   Verify facing and scale against the UE mannequin on first import.
+
+**Blender to UE units:** UE is centimetres, 1 uu = 1 cm, and its character capsule, gravity and
+step-height defaults assume a ~180 cm mannequin. Blender's FBX exporter re-scales on the way out,
+which classically lands the character 100x off. Export with **Apply Scalings: FBX All**.
+
 ### Skeleton
 
 The body mesh rigs to a **MetaHuman-compatible skeleton**, not Manny/Quinn (decided 2026-08-22).
@@ -237,6 +378,7 @@ The segment is designed to tile seamlessly — top and bottom edge loops match p
 
 ## Open Items
 
+- Whether the 25% leg reduction was applied on the vertical axis only or uniformly. A uniform scale would have thinned the legs by the same 25%, which is a silhouette change rather than a proportion change
 - Exact Chaos Cloth stiffness and spring parameters per hair style category (braid, ponytail, bob, long straight)
 - Whether front hair gets any Chaos Cloth at all, or is entirely rigid
 - Whether back hair ultimately simulates via Chaos Cloth or via the authored bone chain. Chaos Cloth is the default and the chain is insurance; the decision lands in CoreX-M3, when the first hair simulation is actually built
