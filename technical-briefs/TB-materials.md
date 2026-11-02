@@ -15,6 +15,7 @@ All masters live under `Content/MGA/Materials/Master/`. All instances live next 
 | Master | Cel | Outline | Palette | Textures | Special features | Used for |
 |--------|:---:|:---:|:---:|:---:|---|---|
 | `M_Master_Character` | ✓ | ✓ | ✓ | Pri+SARE+MOHW+Def | Subsurface scattering on SARE.R; blush via Primary B-mix; preview-only debug colour switch | Female body skin, NPC skin |
+| `M_Master_CharacterTranslucent` | ✓ | — | ✓ | Pri (shared with the opaque slot) | Translucent counterpart of `M_Master_Character`: same front-end, Opacity = Primary.A; no inverse hull (the host mesh already draws the silhouette) | Partial-alpha regions on character meshes, e.g. the eye shadow over the eye |
 | `M_Master_Hair` | ✓ | ✓ | ✓ | Pri+SARE+MOHW+Def | Anisotropic highlight band driven by MOHW.B (highlight intensity); two-sided; dithered alpha for hair-card transitions | Front and back hair |
 | `M_Master_Eye` | ✓ | ✓ | ✓ | Pri+SARE | Iris emissive boost; no MOHW or Definition — eye reads at small screen size | Eyeballs and iris discs |
 | `M_Master_Cloth` | ✓ | ✓ | ✓ | Pri+SARE+MOHW+Def | No SSS; warp/weft Color 1 / Color 2 blend; MOHW.A drives wet-fabric darkening; physics-friendly (Chaos Cloth compatible) | Costumes, magical girl uniforms, vehicle interior fabric |
@@ -24,6 +25,12 @@ All masters live under `Content/MGA/Materials/Master/`. All instances live next 
 | `M_Master_Glass` | — | ✓ silhouette only | ✓ | Pri+SARE | Translucent + fresnel rim; outline drawn from the host mesh, not the glass shell; two-sided (compiled in); MOHW skipped — glass surface props are model-driven | Windows, vehicle canopies |
 | `M_Master_Decal` | ✓ instance toggle | — | ✓ | Pri only | Deferred decal domain; palette-aware; cel banding is a per-instance switch (anime panel sticker = on; dirt smear = off) | Graffiti, signage, posters, dirt, blood, lane markings |
 | `M_Master_Ground` | **—** | **—** | ✓ (full palette) | Pri+SARE+MOHW | Multi-layer vertex blend; tri-planar for slopes; MOHW.A is the puddle/wet mask driving roughness blend; **no cel banding, no inverse hull** | Roads, sidewalks, plazas, alleys, courtyards |
+
+### Opaque and translucent pairs
+
+Blend mode is fixed per master, so translucency is a master-level feature (see [Adding a New Master](#adding-a-new-master)). A mesh that is mostly opaque but has a partially transparent region does **not** switch to a translucent master: the region goes on its own material slot. The opaque slot uses the opaque master and ignores Primary.A (authored 1.0); the translucent slot uses the `…Translucent` counterpart and reads Primary.A from the same texture. Only the faces that need it pay the translucent-pass costs (sorting, no depth write, reduced AO / SSR / contact shadows).
+
+Current pair: `M_Master_Character` + `M_Master_CharacterTranslucent` (the face eye-shadow slot). **To confirm at 5.8 adoption:** whether the Substrate Toon BSDF is supported in a Translucent material; if not, the translucent counterpart falls back to an unlit or standard Substrate BSDF.
 
 ### Why `M_Master_Ground` skips cel and outline
 
