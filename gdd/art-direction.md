@@ -162,6 +162,39 @@ A fourth texture is applied on the UV1 channel (beta UV), independent of the pri
 
 Because beta UV is independent, definition lines can be positioned and scaled separately from the diffuse mapping. This texture does not interact with the palette system — it carries drawn line data directly.
 
+### Character Zone Allocation
+
+Characters are split into **two skeletal meshes — head and body** — on the one MetaHuman skeleton, the head following the body via Leader Pose. Each mesh has its own material and its own texture set, and so its own `MaxIndex` budget of up to 30 zones. The split keeps facial features (lips, eyes, brows) from competing with the body for zones.
+
+A zone is one R value, which selects one Color 1 slot, and its paired G value, which selects one Color 2 slot. Each zone therefore costs one slot from **each** array, and gives two colours joined by the B mix.
+
+**Head mesh**
+
+| Zone | Use | Color 1 / Color 2 / B |
+|------|-----|-----------------------|
+| Lips ×2 | Lips | Allocated; detail pending |
+| … | Skin, eyes, brows, etc. | Allocation in progress |
+
+**Body mesh**
+
+| Zone | Use | Color 1 / Color 2 / B |
+|------|-----|-----------------------|
+| Fingernails | All ten fingernails | C1 = nail bed, C2 = free-edge white, B = 0 over the bed ramping to 1 across the free edge |
+| Toenails | All ten toenails | As fingernails |
+| … | Skin, etc. | Allocation in progress |
+
+**Nails.** There is one zone per nail *group*, not per nail. A bare nail uses the bed / free-edge pair above. A painted nail sets C1 and C2 to the same polish index, so the B blend does nothing. A French manicure keeps C2 at free-edge white. The tip shape is authored once, in B. Per-nail colour is out of scope. If it is ever needed, the nails move to their own material slot with their own zone budget, so the nail faces stay in their own UV island to keep that split possible.
+
+**`MaxIndex`.** Once a mesh's zone count is final, set its master's `MaxIndex` to that count, and author R and G in exact `1/N` steps for that N.
+
+#### Head–Body Seam
+
+The seam is at the neck. Under cel shading, any discontinuity at the seam steps the 2-tone band visibly, so the seam must be invisible in the bare-neck state, not just hidden under collars:
+
+- **Geometry:** the seam vertices (about 20) are copies of each other on both meshes. They share the same position relative to the rig, the same normals, and the same skin weights.
+- **Colour:** both material instances use identical palette indices for the skin zones, including the blush pairing. They are set from one per-character colour definition, not edited by hand on each instance.
+- **Textures:** both sides of the seam have matching texel density, continuous SARE values (SSS and AO), and the same Definition-texture line weight across the boundary.
+
 ---
 
 ## Outlines
