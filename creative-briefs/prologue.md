@@ -51,9 +51,9 @@ The immigration agent discovers the diplomatic tags, leaves to wake his supervis
 | Field | Value |
 |-------|-------|
 | **Systems taught** | Dialogue choices (branching conversation), dialogue skipping |
-| **Story context** | Meghan and Milo discuss what to do — leave before the situation formalises |
+| **Story context** | Meghan and Mira discuss what to do — leave before the situation formalises |
 
-The player participates in a branching conversation with Milo. The decision is made to leave before anyone can formalise whatever the Calibran government has decided Meghan is. Meghan leaves her luggage and passport behind.
+The player participates in a branching conversation with Mira. The decision is made to leave before anyone can formalise whatever the Calibran government has decided Meghan is. Meghan leaves her luggage and passport behind.
 
 **Tutorial moment:** During this conversation, the game teaches how to skip dialogue lines and how to fast-forward through dialogue. This is a low-stakes conversation — nothing said here is critical to progression — making it a safe place to demonstrate the skip mechanic without the player missing anything they cannot revisit.
 
@@ -64,9 +64,9 @@ The player participates in a branching conversation with Milo. The decision is m
 | Field | Value |
 |-------|-------|
 | **Systems taught** | Stealth mechanics, camera awareness (facing, coverage zones), sneaking movement |
-| **Story context** | Milo points out the port's camera system as they move through hallways |
+| **Story context** | Mira points out the port's camera system as they move through hallways |
 
-As Meghan and Milo navigate the port's corridors, Milo draws attention to the camera system. The game pauses to explain:
+As Meghan and Mira navigate the port's corridors, Mira draws attention to the camera system. The game pauses to explain:
 
 - How to read camera facing and coverage zones
 - How to move through gaps in coverage
@@ -102,7 +102,7 @@ This is the base-game path. It is always available regardless of DLC installatio
 
 Halfway through the jumping puzzle, a maintenance air vent is accessible **if the Spicy DLC is installed**. The player **chooses** whether to enter the vent or continue with the jumping puzzle — even with Spicy or Super Spicy installed, the base route is always available.
 
-Vent traversal uses standard movement controls — no new control scheme. Milo points out the first badly-maintained duct joints and teaches the player:
+Vent traversal uses standard movement controls — no new control scheme. Mira points out the first badly-maintained duct joints and teaches the player:
 
 - **Trap identification** — how to spot dangerous joints before reaching them
 - **Trap disarming** — how to neutralise them
@@ -202,8 +202,8 @@ This is the last guided tutorial moment. The prologue ends here. Chapter 1 opens
 
 ## Design Principles
 
-- **Fiction-first teaching** — every system is taught through story, not UI overlays disconnected from the narrative. The player learns stealth because Milo points out the cameras; learns combat because Celeste needs help; learns the phone because Meghan needs one
-- **Milo as tutorial voice** — Milo serves as the in-world guide, pointing things out and explaining mechanics in character. The game's paused explanations are Milo talking to Meghan
+- **Fiction-first teaching** — every system is taught through story, not UI overlays disconnected from the narrative. The player learns stealth because Mira points out the cameras; learns combat because Celeste needs help; learns the phone because Meghan needs one
+- **Mira as tutorial voice** — Mira serves as the in-world guide, pointing things out and explaining mechanics in character. The game's paused explanations are Mira talking to Meghan
 - **DLC shapes, never gates** — the Spicy and Super Spicy content tiers add optional paths and additional teaching moments without breaking the structure. All routes converge. The base path is always complete
 - **One-time training wheels** — the paused combat mode exists only in Beat 8. The event-driven time model exists only in the prologue. Chapter 1 removes both and never brings them back
 - **Consequences from the start** — clothing destruction in the Spicy route creates a real economic cost. The game does not protect the player from the consequences of failure even in the tutorial

@@ -153,7 +153,7 @@ Tierney's ambient succubus influence also contributes to the inhibition reductio
 </details>
 - **Ava's return.** Reclaiming her magical girl identity in Chapter 2 forces Meghan to confront a part of herself she suppressed. This is a major inhibition reduction event
 - **Team formation.** Building a team of people who rely on her and whom she relies on reduces isolation-based defensiveness
-- **Story milestones.** Key emotional beats — reconciliation with Milo, honest conversations with Celeste, moments of vulnerability with Terry — each reduce inhibition by specific amounts
+- **Story milestones.** Key emotional beats — reconciliation with Mira, honest conversations with Celeste, moments of vulnerability with Terry — each reduce inhibition by specific amounts
 
 **What inhibition gates:**
 

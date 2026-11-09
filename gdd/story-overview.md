@@ -54,7 +54,7 @@ Comedic moments exist and land because the world earns them. The cast has person
 
 **Celeste Burton** — Meghan meets Celeste organically before anyone arranges it. Celeste works at Burton's Bar, run by her family, and becomes a friend quickly and genuinely. She is not a plot device; she is a person the game asks the player to care about.
 
-**Milo** — Meghan's familiar. Their relationship has history that the player gradually uncovers. Milo is protective, sometimes to a fault, and is carrying something she hasn't fully told Meghan yet.
+**Mira** — Meghan's familiar. Their relationship has history that the player gradually uncovers. Mira is protective, sometimes to a fault, and is carrying something she hasn't fully told Meghan yet.
 
 **Elisa** — Personal assistant to the CEO of Machina Dynamics. Professional, precise, and quietly intimidating. Not entirely what she appears.
 

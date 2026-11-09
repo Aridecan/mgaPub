@@ -175,7 +175,7 @@ Failure is not mission-ending. A failed disarm triggers the trap's payload — c
 
 **Step by step:**
 
-1. **Prologue introduction** — the Air Vent tutorial (Beat 6, Spicy DLC) teaches trap identification and disarming with badly-maintained duct joints. Clothing damage is the consequence. Milo guides the player through the first disarm. This is the player's first exposure to the visual puzzle
+1. **Prologue introduction** — the Air Vent tutorial (Beat 6, Spicy DLC) teaches trap identification and disarming with badly-maintained duct joints. Clothing damage is the consequence. Mira guides the player through the first disarm. This is the player's first exposure to the visual puzzle
 
 2. **Training environments** — CB-training lists safe disarm practice under Trap Avoidance training. Practice traps have no real payload — failure produces a visual/audio indication but no clothing damage or restraint. The puzzle is identical; only the stakes differ. Engineering XP is gained from practice
 
