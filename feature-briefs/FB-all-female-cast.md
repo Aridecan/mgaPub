@@ -4,7 +4,7 @@
 
 ## Overview
 
-**All-Female Cast** is a new-game option that makes every character the player sees or hears female. The story, the plot and every beat stay exactly as written. Characters who are male in canon are played by their female variant instead, with a name, body, voice and pronouns to match.
+**All-Female Cast** is a new-game option that makes every character the player can see female. The story, the plot and every beat stay exactly as written. Characters who are male in canon are played by their female variant instead, with a name, body, voice and pronouns to match.
 
 This is one of the most requested options in other games. MGA can support it cheaply because of two choices it has already made: a single shared female base body for the cast, and dialogue that records each speaker's and listener's grammatical gender (see [TB-language-settings](../technical-briefs/TB-language-settings.md)).
 
@@ -19,24 +19,26 @@ This is one of the most requested options in other games. MGA can support it che
 
 ## Framing: A Casting Choice, Not an Alternate World
 
-The option changes **who plays the part**, not the world. Nothing in the fiction explains it. The game treats it the way it treats a difficulty preset: a choice the player made about how to experience the story.
+The option changes **who plays the part**, not the world. The game treats it the way it treats a difficulty preset: a choice the player made about how to experience the story.
 
-- No lore is written to justify an all-female population (reproduction, history, demographics). Terridyn is already about 78% female in canon, so the question doesn't come up.
+- Terridyn is already strongly female in canon (about 78%), and its men are scarce on the street. Wars and conscription take many of them, and the rich and powerful draw many more up into affluent families. With the option on, the game nods to this once, lightly: **the rich and powerful were especially good at snapping up the men.** That line, in the in-game text that covers who lives on Terridyn, is the only in-world acknowledgement.
+- No further lore is written for it. Reproduction, history and demographics are not re-explained.
 - Every story fact holds. A character's role, relationships, history and secrets are the same in both casts. Only gendered words change: son becomes daughter, father becomes mother, he becomes she.
 
 ---
 
-## The Rule: On Screen Is All-Female, Off Screen Is Unchanged
+## The Rule: Anyone the Player Can See Is Female
+
+The test is **visual**: could the player ever see this character?
 
 | Character is... | With All-Female Cast on |
 |---|---|
 | **Seen**: rendered in the world, in a cutscene, a photo, a portrait or a video feed | Female variant |
-| **Heard**: speaks any voiced line, including phone calls, radio and broadcasts | Female variant |
-| **Only mentioned**: named or referred to in dialogue, documents, notes or lore entries, but never seen or heard | **Canon gender, unchanged** |
+| **Never seen**: only heard (an off-screen voice on a phone, radio or broadcast) or only mentioned (in dialogue, documents, notes or lore entries) | **Canon gender, unchanged** |
 
-Off-screen characters keep their canon gender, so the world outside the cast is still mixed. A male character who is only mentioned stays male. That includes absent parents, historical figures and people in the news.
+Characters the player never sees keep their canon gender, so the world outside the visible cast is still mixed. That includes absent parents, historical figures, people in the news and a male voice on the radio.
 
-A character who is ever seen or heard counts as on screen **everywhere**, including in text that only mentions them. A character is never male in a document and female in person within one playthrough.
+A character who is seen anywhere counts as seen **everywhere**, including where they are only heard or mentioned. A character is never male in a document or on the phone and female in person within one playthrough.
 
 ---
 
@@ -58,12 +60,13 @@ A character who is ever seen or heard counts as on screen **everywhere**, includ
 | **Ambient population** | Crowds, random NPCs, job clients and enemies are spawned 100% female (canon ratio is ~78%). |
 | **Romance** | Romance options with a male character become woman/woman romances with the female variant. Same beats, same gating. |
 | **Party members** | Any male AI party member, for example in the Haunted House mode, uses a female variant. |
+| **World text** | One line acknowledges the shift in the in-game text about who lives on Terridyn: the rich and powerful were especially good at snapping up the men. |
 | **Dialogue** | Lines whose English wording changes get a variant line. Lines that only say the name use the variant's name. Translations are keyed by speaker and listener gender, so every language gets correctly gendered lines. |
 
 ## What Does Not Change
 
 - The plot, quests, choices, gating values and outcomes.
-- Off-screen characters (see the rule above).
+- Characters the player never sees (see the rule above).
 - The canon cast. The male base body and male voices are still needed for every playthrough with the option off.
 
 ---
