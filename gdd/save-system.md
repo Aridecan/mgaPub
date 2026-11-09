@@ -57,6 +57,8 @@ This enables a player — or a streamer — to maintain separate playthroughs wi
 
 Switching between playthroughs at the main menu switches the active content configuration. No manual content tier adjustment is needed between sessions.
 
+The **All-Female Cast** option is stored the same way: chosen when the playthrough is created, kept in `content_config`, and locked for every save in that folder. See [FB-all-female-cast](../feature-briefs/FB-all-female-cast.md).
+
 ---
 
 ## Streamer Mode

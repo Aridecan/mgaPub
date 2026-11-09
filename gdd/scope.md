@@ -49,6 +49,7 @@ All core systems are in scope for Game 1.
 | CAMERA system (Chapter 4+) | In scope |
 | Clothing and equipment | In scope — Base tier functionality; Spicy tier destruction mechanics per content tier |
 | Content tiers (Base / Spicy / Super Spicy) | In scope |
+| All-Female Cast (new-game option, locked per playthrough) | In scope — see [FB-all-female-cast](../feature-briefs/FB-all-female-cast.md) |
 
 ---
 
