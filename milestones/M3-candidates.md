@@ -107,7 +107,7 @@ package size and the search adds runtime cost, both worth measuring when it happ
 | Item | Note |
 |---|---|
 | **Hair simulation** | Chaos Cloth or bone-based. M2 ships hair rigid with the bone chain authored as insurance, so this becomes "turn on a physics asset" rather than "redo the hair" |
-| **Clothing + the clothing pipeline** | Marvelous Designer → UE. M2 leaves an empty clothing step in the spawn order as the insertion point |
+| **Clothing + the clothing pipeline** | Marvelous Designer → UE. M2 leaves an empty clothing step in the spawn order as the insertion point. **Put the `LayerReveal` hook in the master materials from day one** (a no-op by default), so the transformation sweep and holo scanner stay cheap later; see [FB — Layer-Reveal Effects](../feature-briefs/FB-layer-reveal-effects.md) |
 | **The Spicy body override** | M2's stretch goal; falls here if not reached. Cheaper than it was — the fork in M2 Pillar A means the Spicy body already exists as an asset |
 | **The drone, and the widget system it justifies** | M2 ships a plain third-person camera and does not render the drone. The drone lands with the HUD widget budget it exists to motivate — see [CB — Delivery Girl](../creative-briefs/CB-delivery-girl.md) |
 

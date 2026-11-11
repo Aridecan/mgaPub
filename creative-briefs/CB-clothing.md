@@ -541,6 +541,8 @@ Both tracks ratchet independently. An old, frequently-repaired shirt has low max
 - Each clothing material includes a **Perlin noise texture** (or procedural noise node in the material graph)
 - A `DamageState` parameter drives a threshold against the noise
 - Pixels where the noise value falls below the threshold have their alpha set to 0 — producing a torn, dissolved appearance
+- This is a binary on/off per pixel, so clothing uses the **Masked** blend mode (Opacity Mask + clip), **not Translucent**. Translucent would give up depth writes, correct sorting and AO/SSR, and would ghost under TSR. The same Opacity Mask also carries the transformation-sweep and scanner terms; see [FB — Layer-Reveal Effects](../feature-briefs/FB-layer-reveal-effects.md)
+- The inverse-hull outline shell must evaluate the **same** dissolve mask (same noise seed, same UVs), or torn regions leave floating outlines. Holes also expose the garment's inner face, so cloth is two-sided or has an inner shell
 - `DamageState` is derived from the garment's current condition: `DamageState = 1.0 - (current_durability / 100)`
 - The noise is per-object instance — different instances of the same shirt tear in different patterns
 - The dissolve integrates with the existing material system: the Perlin noise result multiplies against the primary texture's alpha channel. The cel shader, definition texture, and inverse hull outlines all respond naturally to the remaining mesh
