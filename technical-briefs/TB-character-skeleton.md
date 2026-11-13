@@ -60,6 +60,16 @@ Because MetaHuman is a superset of Manny, this is not a binary choice. Three coh
 **Recommended: Tier B.** It is a strict subset of MetaHuman, so it retargets from MetaHuman content unchanged (absent target bones are simply not driven), and a strict superset of Manny's deforming set. The 172 finger correctives are a deformation-quality system coupled to MetaHuman's DNA/body pipeline - MGA's characters are custom and stylised, and that coupling can be taken later without re-skinning, since adding non-deforming corrective joints does not invalidate existing weights.
 
 > **Decision 2026-11-12 (Peter): Tier C, the full union of both skeletons (353 bones).** The first character is rigged **by hand in Blender** (no Auto-Rig Pro). The 172 finger correctives are included for exact MetaHuman name and hierarchy compatibility. They stay at rest until weighted and driven, because in MetaHuman an RBF pose-driver solver moves them, not keyframes.
+>
+> **Staged build (2026-11-12, refines the above):** Tier C is the target *name space*, but it is built in stages:
+>
+> | Stage | Bones | Count | When |
+> |---|---|---|---|
+> | 1 | Main + twist + IK/helper | **111** (84 + 16 + 11) | Now: the animation-compatible skeleton |
+> | 2 | Body correctives | +70 | As creasing shows up, but **before clothing is skinned in volume** |
+> | 3 | Finger correctives | +172 | Optional; may never be needed |
+>
+> Stage 1 alone is animation-compatible. Correctives are not keyed in Manny or MetaHuman animations (a post-process Anim BP drives them at runtime), so leaving them out breaks nothing. Correctives are **deforming** bones, though, so adding one later means a local re-weight on the body *and* on every garment already skinned there. That is why stage 2 should land before clothing production. Per-bone classification: `mga/reference/skeletons/bone_classes.md`.
 
 ---
 
