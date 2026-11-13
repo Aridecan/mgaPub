@@ -27,7 +27,7 @@ Breakdown of the two sets:
 |---|---|---|---|
 | Core deforming skeleton | 80 | yes | yes |
 | Body corrective / helper joints | 70 | yes | yes |
-| IK + weapon virtual bones | 9 | **yes** | **no** |
+| IK + weapon + virtual bones | 11 | **yes** | **no** |
 | Toe bones | 20 | no | **yes** |
 | Finger corrective joints | 172 | no | **yes** |
 
@@ -35,7 +35,7 @@ Breakdown of the two sets:
 
 1. **MetaHuman is a superset of Manny's *deforming* skeleton, exactly.** All 150 of Manny's real joints - including the whole corrective set (`ankle_bck`, `calf_kneeBack`, `clavicle_scap`, `thigh_twistCor`, `upperarm_bicep`, `wrist_inner`, ...) - are present in MetaHuman under identical names. Epic aligned the UE5 mannequin to MetaHuman. Retargeting between them is therefore name-identical on every driven chain.
 
-2. **MetaHuman has no IK bones at all.** `ik_foot_root`, `ik_foot_l/r`, `ik_hand_root`, `ik_hand_l/r`, `ik_hand_gun`, `weapon_l/r` exist on Manny and are absent from `SKM_Body`. These are non-deforming virtual bones, but a large amount of third-party animation and most standard UE locomotion / foot-IK setups reference them. **They must be added back.** This is the one place where "just use MetaHuman" silently loses something.
+2. **MetaHuman has no IK bones at all.** `ik_foot_root`, `ik_foot_l/r`, `ik_hand_root`, `ik_hand_l/r`, `ik_hand_gun`, `weapon_l/r` exist on Manny and are absent from `SKM_Body`. So do two more virtual bones under `root`, **`center_of_mass` and `interaction`**. The name-grep filter below missed them; the 2026-11-12 hierarchy dump found them, making 11 Manny-only bones, not 9. These are non-deforming virtual bones, but a large amount of third-party animation and most standard UE locomotion / foot-IK setups reference them. **They must be added back.** This is the one place where "just use MetaHuman" silently loses something.
 
 ### Reproducing this comparison
 
@@ -55,11 +55,11 @@ Because MetaHuman is a superset of Manny, this is not a binary choice. Three coh
 |---|---|---|---|
 | **A - Manny only** | 159 | Baseline compatibility | No toes. The original plan. |
 | **B - Manny + MH toes + IK bones** (recommended) | 179 | Per-toe articulation, MetaHuman-compatible naming, IK bones retained | 20 extra bones |
-| **C - Full MetaHuman + IK bones** | 351 | Tier B plus MetaHuman-grade hand deformation | 172 finger correctives that are **driven by the RBF pose-driver solver in `ABP_Body_PostProcess`, not by animation** - adopting them means adopting that solver and its DNA-driven pipeline |
+| **C - Full MetaHuman + IK bones** | 353 | Tier B plus MetaHuman-grade hand deformation | 172 finger correctives that are **driven by the RBF pose-driver solver in `ABP_Body_PostProcess`, not by animation** - adopting them means adopting that solver and its DNA-driven pipeline |
 
 **Recommended: Tier B.** It is a strict subset of MetaHuman, so it retargets from MetaHuman content unchanged (absent target bones are simply not driven), and a strict superset of Manny's deforming set. The 172 finger correctives are a deformation-quality system coupled to MetaHuman's DNA/body pipeline - MGA's characters are custom and stylised, and that coupling can be taken later without re-skinning, since adding non-deforming corrective joints does not invalidate existing weights.
 
-> **Open decision - defer to rig time:** whether hand close-ups ever justify Tier C.
+> **Decision 2026-11-12 (Peter): Tier C, the full union of both skeletons (353 bones).** The first character is rigged **by hand in Blender** (no Auto-Rig Pro). The 172 finger correctives are included for exact MetaHuman name and hierarchy compatibility. They stay at rest until weighted and driven, because in MetaHuman an RBF pose-driver solver moves them, not keyframes.
 
 ---
 
@@ -109,10 +109,21 @@ Because MetaHuman is a superset of Manny, this is not a binary choice. Three coh
   `upperarm_twistCor_02_l`  `upperarm_twistCor_02_r`  `wrist_inner_l`  `wrist_inner_r`
   `wrist_outer_l`  `wrist_outer_r`
 
-### 3. IK + weapon virtual bones - 9 (Manny only; **must be added manually**)
+### 3. IK + weapon + virtual bones - 11 (Manny only; **must be added manually**)
 
   `ik_foot_l`  `ik_foot_r`  `ik_foot_root`  `ik_hand_gun`  `ik_hand_l`
-  `ik_hand_r`  `ik_hand_root`  `weapon_l`  `weapon_r`
+  `ik_hand_r`  `ik_hand_root`  `weapon_l`  `weapon_r`  `center_of_mass`  `interaction`
+
+Hierarchy (from the dump):
+
+    root
+    +-- ik_foot_root  -> ik_foot_l, ik_foot_r
+    +-- ik_hand_root  -> ik_hand_gun -> ik_hand_l, ik_hand_r
+    +-- center_of_mass
+    +-- interaction
+    hand_l -> weapon_l        hand_r -> weapon_r
+
+Note that `ik_hand_l` and `ik_hand_r` hang off **`ik_hand_gun`**, not directly off `ik_hand_root`.
 
 ### 4. Toe bones - 20 (MetaHuman only; the reason for this brief)
 
@@ -205,7 +216,7 @@ By suffix family:
 - [ ] **`ball_l` / `ball_r` sit at the mannequin's exact pivot and axis orientation** - the metatarsophalangeal joint. Do not move it to "make room" for the toes. A UE bone has no length; what the editor draws is the line to its children. Deformation comes from ref-pose pivot + orientation + skin weights.
 - [ ] Toe vertices weighted off `ball` onto the toe joints, blended at the metatarsal.
 - [ ] Toe joints left at **identity local transform** in every locomotion animation, so they inherit `ball`'s rotation rigidly and deform identically to being weighted to `ball`.
-- [ ] Add back the 9 IK / weapon virtual bones (section 3).
+- [ ] Add back the 11 IK / weapon / virtual bones (section 3), with the hierarchy shown there.
 - [ ] **Translation Retargeting = `Skeleton`** on every added bone, set on the USkeleton asset. The `Animation` default collapses added bones after a retarget.
 - [ ] **IK Rig chains**: define one chain per toe, or none at all. An undefined target chain is left at ref pose - which is the wanted fallback when the source animation has no toes.
 - [ ] **Compatible Skeletons**: register against the mannequin skeleton so Manny-targeted anim assets play without a retarget pass. Extra bones do not break compatibility; only the driven bone names must line up.
@@ -216,13 +227,34 @@ By suffix family:
 
 ---
 
-## Dumping the authoritative hierarchy
+## The authoritative hierarchy (dumped 2026-11-12)
 
-The lists above are **name sets extracted from the binary assets - they carry no parent-child information**. Before rigging, dump the real hierarchy in-editor and diff it against the mesh being authored.
+The lists above are name sets. **The real parent-child tree and reference pose are in `mga/reference/skeletons/`**, dumped headless from UE 5.8:
 
-The version-proof route is the Skeleton editor: open `SKM_Body`, use the Skeleton Tree panel with *Show All Bones* enabled, and read or export the tree there.
+| File | Contents |
+|---|---|
+| `union_skeleton_tree.txt` | **The rigging reference.** The indented 353-bone tree, tagged `[M]` Manny-only, `[T]` toe, `[C]` finger corrective |
+| `union_skeleton.csv` | Per bone: parent, depth, group, local location/rotation, global location (UE cm) |
+| `metahuman_SKM_Body.json` / `mannequin_SKM_Manny.json` | Raw dumps: local + global transform (location, rotator, quaternion, scale) |
 
-For a scripted dump, the UE Python console exposes the reference skeleton through the skeletal mesh rather than the skeleton asset. Verify the property path against the 5.8 API before relying on it - this API has drifted between releases.
+Sources: `SKM_Body` (MetaHumanCharacter plugin, 342 bones), and `SKM_Manny` from the **MoverTests** plugin (161 bones, the full mannequin skeleton). Don't use the template `SKM_Quinn_Simple`: its mesh carries only 89 bones. Manny and Quinn share `SK_Mannequin`, so the names and hierarchy are identical; only the proportions differ.
+
+**Findings:**
+- **Zero parent conflicts.** All 150 shared bones have the same parent in both skeletons.
+- **Non-obvious parents to copy exactly** (guessing them would break MetaHuman compatibility):
+  - `upperarm_bicep_*` / `upperarm_tricep_*` sit under **`upperarm_twist_02_*`**, not `upperarm_*`.
+  - `spine_04_latissimus_*` sits under **`spine_05`**, not `spine_04`.
+  - `clavicle_pec_*` sits under **`spine_05`**, not `clavicle_*` (`clavicle_scap_*` and `clavicle_out_*` do sit under `clavicle_*`).
+  - `*_twistCor_*` sits under the matching **twist** bone (`thigh_twistCor_01_l` under `thigh_twist_01_l`, and so on).
+  - `thigh_*` / `calf_*` / `upperarm_*` / `lowerarm_*` directional correctives (`_bck`, `_fwd`, `_in`, `_out`) sit under the limb's **`*_correctiveRoot_*`** bone.
+  - `wrist_inner/outer_*` sit under `hand_*`; `ankle_bck/fwd_*` under `foot_*`.
+  - Finger correctives nest several levels deep (e.g. `pinky_02_dip_l` sits under `pinky_03_half_l`), so copy the tree file rather than inferring.
+- **Axis convention:** UE bones extend along local **+X**. Right-side bones are mirrored (they point along -X: `lowerarm_r` local offset is -23.84 vs +23.84 on the left). The mesh faces **+Y**, Z is up, units are cm. Blender bones extend along +Y, so set the FBX export's primary/secondary bone axes to match, and **test-export one limb chain to UE before rigging the whole body**.
+
+**Re-running the dump:** `mga/tools/dump_skeletons.py` (read-only; uses `unreal.SkeletonModifier` getters and never commits):
+
+    UnrealEditor-Cmd OGMMGA.uproject -run=pythonscript -script=D:\Aridecan\mga\tools\dump_skeletons.py
+      -EnablePlugins=PythonScriptPlugin,MetaHumanCharacter,MeshModelingToolset,MoverTests -unattended -nopause
 
 ---
 
