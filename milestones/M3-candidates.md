@@ -106,9 +106,11 @@ package size and the search adds runtime cost, both worth measuring when it happ
 
 | Item | Note |
 |---|---|
-| **Hair simulation** | Chaos Cloth or bone-based. M2 ships hair rigid with the bone chain authored as insurance, so this becomes "turn on a physics asset" rather than "redo the hair" |
+| **Hair simulation** | Chaos Cloth or bone-based. M2 ships hair rigid with the bone chain authored as insurance, so this becomes "turn on a physics asset" rather than "redo the hair". Reconfirmed by Peter 2026-11-19: hair gravity stays M3; M2 only sets the hair origin to the `head` bone and authors the chain |
 | **Clothing + the clothing pipeline** | Marvelous Designer → UE. M2 leaves an empty clothing step in the spawn order as the insertion point. **Put the `LayerReveal` hook in the master materials from day one** (a no-op by default), so the transformation sweep and holo scanner stay cheap later; see [FB — Layer-Reveal Effects](../feature-briefs/FB-layer-reveal-effects.md) |
 | **The Spicy body override** | M2's stretch goal; falls here if not reached. Cheaper than it was — the fork in M2 Pillar A means the Spicy body already exists as an asset |
+| **Corrective bones (knee + shoulder)** | Added 2026-11-19. The ARP base body deforms cleanly in a walk, but under linear blend skinning the **knee folds badly when kneeling** and the **shoulder collapses as the arm rises**, even with the clavicle lifted. Plan: add the MetaHuman correctives (`*_correctiveRoot_*` with `_bck/_fwd/_in/_out`, `calf_kneeBack`, `clavicle_pec/scap`, `upperarm_bicep/tricep`) on the hierarchy recorded in [TB - Character Skeleton](../technical-briefs/TB-character-skeleton.md), weight them, and drive them from a post-process Anim BP (pose driver or Control Rig). Male base body needs the same pass |
+| **Breast jiggle physics** | Moved here by Peter 2026-11-19 (it was never M2 scope). AnimDynamics on the breast bones (ARP exports `c_breast_01/02_l/r`; decide whether those serve or dedicated `breast_l/r` are added), run **after** the spawn-time `Bust` bone offset, with mass/stiffness scaled by the bust value. Chaos Cloth collides with Physics Asset bodies, so chest bodies ride the breast bones. Pairs naturally with the correctives row above (same post-process Anim BP) |
 | **The drone, and the widget system it justifies** | M2 ships a plain third-person camera and does not render the drone. The drone lands with the HUD widget budget it exists to motivate — see [CB — Delivery Girl](../creative-briefs/CB-delivery-girl.md) |
 
 ## Carried forward from M1

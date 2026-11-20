@@ -237,6 +237,54 @@ By suffix family:
 
 ---
 
+## Auto-Rig Pro route - lessons from the FemaleBase POC (2026-11)
+
+FemaleBase was rigged with Auto-Rig Pro (ARP) after Mesh to MetaHuman distorted the mesh (the weight-donor route is dead). This is the checklist to repeat for the male base body.
+
+### Blender - before rigging
+
+- [ ] **Lowest vertex at Z 0.** The sole sits flat on the floor; the hip, knee and ankle line up vertically in front view.
+- [ ] **Ankle at the origin in Y.** FemaleBase stood about 11.5 cm behind Manny, with her ankle at Blender Y +11.5 (Blender front is -Y). Move the mesh and the reference bones; **never move the `rig` object**, which stays at 0,0,0.
+- [ ] **Toe-out about 7.7 degrees** (MetaHuman reference; measured as the ankle-to-ball direction in plan view). FemaleBase started at **1.7 degrees toe-IN**, so her correction is a **+9.4 degree** rotation. That is the same 9.4 degrees that was needed in the UE Retarget Pose. Rotate the foot geometry and the foot/toe/heel/bank reference bones together, about Z, with the ankle as the pivot; left = +, right = -. Check: with a 12.8 cm ankle-to-ball length, the ball sits about +1.7 cm further out in X than the ankle.
+- [ ] Optional: MetaHuman legs also splay about 2.6 degrees; FemaleBase's legs are vertical. Not corrected so far.
+- [ ] Make sure the mesh has symmetry (X mirror) on before editing the legs; symmetrize the right side from the left.
+- [ ] **Toes: 2 working bones plus a stub.** Bone 1 runs from the knuckle to the mesh's bend loop, bone 2 from the bend to the tip, and bone 3 is a 1 mm stub pointing -Y (it exists only to keep the MetaHuman `*_03` name). Put the joint where the **mesh's bend loop** is, not where the reference skeleton has it.
+- [ ] Do every reference-bone change in **one pass, before weight painting**. Each change means Match to Rig and a rebind, and a rebind replaces painted weights.
+
+### Blender - ARP export
+
+- [ ] Humanoid export with **Rename Bones from File** = `mga/reference/skeletons/arp_rename_toes.txt` (ARP toe names to MetaHuman `bigtoe/indextoe/middletoe/ringtoe/littletoe`; misses are skipped silently).
+- [ ] An empty or tiny FBX (about 240 KB with no mesh) means **the mesh is no longer bound** to the rig. Rebind.
+- [ ] Exclude stray objects (`Body.001` and the like) and apply object locations (Eyes) before exporting.
+- [ ] ARP's Humanoid export adds `c_thigh/calf/upperarm/lowerarm_l/r` (the knee- and elbow-adjacent skin bands) and `c_breast_01/02`. The main limb bones carry **0 weight**: the skin lives on the twist bones and the `c_` bones. The `c_` bones follow their parent, which is correct, and need no driving.
+
+### UE - import and retarget
+
+- [ ] **Reimport over the existing mesh and skeleton**, never import as new. That keeps the retargeter, Control Rig and post-process Anim BP wired up.
+- [ ] IK Retargeter (5.6+): chain mapping lives in the **FK Chains** op (Auto-Map -> Map Exact Names); **both** IK Rigs need the chains. Rotation gizmos only appear in **Edit Retarget Pose** mode with the Target selected.
+- [ ] If the foot splay was fixed in Blender, **reset the feet in the Retarget Pose**. Otherwise the corrections stack.
+- [ ] Baked retargeted animations do not update; **re-export** after every retarget change.
+
+### Blender - knee weights (the thigh bulge)
+
+- [ ] **Bind with ARP's `Preserve Volume` OFF** (and untick it on each mesh's Armature modifier). With it on, Blender deforms with dual-quaternion skinning while UE uses linear blend skinning, so **Blender hides joint collapse that UE shows**. This was suspected for the FemaleBase knee, but turning it off changed the result only slightly; the main cause was the stale vertex groups below. Judge every weight in Blender with it off anyway.
+
+- [ ] **Delete stale vertex groups before exporting.** The real cause of the FemaleBase knee bulge (found 2026-11-19): Body still carried `calf_twist_02_l` and `calf_twist_01_l` vertex groups from the earlier hand-made rig. Blender ignores a group with no matching bone, so the knee looked clean there. But ARP's export renames its bones to UE names, so the exported `calf_twist_02_l` bone **picked up the stale group's weights on top of the real ones**: calf weight up to about 20 cm above the knee, and per-vertex weight totals up to 2.0 in the FBX. Check: every vertex group on every mesh must match a deform bone in the ARP rig (Blender: compare `vertex_groups` against `rig.data.bones`). Any name that already looks like a UE bone name is a red flag.
+- [ ] After that, judge the knee and elbow in Blender with Preserve Volume off. Only hand-paint if linear blending still collapses there.
+
+### UE - twist bones
+
+- [ ] **Do not retarget the twist chains** (set the source to None in FK Chains). ARP's twist pivots sit about 14 cm from their skin bands, so copying Manny's twist keys, which also carry swing, distorts the skin.
+- [ ] If twist distribution is needed later, drive it at runtime: `CR_TwistFix` Control Rig (`DistributeTwist` function: swing-twist about local X), run from `ABP_PostProcess`, which is assigned as the mesh's **Post Process Anim Blueprint**. Weights: thigh/upperarm -0.66/-0.33 (cancel the twist at the hip/shoulder end), foot->calf and hand->lowerarm +0.66/+0.33 (parent frame). If a limb twists the wrong way, flip its signs. **Not built yet; on hold until the knee-weight fix has been tested.**
+
+### Deferred cleanup (FemaleBase)
+
+- [ ] Merge the `*toe_03` stub weights into `*_02`.
+- [ ] Heel/bank reference bones to Z 0; heel reference back to the heel's rear edge.
+- [ ] Add `center_of_mass`, `interaction`, `weapon_l/r` (ARP custom export script, or add them in UE).
+
+---
+
 ## The authoritative hierarchy (dumped 2026-11-12)
 
 The lists above are name sets. **The real parent-child tree and reference pose are in `mga/reference/skeletons/`**, dumped headless from UE 5.8:
