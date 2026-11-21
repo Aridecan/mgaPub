@@ -141,9 +141,13 @@ X in this line of work, and it is a **stretch goal** here, otherwise M3. You can
 
 - **The shape keys are the risk in that surgery.** Blender shape keys are stored per vertex index, so
   removing and re-patching the groin region can corrupt or misalign key data across the whole mesh.
-  `MainBody` carries 56 keys, 52 of which are the Faceit ARKit set that is now in M2 scope. The
+  `MainBody` carries 56 keys, 52 of which are the Faceit ARKit set. The
   facial keys touch different vertices but share the same key stack, so **verify the ARKit set still
   deforms correctly after the edit**; the fallback is re-running Faceit.
+  **Superseded 2026-11-19 (Peter):** the shipping body is now FemaleBase (Lesson57, ARP rig), which has
+  never carried the ARKit set. **Authoring the ARKit 52 set moves to M3** with the facial animation
+  pipeline ([M3-candidates](M3-candidates.md)). M2's body ships with `Bust` only; the streamer-safe
+  removal is folded into the Core body at export.
 
 - **Zero the morphs before export, and confirm the exporter does not fold current shape-key values
   into the basis.** All three currently sit at value ~1.0 in the Blender file, and `BreastSize` at

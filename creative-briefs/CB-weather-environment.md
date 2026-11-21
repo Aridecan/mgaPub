@@ -10,7 +10,7 @@ All environmental data is deterministic and driven by the almanac library. Sun p
 
 The almanac currently provides sun/moon positions, sunrise/sunset with six twilight phases, weather conditions (Sunny through Snow), per-hour temperature, moon illumination fractions, and seasonal determination. Three extensions are needed: wind speed/direction, thunderstorm as a distinct condition, and fog/mist as a distinct condition. These are library-level changes, not creative brief scope, but the brief references them as data dependencies.
 
-Weather rendering must respect the anime art style established in [Art Direction](../gdd/art-direction.md). The cel shader's 2-tone diffuse banding (plus separate stepped specular and rim passes), the 98-entry colour palette, and the geometry-based outline system all constrain how weather effects are rendered. Post-processing is avoided where a shader or particle solution exists. Rain is particles, not a full-screen overlay. Fog is volumetric, not a depth-based post-process blur.
+Weather rendering must respect the anime art style established in [Art Direction](../gdd/art-direction.md). The cel shader's 2-tone diffuse banding (plus separate stepped specular and rim passes), the 112-slot colour palette, and the geometry-based outline system all constrain how weather effects are rendered. Post-processing is avoided where a shader or particle solution exists. Rain is particles, not a full-screen overlay. Fog is volumetric, not a depth-based post-process blur.
 
 **Related documents:**
 
@@ -125,7 +125,7 @@ The half-empty city quality noted in [Audio Direction](../gdd/audio-direction.md
 
 - Lore-established: frequent polar auroras from dual moons and a strong magnetosphere
 - Visible on clear nights; intensity increases in winter months
-- Colour palette constrained to the 98-entry project palette — greens, teals, and purples from the chromatic range
+- Colour palette constrained to the 112-slot project palette — greens, teals, and purples from the chromatic range
 - Auroras are a skybox-layer effect — they appear above the cloud layer and behind the moons
 - Not gameplay-affecting; purely atmospheric and beautiful
 - Frequency: several nights per T3PC month on clear nights; rare in summer, common in winter

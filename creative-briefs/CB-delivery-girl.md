@@ -62,6 +62,10 @@ that. It is recorded here so the option is not lost, not because it is planned.
 
 Nessa is a tertiary student working as a courier to make ends meet.
 
+**Full name: Nessa Virelli** (Peter, 2026-11-20). *Nessa* has a Hebrew origin, read as "trial" or
+"miracle". *Virelli* is an invented surname with an Italian tone, built from *vireo* ("to move
+swiftly"), chosen to sound sleek and high-tech, which suits a courier.
+
 One of her deliveries is a prototype drone. An accident during the run opens the package, and the
 drone **binds to her** — the mode's version of the per-operator calibration the CAMERA system already
 uses, where a unit calibrated to one person will not interface correctly with another. The binding is

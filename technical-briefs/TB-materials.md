@@ -2,7 +2,7 @@
 
 ## Overview
 
-This brief locks down the master material set, the features each master exposes, and the naming pattern for material instances built on them. It is the implementation map for the system described in [Art Direction](../gdd/art-direction.md) — the cel shader, the 98-entry palette, the double-index Color 1 / Color 2 model, and the four-texture (Primary / SARE / MOHW / Definition) stack.
+This brief locks down the master material set, the features each master exposes, and the naming pattern for material instances built on them. It is the implementation map for the system described in [Art Direction](../gdd/art-direction.md) — the cel shader, the 112-slot palette, the double-index Color 1 / Color 2 model, and the four-texture (Primary / SARE / MOHW / Definition) stack.
 
 Once this brief is followed for every authored asset, recolouring, costume variants, faction palettes, weather states, and DLC overrides are all material-instance edits. Masters are added only when a new shading model or pipeline feature is required.
 
@@ -14,7 +14,7 @@ All masters live under `Content/MGA/Materials/Master/`. All instances live next 
 
 | Master | Cel | Outline | Palette | Textures | Special features | Used for |
 |--------|:---:|:---:|:---:|:---:|---|---|
-| `M_Master_Character` | ✓ | ✓ | ✓ | Pri+SARE+MOHW+Def | Subsurface scattering on SARE.R; blush via Primary B-mix; preview-only debug colour switch | Female body skin, NPC skin |
+| `M_Master_Character` | ✓ | ✓ | ✓ | Pri+SARE+MOHW+Def | Subsurface scattering on SARE.R; blush via Primary B-mix; soft shadow/highlight via signed Primary.A (shadow + highlight colours are instance parameters, with a switch to ignore A so UE lighting alone decides); preview-only debug colour switch | Female body skin, NPC skin |
 | `M_Master_CharacterTranslucent` | ✓ | — | ✓ | Pri (shared with the opaque slot) | Translucent counterpart of `M_Master_Character`: same front-end, Opacity = Primary.A; no inverse hull (the host mesh already draws the silhouette) | Partial-alpha regions on character meshes, e.g. the eye shadow over the eye |
 | `M_Master_Hair` | ✓ | ✓ | ✓ | Pri+SARE+MOHW+Def | Anisotropic highlight band driven by MOHW.B (highlight intensity); two-sided; dithered alpha for hair-card transitions | Front and back hair |
 | `M_Master_Eye` | ✓ | ✓ | ✓ | Pri+SARE | Iris emissive boost; no MOHW or Definition — eye reads at small screen size | Eyeballs and iris discs |
@@ -28,7 +28,7 @@ All masters live under `Content/MGA/Materials/Master/`. All instances live next 
 
 ### Opaque and translucent pairs
 
-Blend mode is fixed per master, so translucency is a master-level feature (see [Adding a New Master](#adding-a-new-master)). A mesh that is mostly opaque but has a partially transparent region does **not** switch to a translucent master: the region goes on its own material slot. The opaque slot uses the opaque master and ignores Primary.A (authored 1.0); the translucent slot uses the `…Translucent` counterpart and reads Primary.A from the same texture. Only the faces that need it pay the translucent-pass costs (sorting, no depth write, reduced AO / SSR / contact shadows).
+Blend mode is fixed per master, so translucency is a master-level feature (see [Adding a New Master](#adding-a-new-master)). A mesh that is mostly opaque but has a partially transparent region does **not** switch to a translucent master: the region goes on its own material slot. The opaque slot uses the opaque master and ignores Primary.A (authored 1.0) — **except `M_Master_Character`, which reads Primary.A as the signed soft shade** (see [Art Direction](../gdd/art-direction.md#primary-texture--rgba)); the translucent slot's faces sit on their own UV island, so the two meanings never share a texel. The translucent slot uses the `…Translucent` counterpart and reads Primary.A from the same texture. Only the faces that need it pay the translucent-pass costs (sorting, no depth write, reduced AO / SSR / contact shadows).
 
 Current pair: `M_Master_Character` + `M_Master_CharacterTranslucent` (the face eye-shadow slot). **To confirm at 5.8 adoption:** whether the Substrate Toon BSDF is supported in a Translucent material; if not, the translucent counterpart falls back to an unlit or standard Substrate BSDF.
 
@@ -40,24 +40,44 @@ Vertical kerbs and the median curb-face still want cel banding — those use `MI
 
 ### Ground palette discipline
 
-`M_Master_Ground` instances may draw from the **full 98-entry palette**, not a constrained environment subset. The discipline is editorial — environment artists should stay within the natural greys/browns/asphalt range — but the master does not enforce a subset.
+`M_Master_Ground` instances may draw from the **full 112-slot palette**, not a constrained environment subset. The discipline is editorial — environment artists should stay within the natural greys/browns/asphalt range — but the master does not enforce a subset.
 
 **Why the master allows the full palette:** debug visualisation. Bright unnatural colours on otherwise-realistic ground meshes are a useful tool for marking a mesh's bounds during development (the river dams currently render bright red for exactly this purpose). Locking the master to a subset would force a per-asset master swap to enable debug colours, which defeats the purpose.
 
 ---
 
-## Shading Backend — UE 5.8 Toon BSDF (planned)
+## Shading Backend — UE 5.8 Toon BSDF
 
 Each cel master splits into a **front-end** (base-colour selection) and a **back-end** (shading). As of **UE 5.8** the back-end is native Substrate nodes, replacing the hand-built cel network described in [Art Direction](../gdd/art-direction.md#cel-shader--2-tone-banded-lighting).
 
-- **Front-end (unchanged):** `MF_UVsToParameters` + `MF_SelectColorFromPalette` + the 98-entry palette resolve the Primary zone selectors into base colour and unpack the SARE / MOHW / Definition params.
+- **Front-end (unchanged):** `MF_UVsToParameters` + `MF_SelectColorFromPalette` + the 112-slot palette resolve the Primary zone selectors into base colour and unpack the SARE / MOHW / Definition params.
 - **Back-end:** the **Substrate Toon BSDF** node, with cel banding (and likely specular + rim) configured by a bound **Toon Profile asset**. Replaces the separate diffuse-band / specular / rim passes.
-- **Emission boost (SARE.A):** a **Substrate Unlit BSDF** node.
-- **Output:** Toon BSDF **+** Unlit BSDF combined via a **Substrate Add** node.
+- **Emission boost (SARE.A):** straight into the Toon BSDF's own **EmissiveColor** pin. The planned Unlit BSDF + Substrate Add is not needed. *(Built 2026-11-20.)*
+- **Output:** the Toon BSDF → the material output's **Front Material**.
 - **Outlines:** inverse-hull, unchanged — a geometry pass, not part of the BSDF graph.
 - **Scope:** the **cel** masters in the table above. The **non-cel** masters (`M_Master_Ground`, `M_Master_Water`, `M_Master_Glass`) keep their existing Substrate BSDFs and do **not** adopt the Toon BSDF.
 
-**New asset type — Toon Profile** (proposed prefix `TP_`, e.g. `TP_Character`, `TP_Cloth`): each cel master/instance family binds one; it carries the cel ramp / banding (and possibly specular + rim) settings. The channel→BSDF-input mapping and whether the profile fully subsumes specular + rim are to be confirmed during 5.8 adoption. Until then the [Art Direction](../gdd/art-direction.md) pass spec remains the description of the target *look*.
+**New asset type — Toon Profile** (prefix `TP_`, e.g. `TP_Character`, `TP_Cloth`): each cel master binds one, in the BSDF node's Details. It is set **per master material**; instances cannot swap it. It carries a colour **Diffuse Ramp**, a **Specular Ramp**, shadow extinction and hatching, and GI scales. Because the diffuse ramp is a *colour* curve, it can tint the shadow side warm, which is how skin warmth is recovered without an SSS pin.
+
+### Channel → Toon BSDF mapping (`M_Master_Character`, built 2026-11-20)
+
+The Toon BSDF pins are BaseColor, Metallic, Specular, Roughness, Normal, EmissiveColor, PatternUVs, Anisotropy and Tangent. There is **no subsurface and no AO pin**.
+
+| Channel | Destination |
+|---------|-------------|
+| Primary R/G → palette, B → mix | Colour 1 / Colour 2 per zone (17-case Switch → `MF_ColorSelector`), blended by B × Blush Strength (zone 1 only) |
+| Primary.A (soft shade) | Lerp toward `Shadow Color` below 0.5, toward `Highlight Color` above 0.5 |
+| Definition.R (lines, UV1) | Lerp toward `Line Color`, applied last, after the shade → **BaseColor** |
+| SARE.R subsurface | **No pin.** Warmth comes from the `TP_Character` diffuse ramp and `Shadow Color` |
+| SARE.G AO | Material output **Ambient Occlusion** pin if wired (not through Front Material); flat 1.0 until a bake exists |
+| SARE.B roughness | **Roughness** |
+| SARE.A emission boost | shaded colour (before lines) × boost × `Emissive Strength` → **EmissiveColor** |
+| MOHW.R metallic | **Metallic** |
+| MOHW.G outline weight | The inverse-hull outline pass, not the BSDF |
+| MOHW.B highlight band | **Specular** |
+| MOHW.A wetness | Not wired yet |
+
+The look target in [Art Direction](../gdd/art-direction.md) still applies. The specular/rim passes it describes are partly covered by the profile's specular ramp; rim is not implemented yet.
 
 ---
 
@@ -101,7 +121,7 @@ The full per-texture channel layout (canonical reference is [Art Direction](../g
 
 | Texture | UV | R | G | B | A |
 |---|---|---|---|---|---|
-| Primary | 0 | Color 1 zone selector (`Round(R × MaxIndex)`, clamped 1..MaxIndex) | Color 2 zone selector (same math on G) | Mix factor | Alpha |
+| Primary | 0 | Color 1 zone selector (`Round(R × MaxIndex)`, clamped 1..MaxIndex) | Color 2 zone selector (same math on G) | Mix factor (blush on skin) | Alpha — **except `M_Master_Character`: signed soft shade** (0.5 neutral, below = shadow, above = highlight) |
 | SARE | 0 | Subsurface scattering | Ambient occlusion | Roughness | Emission boost |
 | MOHW | 0 | Metallic | Outline weight modulator | Highlight band intensity | Wetness mask |
 | Definition | 1 | Inline line data (channel use TBD) | — | — | — |

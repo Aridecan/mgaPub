@@ -65,18 +65,22 @@ The passes above define the **look**. As of **UE 5.8**, the **implementation** m
 
 ## Colour Palette
 
-All colour in the game is drawn from a **98-entry palette** stored as a 16×7 grid (with unused slots in the final row). No material uses colour values outside the palette.
+All colour in the game is drawn from the palette, stored as a 16×7 grid of **112 slots, 103 of them in use**. Indices run 1–112, left to right and top to bottom. No material uses colour values outside the palette. The master file is `VisualArt/photoshop/Pallette.psd` in Perforce, one named shape layer per entry. The PNG used by Blender and UE is exported from it.
 
 ![MGA Colour Palette](palette.png)
 
-| Category | Count | Purpose |
-|----------|-------|---------|
-| Base chromatic | 64 | Full hue spectrum — clothing, environment, props, effects, secondary colours (rows 1–4) |
-| Signature colours | 6 | Reserved identity colours for key characters (see story spoiler below) |
-| Flesh tones | 8 | Skin across the full character roster |
-| Greyscale | 8 | Shadows, metals, neutral elements, UI |
-| Blush tones | 12 | Anime blush, flush, lips, mouth interior, and emotional colour states |
-| **Total** | **98** | |
+| Indices | Category | Count | Purpose |
+|---------|----------|-------|---------|
+| 1–64 | Base chromatic | 64 | Full hue spectrum: clothing, environment, props, effects, secondary colours (rows 1–4) |
+| 65–70 | Signature colours | 6 | Reserved identity colours for key characters (see story spoiler below) |
+| 71–78 | Flesh tones: light | 8 | The light range where anime skin sits, with pink, peach and golden undertones. Most of the cast is coloured from here |
+| 79–87 | Greyscale | 9 | White to black: shadows, metals, neutral elements, UI |
+| 88–96 | Mouth interior | 9 | Tongue, gums, mouth cavity and inner lip, three depths each |
+| 97–99 | Areola | 3 | Light, mid and deep |
+| 104–107 | Flesh tones: darker | 4 | Olive tan, warm bronze, deep and deepest brown |
+| 100–103, 108–112 | Free | 9 | Unassigned. 100–103 are earmarked for a dedicated cheek-blush set |
+
+*Palette v2, 2026-11-20 (Peter).* The original flesh row was a single peach hue (about 22°) running from medium brown to three near-whites, with no pink undertone. The two entries meant to be pink had come out peach. The rebalance kept the light anime range in 71–78 and moved the darker tones to 104–107, rather than spread a few light entries thinly across the full range. Index lookups are clamped to 1–112 in `MF_SelectColorFromPalette`.
 
 <details>
 <summary>⚠️ Story Spoiler — Signature Colours</summary>
@@ -89,7 +93,7 @@ The 6 signature colours are reserved for the five magical girls and Tierney. Onl
 
 **Palette discipline:** The restricted palette enforces visual consistency across the game. Characters, environments, and UI all speak the same colour language. New assets that require a new colour require a palette discussion — the palette is not expanded casually.
 
-**Blush tones** are designed to blend with flesh tones through the material B channel (see below), creating the anime blush effect as a material parameter rather than a separate render pass.
+**Blush** blends with flesh tones through the material B channel (see below), creating the anime blush effect as a material parameter rather than a separate render pass. There is no dedicated cheek-blush set yet. Until 100–103 are filled, blush uses the light mouth-interior entries (88 *Tongue – light*, 96 *Inner-lip pink*).
 
 **Signature colours** correspond to the key characters and factions whose colours appear repeatedly across costume, UI, and environmental storytelling.
 
@@ -105,10 +109,14 @@ Each material instance exposes two arrays of palette index slots:
 
 | Parameter | Count | Maps to |
 |-----------|-------|---------|
-| Color 1 indexes | 30 | Palette entries (1–98) |
-| Color 2 indexes | 30 | Palette entries (1–98) |
+| Color 1 indexes | up to 30 | Palette entries (1–112) |
+| Color 2 indexes | up to 30 | Palette entries (1–112) |
 
-The 30 Color 1 slots and 30 Color 2 slots define the colour vocabulary available to that material instance. Which slot applies to any given pixel is determined by the primary texture.
+The 30 Color 1 slots and 30 Color 2 slots define the colour vocabulary available to that material instance. Which slot applies to any given pixel is determined by the primary texture. `M_Master_Character` currently has **17** cases wired (`Color 1 Index N` / `Color 2 Index N`, the face's zone count). A new zone needs a new Switch case and its two parameters, as well as the texture change.
+
+**Blush Strength** scales the B mix on **zone 1 (Base) only**. Every other zone gets its full authored B, so turning the skin blush down does not also fade nail free edges or soft-zone feathering. *(2026-11-20.)*
+
+**Soft zones.** A zone is normally hard: a texel belongs to it when the layer's alpha is ≥ 0.5, so a feathered edge is cut off. A *soft* zone instead takes every texel the layer touches (alpha ≥ 0.02) and writes the layer's alpha into B. The feathered edge then blends Colour 1 → Colour 2 inside the zone. Set the zone's Colour 1 to the surrounding colour (skin) so that the zone boundary itself is invisible. Used for the Spicy Explicit zone, where the nipple feathering was being lost. *(2026-11-20, Peter.)*
 
 ### Primary Texture — RGBA
 
@@ -117,7 +125,9 @@ The 30 Color 1 slots and 30 Color 2 slots define the colour vocabulary available
 | **R** | Selects which Color 1 slot (1–N) applies to this pixel region |
 | **G** | Selects which Color 2 slot (1–N) applies to this pixel region |
 | **B** | Mix ratio — lerp between the selected Color 1 and Color 2 |
-| **A** | Alpha |
+| **A** | Alpha — **on `M_Master_Character`: signed soft shade** (see below) |
+
+**Soft shade on character skin (Primary.A).** *Decided by Peter 2026-11-20.* Painted shadows and highlights are soft (feathered), and R/G zones cannot carry softness, so they ride Primary.A on the opaque character master: **0.5 = neutral**, values below lerp toward the instance's shadow colour by `(0.5 − A) × 2`, values above toward its highlight colour by `(A − 0.5) × 2`. It is kept apart from B so blush and shadow can overlap (they do, under the eyes). An instance switch ignores A entirely, so the painted shading can be turned off and the cel shader's own lighting decide where shadows fall.
 
 The R and G channels divide the mesh surface into up to N independently addressable colour zones each, where **N is the master's `MaxIndex`** parameter (default 30, set per-master to match the texture's authored zone count). Selector math is `Round(channel × MaxIndex)` clamped to `[1, MaxIndex]`, so R and G must be authored in `1/N` steps — e.g. R ∈ {1/2, 2/2} for a 2-zone master, R ∈ {1/30, …, 30/30} for a 30-zone master. The B channel blends between the two selected palette entries, allowing two-tone materials: a fabric with warp and weft colours, skin with a blush layer, hair with a highlight band. Changing the look of any zone is a material instance parameter edit, not a texture repaint.
 
@@ -135,6 +145,8 @@ A second texture carries surface property data in packed channels (acronym from 
 | **A** | **E**mission boost |
 
 This texture is authored once per mesh and does not change with colour variations. Subsurface scattering on the R channel is the primary driver of skin warmth and the soft look of flesh in lit areas.
+
+**On the cel masters, R and G have no direct input.** The Substrate Toon BSDF has no subsurface or AO pin. Skin warmth comes instead from the warm diffuse ramp in the `TP_Character` Toon Profile and the instance's Shadow Color. AO goes to the material output's Ambient Occlusion pin if one is wired; the FemaleBase AO plane is flat 1.0 until a bake exists. Roughness and Emission (B, A) feed the BSDF directly. See [TB-materials](../technical-briefs/TB-materials.md).
 
 ### MOHW Texture — Extended Surface Properties
 
@@ -162,6 +174,8 @@ A fourth texture is applied on the UV1 channel (beta UV), independent of the pri
 
 Because beta UV is independent, definition lines can be positioned and scaled separately from the diffuse mapping. This texture does not interact with the palette system — it carries drawn line data directly.
 
+**Interim (FemaleBase, 2026-11-20):** the body's lines are painted on UV0 and the mesh's second UV map (`Channel0`) is empty (all zeros). Until the lines are reworked, the export **copies UV0 into UV1**, so the Definition texture shares the Primary layout and the master's UV1 sampling stays correct.
+
 ### Character Zone Allocation
 
 Characters are split into **two skeletal meshes — head and body** — on the one MetaHuman skeleton, the head following the body via Leader Pose. Each mesh has its own material and its own texture set, and so its own `MaxIndex` budget of up to 30 zones. The split keeps facial features (lips, eyes, brows) from competing with the body for zones.
@@ -172,18 +186,32 @@ A zone is one R value, which selects one Color 1 slot, and its paired G value, w
 
 | Zone | Use | Color 1 / Color 2 / B |
 |------|-----|-----------------------|
-| Lips ×2 | Lips | Allocated; detail pending |
-| … | Skin, eyes, brows, etc. | Allocation in progress |
+| Base | Skin | C1 = skin, C2 = blush, B = blush (BlushCheek + BlushCorner) |
+| Tongue · FrontTeeth · InnerTeeth · MouthBox | Mouth interior | One zone each |
+| UpperLip · LowerLip | Lips | One zone each |
+| EyeCrease · MouthLine | Drawn facial features (hard-edged, so zones, not Definition) | One zone each |
+| EyebrowOutline · EyeBrowColor | Brows | One zone each |
+| LowerLash · TopLashUpper · TopLashLower | Lashes | One zone each |
+| EyeBack | Eye whites | One zone |
+| HairSkullCap | Painted scalp under the hair | One zone; set to the hair colour |
+| EyeShadow | The translucent eye-shadow slot's faces | A = 0.5 as opacity |
+
+**Zone numbers (FemaleBase):** 1 Base, 2 Tongue, 3 FrontTeeth, 4 InnerTeeth, 5 MouthBox, 6 LowerLip, 7 UpperLip, 8 EyeCrease, 9 EyebrowOutline, 10 EyeBrowColor, 11 MouthLine, 12 LowerLash, 13 TopLashUpper, 14 TopLashLower, 15 EyeBack, 16 HairSkullCap, 17 EyeShadow. New zones are **appended**, so existing numbers, and every instance's settings for them, stay put. EyeBack and HairSkullCap were added 2026-11-20, which moved EyeShadow from 15 to 17. Before that, the eye whites had been painted with EyeBrowColor.
+
+Soft shading on Primary.A: EyeCreaseShadow, UnderEyeShadow (shadow); NoseShine (highlight). **NoseTip is a line → Definition**, authored darker/heavier than the body lines (it is the face's most evident interior line); it is not the nose highlight. **The skull cap is a face zone, not a hair-material slot.** That supersedes the earlier plan for the cap to sit on `M_Master_Hair`. The hair strands themselves keep their own slot. The eye-shadow slot is the translucent pair. *(FemaleBase, 2026-11-20.)*
 
 **Body mesh**
 
 | Zone | Use | Color 1 / Color 2 / B |
 |------|-----|-----------------------|
-| Fingernails | All ten fingernails | C1 = nail bed, C2 = free-edge white, B = 0 over the bed ramping to 1 across the free edge |
-| Toenails | All ten toenails | As fingernails |
-| … | Skin, etc. | Allocation in progress |
+| Base | Skin | C1 = skin, C2 = blush, B = blush (BackBlush) |
+| FingerNailBed · FingerNailLunula | All ten fingernails | One zone each; B free for the free edge |
+| ToeNailBed · ToeNailLunula | All ten toenails | As fingernails |
+| Explicit | ExplicitNipples + ExplicitVagina | **Spicy Primary only**; in Core those texels fall through to Base. A **soft zone**: C1 = the skin index, C2 = areola (97–99), B = the painted feathering. Set on the Spicy instance only |
 
-**Nails.** There is one zone per nail *group*, not per nail. A bare nail uses the bed / free-edge pair above. A painted nail sets C1 and C2 to the same polish index, so the B blend does nothing. A French manicure keeps C2 at free-edge white. The tip shape is authored once, in B. Per-nail colour is out of scope. If it is ever needed, the nails move to their own material slot with their own zone budget, so the nail faces stay in their own UV island to keep that split possible.
+Zone numbers: 1 Base, 2 ToeNailBed, 3 ToeNailLunula, 4 FingerNailBed, 5 FingerNailLunula, 6 Explicit. 5 zones in Core, 6 in Spicy. Soft shading on Primary.A: the ten `*Shadow` layers (shadow) and UpperBodyHighlights + KneeFrontHighlight (highlight). The `*Line` layers go to the **Definition** texture. *(FemaleBase, 2026-11-20.)*
+
+**Nails.** There is one zone per nail *group*, not per nail. *Revised 2026-11-20 (Peter):* bed and lunula are separate zones, which leaves B free to ramp to the free edge. A bare nail uses the bed / free-edge pair. A painted nail sets C1 and C2 to the same polish index, so the B blend does nothing. A French manicure keeps C2 at free-edge white. The tip shape is authored once, in B. Per-nail colour is out of scope. If it is ever needed, the nails move to their own material slot with their own zone budget, so the nail faces stay in their own UV island to keep that split possible.
 
 **`MaxIndex`.** Once a mesh's zone count is final, set its master's `MaxIndex` to that count, and author R and G in exact `1/N` steps for that N.
 

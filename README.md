@@ -59,7 +59,7 @@ The GDD is the central design reference. Start with **[gdd.md](gdd/gdd.md)** for
 | [Story Overview](gdd/story-overview.md) | Spoiler-light premise, tone, and setting |
 | [Register and Engagement](gdd/register-and-engagement.md) | Writing register, en-CA as source locale, the long development cycle, distributed-payoff rule, publishing and monetisation during development |
 | [Title and Branding](gdd/title-and-branding.md) | Title rationale, fraction logo, title screen art, chapter operator system |
-| [Art Direction](gdd/art-direction.md) | Visual style, cel shader, colour palette (98 entries), material system |
+| [Art Direction](gdd/art-direction.md) | Visual style, cel shader, colour palette (112 slots), material system |
 | [Character Pipeline](gdd/character-pipeline.md) | Body mesh architecture, hair system, clothing pipeline |
 | [Audio Direction](gdd/audio-direction.md) | Music and sound design intent |
 | [Boot Manager](gdd/boot-manager.md) | ABM/MBM phased lifecycle, pak search order, dependency resolution |

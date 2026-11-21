@@ -23,6 +23,12 @@ standard approach for authored dialogue.
 
 **What needs proving, in order:**
 
+0. **Author the ARKit 52 set on FemaleBase first** (moved here from M2 by Peter, 2026-11-19). The
+   shipping body (FemaleBase, ARP rig) has **never** carried the Faceit set described in (1); that was
+   the old `newbase53` MainBody. Run Faceit on `Face` (save a new Lesson first); the teeth and tongue are
+   loose parts **inside** the Face mesh and the rig has **no jaw bone**, so `jawOpen`/`tongueOut` must
+   carry them as blendshapes. The export script's Core/Spicy rules apply unchanged.
+
 1. **Does the solver's output land on a CUSTOM character?** This is the gate, and everything else is
    downstream of it. Epic describes audio-driven animation as delivering *"animation for all MetaHuman
    facial controls"* — and the MetaHuman facial rig is **not** ARKit 52; it is a much larger control

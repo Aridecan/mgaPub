@@ -28,7 +28,7 @@ only the token→palette binding the engine doesn't provide.
 
 ## Colour — palette-bound (LOCKED CONSTRAINT)
 
-**Every UI colour is a named token that resolves to a specific entry in the fixed 98-entry palette**
+**Every UI colour is a named token that resolves to a specific entry in the fixed 112-slot palette**
 ([Art Direction → Colour Palette](../gdd/art-direction.md), `palette.png`). **No UI colour is ever a
 raw hex value or a colour outside the palette** — this is the existing palette discipline ("Characters,
 environments, and UI all speak the same colour language"; a new colour requires a palette discussion,
@@ -157,7 +157,7 @@ colour hand-patch (white `itemStyle.textColor`) is replaced by the styled ComboB
 
 ## Related
 
-- [Art Direction](../gdd/art-direction.md) — **the fixed 98-entry palette (colour source)**, cel shader
+- [Art Direction](../gdd/art-direction.md) — **the fixed 112-slot palette (colour source)**, cel shader
 - [TB — Settings Menu](TB-settings-menu.md) · [TB — Language Settings](TB-language-settings.md) — first consumers
 - [Boot Manager](../gdd/boot-manager.md) — reuse-UE rule; [TB — Boot Loader](TB-boot-loader.md) — CommonUI stack
 - Content-tier / Streamer-Mode standard — Base = stream-safe (visual too)
