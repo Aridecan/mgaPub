@@ -94,12 +94,17 @@ The manifesto commits to mod-friendly infrastructure. The specific scope at laun
 
 The public demo will include:
 
-- Narrative progression through the end of Chapter 1
-- Three representative side jobs
+- The standalone [test game modes](test-modes.md)
+- The Prologue and the Chapter 1 main quest
+- Three side jobs in full: delivery, waitressing, and repair
+- Limited versions of bounty hunting, infiltration, and hacking — a small fixed set of targets each (around five)
+- Some, but not all, of Chapter 1's side quests
+
+The demo includes all content tiers, except on Steam, where the demo contains Core content only. The full game beyond the demo is available to Patreon and SubscribeStar supporters from the lowest paid tier.
 
 The demo is intended as a long-term systems validation environment — showcasing core combat, player agency tools, and the foundational gameplay loop without exposing late-game mechanics or narrative escalations. Demo scope is fixed at Chapter 1 and does not expand.
 
-The demo will be distributed on **itch.io** initially. Steam demo release is planned for later, once the visual style and systems are more mature. itch.io is chosen for its technical audience, devlog-heavy communication model, and controlled expectations.
+The demo will be distributed on **itch.io** initially. Steam demo release is planned for later, once the visual style and systems are more mature. itch.io is chosen for its technical audience, devlog-heavy communication model, and controlled expectations. Demo links will also be posted on DeviantArt and F95zone.
 
 ---
 

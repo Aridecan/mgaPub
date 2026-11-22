@@ -93,5 +93,5 @@ This approach aligns with the manifesto's [Systems Before Content](manifesto.md#
 - Whether test modes share the main game's save system or use independent saves
 - Whether job test modes are available from the main menu or accessed through a separate launcher/menu
 - Character used in the adventure mode — unique character, generic avatar, or Meghan in a non-canon context
-- Whether test modes are included in the demo build, the full game only, or both
+- ~~Whether test modes are included in the demo build, the full game only, or both~~ — **both**: test modes ship in the public demo (decided 2026-11-22; see [Scope — Demo](scope.md#demo-scope-planned))
 - Scope of the quest system — fully procedural, hand-authored pool, or hybrid
