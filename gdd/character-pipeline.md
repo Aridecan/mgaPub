@@ -211,8 +211,10 @@ The character head has two sockets for modular hair attachment:
 
 | Socket | Role | Behaviour |
 |--------|------|-----------|
-| **Socket_FrontHair** | Signature bangs and framing strands | Fixed per character; defines facial silhouette and identity; not player-customisable |
-| **Socket_BackHair** | Back hairstyle | Modular; player- or character-selectable; swappable at runtime |
+| **HairFrontSocket** | Signature bangs and framing strands | Fixed per character; defines facial silhouette and identity; not player-customisable |
+| **HairBackSocket** | Back hairstyle | Modular; player- or character-selectable; swappable at runtime |
+
+The socket names were `Socket_FrontHair` / `Socket_BackHair` until 2026-11-27; they were renamed to match the hair asset naming (`SK_HairFrontLong001`, `SK_HairBackLong001`), so everything hair-related sorts together.
 
 All front hair pieces share the same Blender object origin (snapped to a `HairOrigin_Front` empty). All back hair pieces share a separate origin (snapped to `HairOrigin_Back`). This guarantees every piece aligns perfectly to its socket with zero per-style offset adjustments.
 

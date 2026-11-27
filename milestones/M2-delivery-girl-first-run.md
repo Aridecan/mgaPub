@@ -155,7 +155,7 @@ X in this line of work, and it is a **stretch goal** here, otherwise M3. You can
   would fix the bust for every character and defeat the shared-base-plus-morph design.
 - **Uniform XYZ scale and the breast-size morph are present and applied at spawn**, even if only one
   value is ever used. The pipeline is the deliverable, not the variation.
-- **Hair on both sockets** (`Socket_FrontHair`, `Socket_BackHair`), origins snapped per the GDD so
+- **Hair on both sockets** (`HairFrontSocket`, `HairBackSocket`), origins snapped per the GDD so
   future styles drop in with zero per-style offset.
 - Renders through `M_Master_Character` / `M_Master_Hair`.
 - **Eyes render through `M_Master_Eye`** (added 2026-07-28). The master material already exists in the
@@ -182,7 +182,7 @@ X in this line of work, and it is a **stretch goal** here, otherwise M3. You can
   Unsimulated bones render identically to rigid — they just never move — so M3 becomes "turn on a
   physics asset" instead of "redo the hair." The 2AM skull-cap method already produces strand
   topology that chains cleanly, and the first hairstyle is being built now, so the cost is near zero.
-- `Socket_FrontHair` / `Socket_BackHair` must be **real sockets on the body skeleton**, not baked
+- `HairFrontSocket` / `HairBackSocket` must be **real sockets on the body skeleton**, not baked
   transforms, so hair can be driven by head motion later.
 
 ### Pillar B — The city survives the cook
