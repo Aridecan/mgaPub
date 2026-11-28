@@ -63,6 +63,12 @@ The passes above define the **look**. As of **UE 5.8**, the **implementation** m
 
 ---
 
+## Exposure
+
+**Project-wide Auto Exposure Bias = 0** (`r.DefaultFeature.AutoExposure.Bias`, Project Settings > Rendering > Default Settings; decided 2026-11-27). The engine's built-in default is **+1 EV**, which over-brightens cel-shaded surfaces: the flat palette colours wash out and the soft shading and Definition lines disappear. The emission boost is not involved (SARE.A is 0 on the character textures).
+
+Auto-exposure stays **on**, so the image still adapts between bright streets and dark interiors. A map's Post Process Volume overrides this default; none is needed for exposure today. When the day/night cycle arrives, exposure should follow the time of day and will override the project default.
+
 ## Colour Palette
 
 All colour in the game is drawn from the palette, stored as a 16×7 grid of **112 slots, 103 of them in use**. Indices run 1–112, left to right and top to bottom. No material uses colour values outside the palette. The master file is `VisualArt/photoshop/Pallette.psd` in Perforce, one named shape layer per entry. The PNG used by Blender and UE is exported from it.
