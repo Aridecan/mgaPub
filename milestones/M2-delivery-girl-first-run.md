@@ -272,8 +272,8 @@ beyond the one megablock.
 
 | # | Workstream | Owner | Effort | Status |
 |---|-----------|-------|--------|--------|
-| **1** | Nessa body + hair out of Blender into UE — export, skeleton, skinning, master-material hookup | Peter drives | L | Not started. Body mostly modelled; hairstyle outstanding |
-| **2** | Character spawn pipeline — scale → morph → sockets → empty clothing step → Chaos Cloth init | split | M | Not started |
+| **1** | Nessa body + hair out of Blender into UE — export, skeleton, skinning, master-material hookup | Peter drives | L | **Done** (P4 CL 172/178/182): body, materials, front + back hair. Eye material still a placeholder |
+| **2** | Character spawn pipeline — scale → morph → sockets → empty clothing step → Chaos Cloth init | split | M | **Done 2026-11-27** (P4 CL 183, [#33](https://github.com/Aridecan/mgaPub/issues/33)) |
 | **3** | GMC integration — locomotion, third-person camera, on the M1 WS4 `IA_`/`IMC_` assets | split | M | Not started |
 | **4** | Megablock bake — one superblock verified, then the other eight, submitted to P4 | Peter drives (modal tool) | L | Not started |
 | **5** | Audio — ambient bed, physical materials on baked surfaces, surface-driven footsteps through the M1 submixes | split | S | Not started |
